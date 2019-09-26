@@ -6,24 +6,41 @@ using Photon.Realtime;
 
 public class NetManager : MonoBehaviourPunCallbacks
 {
-    public override void OnConnected()
+    private void Start()
     {
-        base.OnConnected();
-    }
+        DontDestroyOnLoad(gameObject);
 
-    public override void OnJoinedRoom()
-    {
-        base.OnJoinedRoom();
+        PhotonNetwork.NickName = MasterManager.GameSettings.NickName;
+        PhotonNetwork.GameVersion = MasterManager.GameSettings.GameVersion;
+
+        PhotonNetwork.ConnectUsingSettings();
     }
 
     public override void OnConnectedToMaster()
     {
-        base.OnConnectedToMaster();
+        print(PhotonNetwork.LocalPlayer.NickName + " has been connected to server!");
+        PhotonNetwork.JoinLobby(TypedLobby.Default);
     }
 
+    public override void OnJoinedLobby()
+    {
+        Debug.Log(PhotonNetwork.LocalPlayer.NickName + " has entered the lobby!");
+        PhotonNetwork.JoinRandomRoom();
+    }
+
+    public override void OnJoinedRoom()
+    {
+        Debug.Log(PhotonNetwork.LocalPlayer.NickName + " has entered the room :" + PhotonNetwork.CurrentRoom + "!");
+        PhotonNetwork.LoadLevel("MainScene");
+    }
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        Debug.LogWarning(returnCode + ": " + message);
+        PhotonNetwork.CreateRoom(Random.Range(0, 9999).ToString(), new RoomOptions() { MaxPlayers = 19 });
+    }
     public override void OnDisconnected(DisconnectCause cause)
     {
-        base.OnDisconnected(cause);
+        Debug.LogWarning(PhotonNetwork.LocalPlayer.NickName + 
+            " has been disconnected from server for reason: " + cause.ToString());
     }
-
 }
