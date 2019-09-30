@@ -37,6 +37,7 @@ public class MyCharacter : MonoBehaviourPun
 
     private void FixedUpdate()
     {
+        if (!_view.IsMine) return;
         var horAxis = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
         var verAxis = Input.GetAxis("Vertical") * speed * Time.deltaTime;
         _rb.velocity = new Vector3(horAxis, _rb.velocity.y, verAxis);
