@@ -6,12 +6,16 @@ using Photon.Realtime;
 
 public class NetManager : MonoBehaviourPunCallbacks
 {
+    public string nickname = "GenericNickname";
+    public string gameVersion = "0.0.1";
+
+
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
 
-        PhotonNetwork.NickName = MasterManager.GameSettings.NickName;
-        PhotonNetwork.GameVersion = MasterManager.GameSettings.GameVersion;
+        PhotonNetwork.NickName = nickname + Random.Range(0f,100f);
+        PhotonNetwork.GameVersion = gameVersion;
 
         PhotonNetwork.ConnectUsingSettings();
     }
