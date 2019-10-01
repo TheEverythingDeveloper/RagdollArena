@@ -193,7 +193,7 @@ GameObject:
   - component: {fileID: 1206384370}
   - component: {fileID: 1206384369}
   - component: {fileID: 1206384368}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -328,7 +328,7 @@ GameObject:
   - component: {fileID: 1576122082}
   - component: {fileID: 1576122081}
   - component: {fileID: 1576122080}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -419,7 +419,7 @@ GameObject:
   - component: {fileID: 2079544722}
   - component: {fileID: 2079544721}
   - component: {fileID: 2079544720}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sphere (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
