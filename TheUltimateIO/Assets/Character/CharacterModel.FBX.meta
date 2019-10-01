@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e77faff55849c2b4b8a895eec22aeaa4
+guid: a05325a55133d5543974a69bb23ceff0
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -31,18 +31,18 @@ ModelImporter:
     100050: CATRigSpine 1
     100052: Character
     100054: Character001
-    100056: Cuello
-    100058: ManoDer
-    100060: ManoIzq
-    100062: Pelvis
-    100064: Pelvis2
-    100066: PieDer
-    100068: PieIzq
-    100070: PiernaDer1
-    100072: PiernaDer2
-    100074: PiernaIzq1
-    100076: PiernaIzq2
-    100078: //RootNode
+    100056: //RootNode
+    100058: Cuello
+    100060: ManoDer
+    100062: ManoIzq
+    100064: Pelvis
+    100066: Pelvis2
+    100068: PieDer
+    100070: PieIzq
+    100072: PiernaDer1
+    100074: PiernaDer2
+    100076: PiernaIzq1
+    100078: PiernaIzq2
     100080: RodillaDer
     100082: RodillaIzq
     100084: Torso1
@@ -75,18 +75,18 @@ ModelImporter:
     400050: CATRigSpine 1
     400052: Character
     400054: Character001
-    400056: Cuello
-    400058: ManoDer
-    400060: ManoIzq
-    400062: Pelvis
-    400064: Pelvis2
-    400066: PieDer
-    400068: PieIzq
-    400070: PiernaDer1
-    400072: PiernaDer2
-    400074: PiernaIzq1
-    400076: PiernaIzq2
-    400078: //RootNode
+    400056: //RootNode
+    400058: Cuello
+    400060: ManoDer
+    400062: ManoIzq
+    400064: Pelvis
+    400066: Pelvis2
+    400068: PieDer
+    400070: PieIzq
+    400072: PiernaDer1
+    400074: PiernaDer2
+    400076: PiernaIzq1
+    400078: PiernaIzq2
     400080: RodillaDer
     400082: RodillaIzq
     400084: Torso1
