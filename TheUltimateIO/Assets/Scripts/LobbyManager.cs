@@ -11,10 +11,16 @@ public class LobbyManager : MonoBehaviourPun
 {
     private NetManager _netMng;
     [SerializeField] private TMP_InputField _nicknameInputField;
+    [SerializeField] private GameObject _nicknamePanel;
 
     private void Awake()
     {
         _netMng = FindObjectOfType<NetManager>();
+    }
+
+    public void StartButton()
+    {
+        _nicknamePanel.SetActive(true);
     }
 
     public void OnEndValue()

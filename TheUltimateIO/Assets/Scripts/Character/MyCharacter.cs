@@ -23,14 +23,10 @@ public class MyCharacter : MonoBehaviourPun
 
     private void Awake()
     {
-        Debug.Log("awakee");
         _view = GetComponent<PhotonView>();
         _rb = GetComponentInChildren<Rigidbody>();
         if (!_view.IsMine)
-        {
-            Debug.Log("No tengo autoridad");
             return;
-        }
         //TODO: Cambiar el color de todo el robot
         _color = GetComponent<Renderer>().material.color = new Color(
             Random.Range(0f, 1f),
