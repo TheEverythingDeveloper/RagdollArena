@@ -14,9 +14,11 @@ public class NetManager : MonoBehaviourPunCallbacks
     {
         DontDestroyOnLoad(gameObject);
 
-        PhotonNetwork.NickName = nickname + Random.Range(0f,100f);
         PhotonNetwork.GameVersion = gameVersion;
+    }
 
+    public void Connect()
+    {
         PhotonNetwork.ConnectUsingSettings();
     }
 

@@ -8,8 +8,9 @@ public class LevelManager : MonoBehaviour
 {
     private void Start()
     {
-        PhotonNetwork.Instantiate("Character",
+        var user = PhotonNetwork.Instantiate("User",
             new Vector3(Random.Range(-2f, 2f), 1, Random.Range(-2f, 2f)), 
             Quaternion.identity);
+        user.GetComponentInChildren<Character3DUI>().RPCUpdateNickname(PhotonNetwork.NickName);
     }
 }
