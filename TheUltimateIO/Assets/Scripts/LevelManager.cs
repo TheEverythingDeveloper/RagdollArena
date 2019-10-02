@@ -11,6 +11,6 @@ public class LevelManager : MonoBehaviour
         var user = PhotonNetwork.Instantiate("User",
             new Vector3(Random.Range(-2f, 2f), 1, Random.Range(-2f, 2f)), 
             Quaternion.identity);
-        user.GetComponentInChildren<Character3DUI>().RPCUpdateNickname(PhotonNetwork.NickName);
+        user.GetComponentInChildren<Character3DUI>().photonView.RPC("RPCUpdateNickname", RpcTarget.AllBuffered, PhotonNetwork.NickName);
     }
 }
