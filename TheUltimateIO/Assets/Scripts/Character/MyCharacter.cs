@@ -24,6 +24,9 @@ public class MyCharacter : MonoBehaviourPun
     private float _sqrMagnitudeInTime = 0f;
     public float sqrMagnitudeInTimeSpeed;
     private Vector3 _forwardTarget;
+    private Quaternion _lookRotation;
+    private Vector3 _direction;
+    private Quaternion _initialRot;
 
     private void Awake()
     {
@@ -32,6 +35,7 @@ public class MyCharacter : MonoBehaviourPun
         if (!_view.IsMine)
             return;
 
+        _initialRot = pelvisRb.transform.localRotation;
         var colorA = _allMyRenderers[0].material.GetColor("_ColorA");
         var colorB = _allMyRenderers[0].material.GetColor("_ColorB");
         var colorC = _allMyRenderers[0].material.GetColor("_ColorC");
@@ -62,14 +66,12 @@ public class MyCharacter : MonoBehaviourPun
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 1 << 9))
         {
-            _forwardTarget = new Vector3(hit.point.x, pelvisRb.transform.position.y, hit.point.z);
+            _direction = (hit.point - pelvisRb.transform.position).normalized;
 
+            _lookRotation = Quaternion.LookRotation(_direction);
+            _lookRotation *= _initialRot;
 
-            float newRot = Quaternion.FromToRotation(pelvisRb.transform.forward, _forwardTarget).eulerAngles.magnitude;
-
-            Debug.Log("1: " + newRot);
-            Debug.Log("2: " + newRot / rotationSpeed);
-            pelvisRb.transform.Rotate(Vector3.right, newRot / rotationSpeed);
+            pelvisRb.transform.localRotation = Quaternion.Slerp(pelvisRb.transform.localRotation, _lookRotation, Time.deltaTime * rotationSpeed);
         }
     }
 
