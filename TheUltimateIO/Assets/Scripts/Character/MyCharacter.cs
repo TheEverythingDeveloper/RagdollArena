@@ -5,11 +5,12 @@ using UnityEngine;
 public class MyCharacter : MonoBehaviourPun
 {
     private PhotonView _view;
-    private Rigidbody _rb;
+    public Rigidbody pelvisRb;
     private Color _color;
     private Renderer[] _allMyRenderers;
     public float speed = 60f;
     public float jumpSpeed = 200f;
+    public float rotationSpeed = 2f;
     public float cameraSpeed = 0.6f;
     private bool _inAir = false;
     [Tooltip("Distancia que vamos a necesitar estar del piso para poder saltar.")]
@@ -22,11 +23,11 @@ public class MyCharacter : MonoBehaviourPun
     public float ratioMultiplierFoV;
     private float _sqrMagnitudeInTime = 0f;
     public float sqrMagnitudeInTimeSpeed;
+    private Vector3 _forwardTarget;
 
     private void Awake()
     {
         _view = GetComponent<PhotonView>();
-        _rb = GetComponentInChildren<Rigidbody>();
         _allMyRenderers = GetComponentsInChildren<Renderer>();
         if (!_view.IsMine)
             return;
@@ -42,17 +43,34 @@ public class MyCharacter : MonoBehaviourPun
 
     private void Update()
     {
-        if (!_view.IsMine) return;
+        if (!_view.IsMine && pelvisRb != null) return;
         if (Input.GetKeyDown(KeyCode.Space) && !_inAir)
         {
             _inAir = true;
-            _rb.AddForce(Vector3.up * jumpSpeed * Time.deltaTime, ForceMode.Impulse);
+            pelvisRb.AddForce(Vector3.up * jumpSpeed * Time.deltaTime, ForceMode.Impulse);
         }
 
-        Debug.DrawLine(transform.position, transform.position + Vector3.down * inAirDistance, _inAir ? Color.red : Color.green);
-        _inAir = !Physics.Raycast(transform.position, Vector3.down, inAirDistance, 1 << 9);
+        Debug.DrawLine(transform.position, 
+            transform.position + Vector3.down * inAirDistance,
+            _inAir ? Color.red : Color.green);
+        _inAir = !Physics.Raycast(pelvisRb.transform.position, Vector3.down, inAirDistance, 1 << 9);
 
-        _sqrMagnitudeInTime = Mathf.Lerp(_sqrMagnitudeInTime, _rb.velocity.sqrMagnitude, sqrMagnitudeInTimeSpeed * Time.deltaTime);
+        _sqrMagnitudeInTime = Mathf.Lerp(_sqrMagnitudeInTime, pelvisRb.velocity.sqrMagnitude,
+            sqrMagnitudeInTimeSpeed * Time.deltaTime);
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 1 << 9))
+        {
+            _forwardTarget = new Vector3(hit.point.x, pelvisRb.transform.position.y, hit.point.z);
+
+
+            float newRot = Quaternion.FromToRotation(pelvisRb.transform.forward, _forwardTarget).eulerAngles.magnitude;
+
+            Debug.Log("1: " + newRot);
+            Debug.Log("2: " + newRot / rotationSpeed);
+            pelvisRb.transform.Rotate(Vector3.right, newRot / rotationSpeed);
+        }
     }
 
     private void FixedUpdate()
@@ -62,16 +80,16 @@ public class MyCharacter : MonoBehaviourPun
         //Movement
         var horAxis = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
         var verAxis = Input.GetAxis("Vertical") * speed * Time.deltaTime;
-        _rb.velocity = new Vector3(horAxis, _rb.velocity.y, verAxis);
-
+        pelvisRb.velocity = new Vector3(horAxis, pelvisRb.velocity.y, verAxis);
 
         #region Camera
         //FoV Camera
-        Camera.main.fieldOfView = Mathf.Lerp(minFOV, maxFOV, _rb.velocity.sqrMagnitude * ratioMultiplierFoV);
+        Camera.main.fieldOfView = Mathf.Lerp(minFOV, maxFOV, pelvisRb.velocity.sqrMagnitude * ratioMultiplierFoV);
 
         //Camera offset
-        Vector3 offsetPosition = _rb.transform.position + cameraOffset;
-        Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, offsetPosition, cameraSpeed * Time.deltaTime);
+        Vector3 offsetPosition = pelvisRb.transform.position + cameraOffset;
+        Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, 
+            offsetPosition, cameraSpeed * Time.deltaTime);
         #endregion
     }
 

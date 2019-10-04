@@ -420,6 +420,14 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 8ff7b8f70d90dbc4e8cb018f4cb47331, type: 2}
+    - target: {fileID: 581, guid: 5902c9be90972cf429bc3820e10dd5d0, type: 3}
+      propertyPath: rotationSpeed
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 581, guid: 5902c9be90972cf429bc3820e10dd5d0, type: 3}
+      propertyPath: inAirDistance
+      value: 1.7
+      objectReference: {fileID: 0}
     - target: {fileID: 582, guid: 5902c9be90972cf429bc3820e10dd5d0, type: 3}
       propertyPath: viewIdField
       value: 0

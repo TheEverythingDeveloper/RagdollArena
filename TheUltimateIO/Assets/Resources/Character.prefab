@@ -47,8 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e038303661145c479cca692ce9f7f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pelvisRb: {fileID: 3848815071746402736}
   speed: 600
   jumpSpeed: 4500
+  rotationSpeed: 2
   cameraSpeed: 0.5
   inAirDistance: 0.6
   minFOV: 70
