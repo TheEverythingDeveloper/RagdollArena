@@ -1,4 +1,5 @@
 ﻿using Photon.Pun;
+using System.Linq;
 using UnityEngine;
 
 public class MyCharacter : MonoBehaviourPun
@@ -6,6 +7,7 @@ public class MyCharacter : MonoBehaviourPun
     private PhotonView _view;
     private Rigidbody _rb;
     private Color _color;
+    private Renderer[] _allMyRenderers;
     public float speed = 60f;
     public float jumpSpeed = 200f;
     public float cameraSpeed = 0.6f;
@@ -25,14 +27,17 @@ public class MyCharacter : MonoBehaviourPun
     {
         _view = GetComponent<PhotonView>();
         _rb = GetComponentInChildren<Rigidbody>();
+        _allMyRenderers = GetComponentsInChildren<Renderer>();
         if (!_view.IsMine)
             return;
-        //TODO: Cambiar el color de todo el robot
-        _color = GetComponent<Renderer>().material.color = new Color(
-            Random.Range(0f, 1f),
-            Random.Range(0f, 1f),
-            Random.Range(0f, 1f));
-        _view.RPC("RPCUpdateColor", RpcTarget.AllBuffered, _color.r, _color.g, _color.b);
+
+        var colorA = _allMyRenderers[0].material.GetColor("_ColorA");
+        var colorB = _allMyRenderers[0].material.GetColor("_ColorB");
+        var colorC = _allMyRenderers[0].material.GetColor("_ColorC");
+        _view.RPC("RPCUpdateColor", RpcTarget.AllBuffered,
+            new float[] { colorA.r, colorA.g, colorA.b },
+            new float[] { colorB.r, colorB.g, colorB.b },
+            new float[] { colorC.r, colorC.g, colorC.b });
     }
 
     private void Update()
@@ -44,7 +49,7 @@ public class MyCharacter : MonoBehaviourPun
             _rb.AddForce(Vector3.up * jumpSpeed * Time.deltaTime, ForceMode.Impulse);
         }
 
-        Debug.DrawLine(transform.position, transform.position + Vector3.down * inAirDistance, _inAir? Color.red : Color.green);
+        Debug.DrawLine(transform.position, transform.position + Vector3.down * inAirDistance, _inAir ? Color.red : Color.green);
         _inAir = !Physics.Raycast(transform.position, Vector3.down, inAirDistance, 1 << 9);
 
         _sqrMagnitudeInTime = Mathf.Lerp(_sqrMagnitudeInTime, _rb.velocity.sqrMagnitude, sqrMagnitudeInTimeSpeed * Time.deltaTime);
@@ -71,9 +76,15 @@ public class MyCharacter : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void RPCUpdateColor(float r, float g, float b)
+    public void RPCUpdateColor(float[] colorA, float[] colorB, float[] colorC)
     {
-        GetComponent<Renderer>().material.color = new Color(r, g, b, 1f);
+        _allMyRenderers.Select(x =>
+        {
+            x.material.SetColor("_ColorA", new Color(colorA[0],colorA[1],colorA[2]));
+            x.material.SetColor("_ColorB", new Color(colorB[0], colorB[1], colorB[2]));
+            x.material.SetColor("_ColorC", new Color(colorC[0], colorC[1], colorC[2]));
+            return x;
+        }).ToList();
     }
 }
 

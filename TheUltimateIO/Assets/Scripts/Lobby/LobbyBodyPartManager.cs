@@ -15,6 +15,7 @@ namespace Lobby
         private void Awake()
         {
             _allBodyPartButtons = GetComponentsInChildren<Button>();
+            _allBodyPartButtons[0].animator.SetTrigger("ChangeSelection");
         }
 
         public void SelectBodyPart(int ID)
