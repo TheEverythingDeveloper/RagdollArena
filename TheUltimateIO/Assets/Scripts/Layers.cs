@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Layers : MonoBehaviour
 {
-    public static int PLAYER = 8;
-    public static int FACTORYOBJECT = 9;
-    public static int HOLE = 10;
-    public static int INTERACTABLE = 11;
+    public static int FLOOR = 9;
+    public static int RAGDOLL = 10;
+    public static int CHARACTER = 11;
 }

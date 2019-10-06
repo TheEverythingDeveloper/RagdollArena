@@ -428,6 +428,10 @@ PrefabInstance:
       propertyPath: inAirDistance
       value: 1.7
       objectReference: {fileID: 0}
+    - target: {fileID: 581, guid: 5902c9be90972cf429bc3820e10dd5d0, type: 3}
+      propertyPath: cameraSpeed
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 582, guid: 5902c9be90972cf429bc3820e10dd5d0, type: 3}
       propertyPath: viewIdField
       value: 0

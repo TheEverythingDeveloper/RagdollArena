@@ -7,30 +7,33 @@ using Photon;
 using Photon.Realtime;
 using Photon.Pun;
 
-public class Character3DUI : MonoBehaviourPun
+namespace Character
 {
-    [SerializeField] private TextMeshProUGUI _myNicknameText;
-    private Vector3 _canvasOffset;
-    [SerializeField] private Transform _myCharacter;
-
-    private void Awake()
+    public class Character3DUI : MonoBehaviourPun
     {
-        _canvasOffset = transform.position - _myCharacter.position;
-    }
+        [SerializeField] private TextMeshProUGUI _myNicknameText;
+        private Vector3 _canvasOffset;
+        [SerializeField] private Transform _myCharacter;
 
-    private void LateUpdate()
-    {
-        transform.position = _myCharacter.position + _canvasOffset;
-    }
+        private void Awake()
+        {
+            _canvasOffset = transform.position - _myCharacter.position;
+        }
 
-    public void UpdateNickname(string newNickname)
-    {
-        _myNicknameText.text = newNickname;
-    }
+        private void LateUpdate()
+        {
+            transform.position = _myCharacter.position + _canvasOffset;
+        }
 
-    [PunRPC]
-    public void RPCUpdateNickname(string actualNickname)
-    {
-        UpdateNickname(actualNickname);
+        public void UpdateNickname(string newNickname)
+        {
+            _myNicknameText.text = newNickname;
+        }
+
+        [PunRPC]
+        public void RPCUpdateNickname(string actualNickname)
+        {
+            UpdateNickname(actualNickname);
+        }
     }
 }
