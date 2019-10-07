@@ -1,14 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Photon.Pun;
+﻿using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class NetManager : MonoBehaviourPunCallbacks
 {
     public string nickname = "GenericNickname";
     public string gameVersion = "0.0.1";
-
 
     private void Start()
     {
@@ -38,7 +36,20 @@ public class NetManager : MonoBehaviourPunCallbacks
     {
         Debug.Log(PhotonNetwork.LocalPlayer.NickName + " has entered the room :" + PhotonNetwork.CurrentRoom + "!");
         PhotonNetwork.LoadLevel("MainScene");
+        if (PhotonNetwork.CurrentRoom.PlayerCount <= 1) //es decir que somos el que creo el room
+        {
+            var go = PhotonNetwork.Instantiate("LevelManager", transform.position, Quaternion.identity);
+            DontDestroyOnLoad(go);
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
     }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.LogWarning("OnSceneLoaded: " + scene.name);
+        FindObjectOfType<LevelManager>().ArtificialAwake();
+    }
+
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         Debug.LogWarning(returnCode + ": " + message);
@@ -46,7 +57,12 @@ public class NetManager : MonoBehaviourPunCallbacks
     }
     public override void OnDisconnected(DisconnectCause cause)
     {
-        Debug.LogWarning(PhotonNetwork.LocalPlayer.NickName + 
+        Debug.LogWarning(PhotonNetwork.LocalPlayer.NickName +
             " has been disconnected from server for reason: " + cause.ToString());
+
+        if(SceneManager.GetActiveScene().name == "MainScene") 
+        {
+           // FindObjectOfType<LevelManager>().UpdateAmountLeaderboardUserRank(false); //desconectarse del ranking
+        }
     }
 }

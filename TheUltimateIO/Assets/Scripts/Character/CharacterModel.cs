@@ -46,6 +46,7 @@ namespace Character
             _allConstructables.Add(_movementController);
             _allUpdatables.Add(_movementController);
             _allUpdatables.Add(new CharacterCamera(this, pelvisRb));
+            _allUpdatables.Add(new CharacterPointsManager(this, FindObjectOfType<LevelManager>(), PhotonNetwork.NickName));
 
             var colorA = _allMyRenderers[0].material.GetColor("_ColorA");
             var colorB = _allMyRenderers[0].material.GetColor("_ColorB");
