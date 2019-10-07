@@ -22,7 +22,6 @@ namespace Character
                 _lvlMng.UpdateUserPoints(_nickName,Random.Range(0,100));
             }
         }
-
         public void ArtificialFixedUpdate() { }
         public void ArtificialLateUpdate() { }
     }

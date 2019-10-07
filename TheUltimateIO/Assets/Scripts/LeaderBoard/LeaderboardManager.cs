@@ -4,67 +4,70 @@ using System;
 using System.Linq;
 using Random = UnityEngine.Random;
 
-public class LeaderboardManager
+namespace Leaderboard
 {
-    LevelManager _lvlMng;
-    public Dictionary<string, UserData> allUserData = new Dictionary<string, UserData>();
-    public LeaderboardTable table;
-
-    public LeaderboardManager(LevelManager lvlMng)
+    public class LeaderboardManager
     {
-        _lvlMng = lvlMng;
-    }
+        LevelManager _lvlMng;
+        public Dictionary<string, UserData> allUserData = new Dictionary<string, UserData>();
+        public LeaderboardTable table;
 
-    public void UpdateUserPoints(string newUserNickname, int addedPoints)
-    {
-        if (allUserData.ContainsKey(newUserNickname))
+        public LeaderboardManager(LevelManager lvlMng)
         {
-            allUserData[newUserNickname].points += addedPoints;
+            _lvlMng = lvlMng;
         }
-        else
+
+        public void UpdateUserPoints(string newUserNickname, int addedPoints)
         {
-            allUserData.Add(newUserNickname, new UserData(newUserNickname, addedPoints));
+            if (allUserData.ContainsKey(newUserNickname))
+            {
+                allUserData[newUserNickname].points += addedPoints;
+            }
+            else
+            {
+                allUserData.Add(newUserNickname, new UserData(newUserNickname, addedPoints));
+            }
+            Debug.Log(allUserData[newUserNickname].nickname + " :::: " + allUserData[newUserNickname].points);
+
+            UpdateOrder();
         }
-        Debug.Log(allUserData[newUserNickname].nickname + " :::: " + allUserData[newUserNickname].points);
 
-        UpdateOrder();
-    }
-
-    private void UpdateOrder()
-    {
-        allUserData = allUserData.OrderByDescending(x => x.Value.points).
-                                  ToDictionary(x => x.Value.nickname, y => y.Value);
-
-        //de aca llamar a rpc del levelmanager que le avise a los leaderboardmanagers que actualicen las tablas.
-        string[] allNicknames = allUserData.Select(x => x.Value.nickname).ToArray();
-        int[] allPoints = allUserData.Select(x => x.Value.points).ToArray();
-        _lvlMng.UpdateLeaderboardTables(allNicknames, allPoints);
-    }
-
-    public void UpdateTableInfo(string[] nicknames, int[] points)
-    {
-        Debug.Log("no existe tabla"  + (table != null));
-        if (!table) return;
-        table.UpdateTable(nicknames, points);
-    }
-
-    public void DebugTopRanking()
-    {
-        allUserData.OrderByDescending(x => x.Value.points).Select(x =>
+        private void UpdateOrder()
         {
-            Debug.Log(x.Value.nickname + " :::: " + x.Value.points);
-            return x;
-        }).ToList();
-    }
+            allUserData = allUserData.OrderByDescending(x => x.Value.points).
+                                      ToDictionary(x => x.Value.nickname, y => y.Value);
 
-    public void ShufflePoints()
-    {
-        allUserData.Select(x =>
+            //de aca llamar a rpc del levelmanager que le avise a los leaderboardmanagers que actualicen las tablas.
+            string[] allNicknames = allUserData.Select(x => x.Value.nickname).ToArray();
+            int[] allPoints = allUserData.Select(x => x.Value.points).ToArray();
+            _lvlMng.UpdateLeaderboardTables(allNicknames, allPoints);
+        }
+
+        public void UpdateTableInfo(string[] nicknames, int[] points)
         {
-            x.Value.points = Random.Range(0, 1000);
-            return x;
-        }).ToArray();
+            Debug.Log("no existe tabla" + (table != null));
+            if (!table) return;
+            table.UpdateTable(nicknames, points);
+        }
 
-        UpdateOrder();
+        public void DebugTopRanking()
+        {
+            allUserData.OrderByDescending(x => x.Value.points).Select(x =>
+            {
+                Debug.Log(x.Value.nickname + " :::: " + x.Value.points);
+                return x;
+            }).ToList();
+        }
+
+        public void ShufflePoints()
+        {
+            allUserData.Select(x =>
+            {
+                x.Value.points = Random.Range(0, 1000);
+                return x;
+            }).ToArray();
+
+            UpdateOrder();
+        }
     }
 }

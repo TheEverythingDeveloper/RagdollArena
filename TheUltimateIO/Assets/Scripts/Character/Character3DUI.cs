@@ -14,6 +14,7 @@ namespace Character
         [SerializeField] private TextMeshProUGUI _myNicknameText;
         private Vector3 _canvasOffset;
         [SerializeField] private Transform _myCharacter;
+        [SerializeField] private GameObject _crown;
 
         private void Awake()
         {
@@ -23,6 +24,17 @@ namespace Character
         private void LateUpdate()
         {
             transform.position = _myCharacter.position + _canvasOffset;
+        }
+
+        public void UpdateCrown(bool active)
+        {
+            _crown.SetActive(active);
+        }
+
+        [PunRPC]
+        public void RPCUpdateCrown(bool active)
+        {
+            UpdateCrown(active);
         }
 
         public void UpdateNickname(string newNickname)

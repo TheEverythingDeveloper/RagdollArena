@@ -4,6 +4,7 @@ using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using Leaderboard;
 
 public class LevelManager : MonoBehaviourPun
 {
@@ -19,6 +20,7 @@ public class LevelManager : MonoBehaviourPun
 
         var user = PhotonNetwork.Instantiate("User",
             new Vector3(Random.Range(-2f, 2f), 1, Random.Range(-2f, 2f)), Quaternion.identity);
+        user.GetComponentInChildren<CharacterModel>().name = PhotonNetwork.NickName;
         user.GetComponentInChildren<Character3DUI>().photonView.RPC("RPCUpdateNickname", RpcTarget.AllBuffered, PhotonNetwork.NickName);
 
         _leaderboardMng = new LeaderboardManager(this);

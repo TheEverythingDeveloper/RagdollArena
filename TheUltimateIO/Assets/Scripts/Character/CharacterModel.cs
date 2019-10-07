@@ -12,6 +12,7 @@ namespace Character
         private List<IConstructable> _allConstructables = new List<IConstructable>();
         private CharacterMovement _movementController;
 
+        public string nickname;
         public Rigidbody pelvisRb;
         private Color _color;
         private Renderer[] _allMyRenderers;
@@ -29,7 +30,8 @@ namespace Character
         public float ratioMultiplierFoV;
         public float sqrMagnitudeInTimeSpeed;
 
-        public event Action OnJump = delegate { };
+        public event Action OnJump = delegate { }; //se llama cada vez que saltamos
+        public event Action<bool> OnCrowned = delegate { }; //se llama cuando agarramos la corona o perdemos la corona
 
         private void Awake()
         {
@@ -59,6 +61,7 @@ namespace Character
             ArtificialAwakes();
         }
 
+        public void Crowned(bool on) => OnCrowned(on);
         public void TryJump() { if (_movementController.inAir) return; OnJump(); }
 
         private void Start() { if (!photonView.IsMine) return; ArtificialStart(); }
