@@ -44,7 +44,13 @@ namespace Character
 
             if (!photonView.IsMine) return;
 
-            gameObject.layer = Layers.PLAYER;
+            var allChilds = GetComponentsInChildren<Transform>();
+            allChilds.Select(x =>
+            {
+                x.gameObject.layer = Layers.PLAYER;
+                return x;
+            }).ToList();
+
             anim = GetComponent<Animator>();
 
             _allUpdatables.Add(new CharacterController(this));

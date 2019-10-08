@@ -48,7 +48,6 @@ namespace Character
         }
         private void OnJointBreak(float breakForce)
         {
-            DestroyImmediate(GetComponent<SpringJoint>());
             _taken = false;
         }
     }
