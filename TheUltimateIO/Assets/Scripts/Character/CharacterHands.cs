@@ -22,8 +22,8 @@ namespace Character
 
             if (Input.GetMouseButtonDown(buttonMouse))
             {
-                _hand.velocity = Vector3.zero;
-                _hand.AddForce(myModel.pelvisRb.transform.up * 50, ForceMode.Impulse);
+                //_hand.velocity = Vector3.zero;
+                //_hand.AddForce(myModel.pelvisRb.transform.up * 50, ForceMode.Impulse);
                 _activeTaken = true;
             }
             if (Input.GetMouseButtonUp(buttonMouse))
