@@ -14,6 +14,7 @@ namespace Character
 
         public string nickname;
         public Rigidbody pelvisRb;
+        public Animator anim;
         private Color _color;
         private Renderer[] _allMyRenderers;
         public float speed = 60f;
@@ -42,6 +43,9 @@ namespace Character
             _allConstructables.Add(characterView);
 
             if (!photonView.IsMine) return;
+
+            gameObject.layer = Layers.PLAYER;
+            anim = GetComponent<Animator>();
 
             _allUpdatables.Add(new CharacterController(this));
             _movementController = new CharacterMovement(this, pelvisRb, pelvisRb.transform.localRotation);

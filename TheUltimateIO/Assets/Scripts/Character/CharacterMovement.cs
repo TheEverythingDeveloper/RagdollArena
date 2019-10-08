@@ -45,15 +45,17 @@ namespace Character
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 1 << Layers.FLOOR))
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity , 1 << Layers.FLOOR))
             {
+                if (Vector3.Distance(hit.point, _pelvisRb.transform.position) < 2) return;
                 _direction = (hit.point - _pelvisRb.transform.position).normalized;
-
                 _lookRotation = Quaternion.LookRotation(_direction);
                 _lookRotation *= _initialRot;
 
                 _pelvisRb.transform.localRotation = Quaternion.Slerp(
                     _pelvisRb.transform.localRotation, _lookRotation, Time.deltaTime * _myModel.rotationSpeed);
+
+                _pelvisRb.transform.localRotation = Quaternion.Euler(_initialRot.eulerAngles.x, _lookRotation.eulerAngles.y, _initialRot.eulerAngles.z);
             }
         }
 
@@ -61,6 +63,10 @@ namespace Character
         {
             var horAxis = Input.GetAxis("Horizontal") * _myModel.speed * Time.deltaTime;
             var verAxis = Input.GetAxis("Vertical") * _myModel.speed * Time.deltaTime;
+
+            var animMove = horAxis != 0 || verAxis != 0;
+            if (animMove != _myModel.anim.GetBool("Move")) _myModel.anim.SetBool("Move", animMove);
+
             _pelvisRb.velocity = new Vector3(horAxis, _pelvisRb.velocity.y, verAxis);
         }
 
