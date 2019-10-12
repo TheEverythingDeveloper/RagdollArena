@@ -38,8 +38,7 @@ namespace Character
         }
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject.layer == Layers.PLAYER && (_taken || !_activeTaken)) return;
-
+            if (collision.gameObject.layer == Layers.PLAYER || _taken || !_activeTaken) return;
             SpringJoint sp = gameObject.AddComponent<SpringJoint>();
             sp.connectedBody = collision.rigidbody;
             sp.spring = 12000;
