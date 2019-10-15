@@ -5106,6 +5106,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedBodyPart: 0
+--- !u!54 &2061846628 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 7590730435640764108, guid: a6992ea2750b94b4f8277546e57a044e,
+    type: 3}
+  m_PrefabInstance: {fileID: 8709166513393260165}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2078562934
 GameObject:
   m_ObjectHideFlags: 0
@@ -6163,5 +6169,10 @@ PrefabInstance:
       propertyPath: viewIdField
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2859030442111667815, guid: a6992ea2750b94b4f8277546e57a044e,
+        type: 3}
+      propertyPath: pelvisRb
+      value: 
+      objectReference: {fileID: 2061846628}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a6992ea2750b94b4f8277546e57a044e, type: 3}
