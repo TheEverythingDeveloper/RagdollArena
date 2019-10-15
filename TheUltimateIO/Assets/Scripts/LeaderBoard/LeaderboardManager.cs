@@ -53,6 +53,7 @@ namespace Leaderboard
                     }).ToList();
                 Debug.LogWarning("check  +  " + func.Count());
             }
+            UpdateOrder();
         }
 
         private void UpdateOrder()
