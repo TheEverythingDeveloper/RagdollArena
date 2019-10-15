@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class Point : MonoBehaviour
+public class Point : MonoBehaviourPun
 {
     public int points;
 
@@ -11,6 +12,7 @@ public class Point : MonoBehaviour
         if(other.gameObject.layer == Layers.CHARACTER || other.gameObject.layer == Layers.PLAYER)
         {
             other.GetComponentInParent<Character.CharacterModel>().AddPoint(points);
+            PhotonNetwork.Destroy(photonView);
         }
     }
 }

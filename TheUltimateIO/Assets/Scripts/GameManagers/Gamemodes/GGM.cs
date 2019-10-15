@@ -85,11 +85,16 @@ namespace Gamemodes
             }
             else
             {
-                newGameMode.gameObject.SetActive(true);
-                Debug.Log("Gamemode changed to " + newGameMode.gameModeName);
+                 newGameMode.gameObject.SetActive(true);
+                 Debug.Log("Gamemode changed to " + newGameMode.gameModeName);
 
-                if (_lvlManager) _lvlManager.NewGM(newGameMode);
-                else Debug.LogError("LevelManager null");
+                 if (_lvlManager) _lvlManager.NewGM(newGameMode);
+                 else
+                {
+                    _lvlManager = FindObjectOfType<LevelManager>();
+                    _lvlManager.NewGM(newGameMode);
+                }
+                //newGameMode.gameObject.SetActive(true);
                 //StartGameMode(newGameMode);
             }
         }
@@ -98,6 +103,7 @@ namespace Gamemodes
         {
             Debug.LogWarning("new mode: "+ newGM.gameModeName);
             actualGM = newGM;
+            actualGM.gameObject.SetActive(true);
             actualGM.OnGamemodeEnded += ChangeGeneralGamemode;
             actualGM.GamemodeActivation(true);
         }

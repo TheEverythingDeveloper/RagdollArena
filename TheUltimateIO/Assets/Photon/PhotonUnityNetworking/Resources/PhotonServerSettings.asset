@@ -48,5 +48,6 @@ MonoBehaviour:
   - RPCUpdateGMType
   - RPCChangeGMType
   - RPCUpdateGM
+  - RPCNewGameMode
   DisableAutoOpenWizard: 1
   ShowSettings: 1
