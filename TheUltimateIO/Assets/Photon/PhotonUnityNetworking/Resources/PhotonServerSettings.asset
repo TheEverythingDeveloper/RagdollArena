@@ -44,5 +44,9 @@ MonoBehaviour:
   - RPCUpdateLeaderboardTables
   - RPCUpdateAmountLeaderboardUserRank
   - RPCUpdateCrown
+  - RPCUpdateGameModeType
+  - RPCUpdateGMType
+  - RPCChangeGMType
+  - RPCUpdateGM
   DisableAutoOpenWizard: 1
   ShowSettings: 1

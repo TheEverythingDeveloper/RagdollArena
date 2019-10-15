@@ -62,7 +62,7 @@ public class NetManager : MonoBehaviourPunCallbacks
 
         if(SceneManager.GetActiveScene().name == "MainScene") 
         {
-           // FindObjectOfType<LevelManager>().UpdateAmountLeaderboardUserRank(false); //desconectarse del ranking
+            FindObjectOfType<LevelManager>().UpdateUserPoints(PhotonNetwork.NickName, Leaderboard.LeaderboardManager.REMOVE); //desconectarse del ranking
         }
     }
 }

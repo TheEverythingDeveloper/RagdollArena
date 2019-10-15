@@ -11,6 +11,7 @@ namespace Leaderboard
         LevelManager _lvlMng;
         public Dictionary<string, UserData> allUserData = new Dictionary<string, UserData>();
         public LeaderboardTable table;
+        public static int REMOVE;
 
         public LeaderboardManager(LevelManager lvlMng)
         {
@@ -19,14 +20,22 @@ namespace Leaderboard
 
         public void UpdateUserPoints(string newUserNickname, int addedPoints)
         {
-            if (allUserData.ContainsKey(newUserNickname))
+            if(addedPoints == REMOVE) //si es igual a 404 significa que entonces se fue de la partida
             {
-                allUserData[newUserNickname].points += addedPoints;
+                allUserData.Remove(newUserNickname);
             }
             else
             {
-                allUserData.Add(newUserNickname, new UserData(newUserNickname, addedPoints));
+                if (allUserData.ContainsKey(newUserNickname))
+                {
+                    allUserData[newUserNickname].points += addedPoints;
+                }
+                else
+                {
+                    allUserData.Add(newUserNickname, new UserData(newUserNickname, addedPoints));
+                }
             }
+
             Debug.Log(allUserData[newUserNickname].nickname + " :::: " + allUserData[newUserNickname].points);
 
             UpdateOrder();
