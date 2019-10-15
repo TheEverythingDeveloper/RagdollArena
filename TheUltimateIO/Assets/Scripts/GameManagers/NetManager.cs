@@ -61,7 +61,7 @@ public class NetManager : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
-        _lvlmng.RemoveUserLeaderboard();
+        //_lvlmng.RemoveUserLeaderboard();
         //_lvlmng.UpdateUserPoints(PhotonNetwork.NickName, Leaderboard.LeaderboardManager.REMOVE); //desconectarse del ranking
     }
 
