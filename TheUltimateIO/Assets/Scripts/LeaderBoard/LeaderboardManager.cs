@@ -16,6 +16,7 @@ namespace Leaderboard
         public LeaderboardManager(LevelManager lvlMng)
         {
             _lvlMng = lvlMng;
+            _enabled = true;
         }
 
         public void UpdateUserPoints(string newUserNickname, int addedPoints)
