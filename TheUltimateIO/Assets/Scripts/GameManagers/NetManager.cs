@@ -34,7 +34,6 @@ public class NetManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        _lvlmng = FindObjectOfType<LevelManager>();
         Debug.Log(PhotonNetwork.LocalPlayer.NickName + " has entered the room :" + PhotonNetwork.CurrentRoom + "!");
         PhotonNetwork.LoadLevel("MainScene");
         if (PhotonNetwork.CurrentRoom.PlayerCount <= 1) //es decir que somos el que creo el room
@@ -55,22 +54,5 @@ public class NetManager : MonoBehaviourPunCallbacks
     {
         Debug.LogWarning(returnCode + ": " + message);
         PhotonNetwork.CreateRoom(Random.Range(0, 9999).ToString(), new RoomOptions() { MaxPlayers = 19 });
-    }
-
-    private LevelManager _lvlmng;
-
-    public override void OnLeftRoom()
-    {
-        //_lvlmng.RemoveUserLeaderboard();
-        //_lvlmng.UpdateUserPoints(PhotonNetwork.NickName, Leaderboard.LeaderboardManager.REMOVE); //desconectarse del ranking
-    }
-
-    public override void OnDisconnected(DisconnectCause cause)
-    {
-        Debug.LogWarning(PhotonNetwork.LocalPlayer.NickName +
-            " has been disconnected from server for reason: " + cause.ToString());
-
-        _lvlmng.RemoveUserLeaderboard();
-        //_lvlmng.UpdateUserPoints(PhotonNetwork.NickName, Leaderboard.LeaderboardManager.REMOVE); //desconectarse del ranking
     }
 }

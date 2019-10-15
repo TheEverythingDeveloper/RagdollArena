@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using System;
+using Character;
 using System.Linq;
-using Random = UnityEngine.Random;
 
 namespace Leaderboard
 {
@@ -11,7 +11,7 @@ namespace Leaderboard
         LevelManager _lvlMng;
         public Dictionary<string, UserData> allUserData = new Dictionary<string, UserData>();
         public LeaderboardTable table;
-        public static int REMOVE = 404;
+        private bool _enabled;
 
         public LeaderboardManager(LevelManager lvlMng)
         {
@@ -20,25 +20,36 @@ namespace Leaderboard
 
         public void UpdateUserPoints(string newUserNickname, int addedPoints)
         {
-            if(addedPoints == REMOVE) //si es igual a 404 significa que entonces se fue de la partida
+            if (allUserData.ContainsKey(newUserNickname))
             {
-                allUserData.Remove(newUserNickname);
+                allUserData[newUserNickname].points += addedPoints;
             }
             else
             {
-                if (allUserData.ContainsKey(newUserNickname))
-                {
-                    allUserData[newUserNickname].points += addedPoints;
-                }
-                else
-                {
-                    allUserData.Add(newUserNickname, new UserData(newUserNickname, addedPoints));
-                }
+                allUserData.Add(newUserNickname, new UserData(newUserNickname, addedPoints));
             }
 
             Debug.Log(allUserData[newUserNickname].nickname + " :::: " + allUserData[newUserNickname].points);
 
             UpdateOrder();
+        }
+
+        public IEnumerator InactivePlayersCoroutine()
+        {
+            while (_enabled)
+            {
+                yield return new WaitForSeconds(5f);
+
+                //conseguir todos los charactermodel
+                var allCharacters = Object.FindObjectsOfType<CharacterModel>().Select(x => x.name).ToList();
+                var func = allUserData
+                    .Where(x => !allCharacters.Contains(x.Key))
+                    .Select(x =>
+                    {
+                        allUserData.Remove(x.Key);
+                        return x;
+                    }).ToList();
+            }
         }
 
         private void UpdateOrder()
