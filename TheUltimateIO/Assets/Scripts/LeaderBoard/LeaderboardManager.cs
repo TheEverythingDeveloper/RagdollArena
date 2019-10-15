@@ -20,7 +20,6 @@ namespace Leaderboard
 
         public void UpdateUserPoints(string newUserNickname, int addedPoints)
         {
-            Debug.LogError("ASDASDASDA   "+ addedPoints);
             if(addedPoints == REMOVE) //si es igual a 404 significa que entonces se fue de la partida
             {
                 allUserData.Remove(newUserNickname);
