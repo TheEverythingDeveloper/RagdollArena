@@ -66,6 +66,17 @@ public class LevelManager : MonoBehaviourPun
         _actualGMType = newType;
     }
 
+    public void NewGM(GameMode gm)
+    {
+        photonView.RPC("RPCNewGameMode", RpcTarget.All, gm);
+    }
+
+    [PunRPC]
+    private void RPCNewGameMode(GameMode gm)
+    {
+        Gamemodes.GGM.Instance.StartGameMode(gm);
+    }
+
     public void UpdateGM(params object[] allParams)
     { photonView.RPC("RPCUpdateGM", RpcTarget.All, allParams); }
 

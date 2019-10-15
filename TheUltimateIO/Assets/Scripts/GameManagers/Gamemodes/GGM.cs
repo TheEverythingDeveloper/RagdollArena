@@ -22,6 +22,7 @@ namespace Gamemodes
         private float _randomTime;
         public CharacterModel user;
 
+        LevelManager _lvlManager;
         private void Awake()
         {
             Instance = this;
@@ -38,6 +39,7 @@ namespace Gamemodes
                 return x;
             }).ToArray();
             ChangeGeneralGamemode();
+            _lvlManager = FindObjectOfType<LevelManager>();
         }
 
         private void Update()
@@ -61,7 +63,7 @@ namespace Gamemodes
 
         public void ChangeGamemode(GamemodeType gamemodeID)
         {
-            Debug.Log("Changing gamemode...");
+            Debug.LogWarning("Changing gamemode...");
             GameMode newGameMode = allGameModes[Mathf.Clamp((int)gamemodeID, 0,allGameModes.Count - 1)];
 
             if(actualGM != null)
@@ -85,13 +87,16 @@ namespace Gamemodes
             {
                 newGameMode.gameObject.SetActive(true);
                 Debug.Log("Gamemode changed to " + newGameMode.gameModeName);
-                StartGameMode(newGameMode);
+
+                if (_lvlManager) _lvlManager.NewGM(newGameMode);
+                else Debug.LogError("LevelManager null");
+                //StartGameMode(newGameMode);
             }
         }
 
         public void StartGameMode(GameMode newGM)
         {
-            Debug.Log(newGM.gameModeName);
+            Debug.LogWarning("new mode: "+ newGM.gameModeName);
             actualGM = newGM;
             actualGM.OnGamemodeEnded += ChangeGeneralGamemode;
             actualGM.GamemodeActivation(true);

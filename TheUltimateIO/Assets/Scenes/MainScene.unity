@@ -568,12 +568,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f502a34e5a33a2499810574d5b652d7, type: 3}
---- !u!1 &254150251 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5700020366393009551, guid: 113a8ae3c58df0448a28c9ef654babf6,
-    type: 3}
-  m_PrefabInstance: {fileID: 2115259864}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &269157004 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3474810834473331364, guid: 113a8ae3c58df0448a28c9ef654babf6,
@@ -632,7 +626,6 @@ MonoBehaviour:
   - {fileID: 2116884002}
   - {fileID: 202085042}
   - {fileID: 172761321}
-  - {fileID: 254150251}
   - {fileID: 691155612}
   editModeVisibileObjects: []
   editModeInvisibleObjects: []
@@ -4102,7 +4095,42 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4238039070346305822, guid: 113a8ae3c58df0448a28c9ef654babf6,
         type: 3}
+      propertyPath: allGameModes.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4238039070346305822, guid: 113a8ae3c58df0448a28c9ef654babf6,
+        type: 3}
       propertyPath: actualGM
+      value: 
+      objectReference: {fileID: 2115259865}
+    - target: {fileID: 4238039070346305822, guid: 113a8ae3c58df0448a28c9ef654babf6,
+        type: 3}
+      propertyPath: allGameModes.Array.data[0]
+      value: 
+      objectReference: {fileID: 2115259865}
+    - target: {fileID: 4238039070346305822, guid: 113a8ae3c58df0448a28c9ef654babf6,
+        type: 3}
+      propertyPath: allGameModes.Array.data[1]
+      value: 
+      objectReference: {fileID: 2115259865}
+    - target: {fileID: 4238039070346305822, guid: 113a8ae3c58df0448a28c9ef654babf6,
+        type: 3}
+      propertyPath: allGameModes.Array.data[2]
+      value: 
+      objectReference: {fileID: 2115259865}
+    - target: {fileID: 4238039070346305822, guid: 113a8ae3c58df0448a28c9ef654babf6,
+        type: 3}
+      propertyPath: allGameModes.Array.data[3]
+      value: 
+      objectReference: {fileID: 2115259865}
+    - target: {fileID: 4238039070346305822, guid: 113a8ae3c58df0448a28c9ef654babf6,
+        type: 3}
+      propertyPath: allGameModes.Array.data[4]
+      value: 
+      objectReference: {fileID: 2115259865}
+    - target: {fileID: 4238039070346305822, guid: 113a8ae3c58df0448a28c9ef654babf6,
+        type: 3}
+      propertyPath: allGameModes.Array.data[5]
       value: 
       objectReference: {fileID: 2115259865}
     m_RemovedComponents: []
