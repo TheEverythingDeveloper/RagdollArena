@@ -43,13 +43,15 @@ namespace Leaderboard
 
                 //conseguir todos los charactermodel
                 var allCharacters = Object.FindObjectsOfType<CharacterModel>().Select(x => x.name).ToList();
-                var func = allUserData
-                    .Where(x => !allCharacters.Contains(x.Key))
+                var allUserDataCopy = allUserData.Select(x => x.Key).ToList();
+                var func = allUserDataCopy
+                    .Where(x => !allCharacters.Contains(x))
                     .Select(x =>
                     {
-                        allUserData.Remove(x.Key);
+                        allUserData.Remove(x);
                         return x;
                     }).ToList();
+                Debug.LogWarning("check  +  " + func.Count());
             }
         }
 
