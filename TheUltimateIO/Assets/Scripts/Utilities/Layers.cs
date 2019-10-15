@@ -8,4 +8,5 @@ public class Layers : MonoBehaviour
     public static int RAGDOLL = 10;
     public static int CHARACTER = 11;
     public static int PLAYER = 12;
+    public static int POINT = 13;
 }

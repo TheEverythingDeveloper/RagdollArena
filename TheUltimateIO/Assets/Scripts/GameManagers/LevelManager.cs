@@ -37,6 +37,7 @@ public class LevelManager : MonoBehaviourPun
     public void RespawnRandom(Transform player)
     {
         player.position = new Vector3(Random.Range(minXPos, maxXPos), yPos, Random.Range(minZPos, maxZPos));
+        UpdateUserPoints(PhotonNetwork.NickName, -10);
     }
 
     public void UpdateUserPoints(string nickName, int addedPoints)

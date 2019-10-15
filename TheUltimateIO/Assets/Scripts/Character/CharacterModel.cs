@@ -33,6 +33,8 @@ namespace Character
         [Tooltip("Mientras mas bajo, mas va a quedar en el MinFoV. Caso contrario, del MaxFoV.")]
         public float ratioMultiplierFoV;
         public float sqrMagnitudeInTimeSpeed;
+        [Tooltip("Altura minima en la que el player debe volver")]
+        public float heightRespawn = -3f;
 
         public event Action<int> OnPointsUpdate = delegate { }; //se llama cada vez que ganamos o perdemos puntos
         public event Action OnJump = delegate { }; //se llama cada vez que saltamos
@@ -107,8 +109,20 @@ namespace Character
         }
         public void ArtificialAwakes() { _allConstructables.Select(x => { x.ArtificialAwake(); return x; }).ToList(); }
         public void ArtificialStart() { _allConstructables.Select(x => { x.ArtificialStart(); return x; }).ToList(); }
-        public void ArtificialUpdate() { _allUpdatables.Select(x => { x.ArtificialUpdate(); return x; }).ToList(); }
+        public void ArtificialUpdate() { _allUpdatables.Select(x => { x.ArtificialUpdate(); return x; }).ToList(); CheckHeight(); }
         public void ArtificialFixedUpdate() { _allUpdatables.Select(x => { x.ArtificialFixedUpdate(); return x; }).ToList(); }
         public void ArtificialLateUpdate() { _allUpdatables.Select(x => { x.ArtificialLateUpdate(); return x; }).ToList(); }
+
+        void CheckHeight()
+        {
+            if (pelvisRb.transform.position.y < heightRespawn)
+                _lvlMng.RespawnRandom(pelvisRb.transform);
+        }
+
+        public void AddPoint(int points)
+        {
+            _lvlMng.UpdateUserPoints(PhotonNetwork.NickName, points);
+        }
     }
+
 }
