@@ -26,8 +26,9 @@ namespace Gamemodes
         private void Awake()
         {
             Instance = this;
+            _lvlManager = FindObjectOfType<LevelManager>();
             _gameModePanel = transform.parent.GetComponentInChildren<GameModePanel>();
-            allGameModes = GetComponentsInChildren<GameMode>().ToList();
+            //allGameModes = GetComponentsInChildren<GameMode>().ToList();
             allGameModes.Add(null);
             allGameModes.Select(x =>
             {
@@ -39,7 +40,6 @@ namespace Gamemodes
                 return x;
             }).ToArray();
             ChangeGeneralGamemode();
-            _lvlManager = FindObjectOfType<LevelManager>();
         }
 
         private void Update()
