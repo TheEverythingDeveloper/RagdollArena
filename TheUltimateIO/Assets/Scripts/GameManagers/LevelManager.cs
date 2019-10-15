@@ -15,13 +15,14 @@ public class LevelManager : MonoBehaviourPun
     [SerializeField] private GameObject _myCamera;
     private LeaderboardManager _leaderboardMng;
     public LayerMask playerFriendsLayermask;
-
+    [Tooltip("Posiciones random de spawneo")]
+    public float minXPos, maxXPos, minZPos, maxZPos, yPos;
     public void ArtificialAwake()
     {
         Debug.Log("Starting Level Manager");
 
         var user = PhotonNetwork.Instantiate("User",
-            new Vector3(Random.Range(-2f, 2f), 1, Random.Range(-2f, 2f)), Quaternion.identity);
+            new Vector3(Random.Range(minXPos, maxXPos), yPos, Random.Range(minZPos, maxZPos)), Quaternion.identity);
         user.GetComponentInChildren<CharacterModel>().name = PhotonNetwork.NickName;
         user.GetComponentInChildren<Character3DUI>().photonView.RPC("RPCUpdateNickname", RpcTarget.AllBuffered, PhotonNetwork.NickName);
         GGM.Instance.user = user.GetComponentInChildren<CharacterModel>();
@@ -32,6 +33,11 @@ public class LevelManager : MonoBehaviourPun
             _leaderboardMng.table = FindObjectOfType<LeaderboardTable>();
 
         UpdateUserPoints(PhotonNetwork.NickName, 0);
+    }
+
+    public void RespawnRandom(Transform player)
+    {
+        player.position = new Vector3(Random.Range(minXPos, maxXPos), yPos, Random.Range(minZPos, maxZPos));
     }
 
     public void UpdateUserPoints(string nickName, int addedPoints)
