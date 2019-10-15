@@ -11,7 +11,7 @@ namespace Leaderboard
         LevelManager _lvlMng;
         public Dictionary<string, UserData> allUserData = new Dictionary<string, UserData>();
         public LeaderboardTable table;
-        public static int REMOVE;
+        public static int REMOVE = 404;
 
         public LeaderboardManager(LevelManager lvlMng)
         {
