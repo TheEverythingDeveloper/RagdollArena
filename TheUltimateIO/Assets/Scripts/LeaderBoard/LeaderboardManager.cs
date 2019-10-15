@@ -1,8 +1,8 @@
-﻿using System.Collections;
+﻿using Character;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using Character;
 using System.Linq;
+using UnityEngine;
 
 namespace Leaderboard
 {
@@ -52,8 +52,8 @@ namespace Leaderboard
                         return x;
                     }).ToList();
                 Debug.LogWarning("check  +  " + func.Count());
+                UpdateOrder();
             }
-            UpdateOrder();
         }
 
         private void UpdateOrder()
