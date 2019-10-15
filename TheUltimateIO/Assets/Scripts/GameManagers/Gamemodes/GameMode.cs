@@ -10,6 +10,8 @@ namespace Gamemodes
     {
         public string gameModeName = "GenericGameMode";
         public Action OnGamemodeEnded = delegate { };
+        [Tooltip("Cantidad de puntos que va a ganar cuando gane el modo")] public int winningPoints;
+        [Tooltip("Cantidad de puntos que va a perder cuando pierda el modo")] public int loosingPoints;
 
         public abstract void ArtificialUpdate();
         public abstract void GamemodeActivation(bool on);

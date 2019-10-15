@@ -34,6 +34,7 @@ namespace Character
         public float ratioMultiplierFoV;
         public float sqrMagnitudeInTimeSpeed;
 
+        public event Action<int> OnPointsUpdate = delegate { }; //se llama cada vez que ganamos o perdemos puntos
         public event Action OnJump = delegate { }; //se llama cada vez que saltamos
         public event Action<bool> OnCrowned = delegate { }; //se llama cuando agarramos la corona o perdemos la corona
         public Func<int> GetActiveModeValue; //Va a conseguir el valor importante del modo de juego actual (amigos, puntos, etc)
@@ -84,6 +85,7 @@ namespace Character
                 Gizmos.DrawWireSphere(pelvisRb.transform.position, contactRadius);
         }
 
+        public void UpdatePoints(int addedPoints) => OnPointsUpdate(addedPoints);
         public void Crowned(bool on) => OnCrowned(on);
         public void TryJump() { if (_movementController.inAir) return; OnJump(); }
 

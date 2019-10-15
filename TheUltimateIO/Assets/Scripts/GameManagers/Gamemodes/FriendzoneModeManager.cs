@@ -1,12 +1,11 @@
-﻿using TMPro;
-using UnityEngine;
-using System.Collections.Generic;
-using Utilities;
-using System;
+﻿using Photon.Pun;
 using Sirenix.OdinInspector;
-using Photon.Pun;
-using Photon;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using TMPro;
+using UnityEngine;
+using Utilities;
 using Random = UnityEngine.Random;
 
 namespace Gamemodes
@@ -31,6 +30,7 @@ namespace Gamemodes
         [Tooltip("Basicamente, el tiempo total de cada oleada")]
         public float waveTime;
         private float _waveTotalTime;
+        private bool _isOnFriendsRange; // si cumple esto significa que esta en el rango correcto
 
         //Waves Variables
         [TableMatrix(HorizontalTitle = "All Combinations Matrix", SquareCells = true)]
@@ -80,11 +80,14 @@ namespace Gamemodes
         {
             if (!_gameModeOn) return;
 
-            if(_timeMng != null)
+            if (_timeMng != null)
                 _timeMng.ArtificialUpdate();
 
             //Debug.Log(GGM.Instance.user.GetActiveModeValue() +" is the amount of friends");
-            _actualFriendsText.text = GGM.Instance.user.GetActiveModeValue().ToString();
+            var actualFriends = GGM.Instance.user.GetActiveModeValue();
+            _actualFriendsText.text = actualFriends.ToString();
+            _isOnFriendsRange = actualFriends >= actualCombination.Item1 && actualFriends <= actualCombination.Item2;
+            _actualFriendsText.color = _isOnFriendsRange ? Color.green : Color.red;
         }
 
         protected override void StartGameMode()
@@ -132,6 +135,9 @@ namespace Gamemodes
 
         protected override void StopGameMode()
         {
+            //actualizar puntos al jugador
+            GGM.Instance.user.UpdatePoints(_isOnFriendsRange ? winningPoints : loosingPoints);
+
             _myTimebar.transform.parent.gameObject.SetActive(false);
             Debug.Log("Termino el modo FriendZone");
             _timeMng.PauseTimer(true);
