@@ -56,7 +56,7 @@ namespace Gamemodes
 
         public void ChangeGeneralGamemode()
         {
-
+            ChangeGamemode(GamemodeType.FriendzoneGM);
         }
 
         public void ChangeGamemode(GamemodeType gamemodeID)
@@ -93,7 +93,7 @@ namespace Gamemodes
         {
             Debug.Log(newGM.gameModeName);
             actualGM = newGM;
-            actualGM.OnGamemodeEnded += ChangeGamemode;
+            actualGM.OnGamemodeEnded += ChangeGeneralGamemode;
             actualGM.GamemodeActivation(true);
         }
     }
