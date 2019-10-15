@@ -37,7 +37,7 @@ namespace Gamemodes
                 }
                 return x;
             }).ToArray();
-            ChangeGamemode();
+            ChangeGeneralGamemode();
         }
 
         private void Update()
@@ -54,10 +54,15 @@ namespace Gamemodes
             Debug.Log("Free Time: " + (_randomTime - actualTime));
         }
 
-        public void ChangeGamemode()
+        public void ChangeGeneralGamemode()
+        {
+
+        }
+
+        public void ChangeGamemode(GamemodeType gamemodeID)
         {
             Debug.Log("Changing gamemode...");
-            GameMode newGameMode = allGameModes[Random.Range(0, allGameModes.Count)];
+            GameMode newGameMode = allGameModes[Mathf.Clamp((int)gamemodeID, 0,allGameModes.Count - 1)];
 
             if(actualGM != null)
             {
@@ -71,7 +76,7 @@ namespace Gamemodes
                 _randomTime = Random.Range(4f, 10f);
                 _timeMng = new TimeManager(_randomTime);
                 _timeMng.OnTimeUpdate += OnFreeTimeUpdate;
-                _timeMng.OnFinishedTimer += ChangeGamemode;
+                _timeMng.OnFinishedTimer += ChangeGeneralGamemode;
                 Debug.Log("Changed gamemode to nothing for : " + _randomTime);
                 _gameModePanel.SetGameModeText("FREE TIME!");
                 actualGM = null;

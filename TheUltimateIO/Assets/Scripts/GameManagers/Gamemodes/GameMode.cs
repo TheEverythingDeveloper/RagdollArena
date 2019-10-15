@@ -10,6 +10,7 @@ namespace Gamemodes
     {
         public string gameModeName = "GenericGameMode";
         public Action OnGamemodeEnded = delegate { };
+        public GamemodeType gamemodeType;
         [Tooltip("Cantidad de puntos que va a ganar cuando gane el modo")] public int winningPoints;
         [Tooltip("Cantidad de puntos que va a perder cuando pierda el modo")] public int loosingPoints;
 
@@ -20,6 +21,12 @@ namespace Gamemodes
 
         public virtual void ArtificialFixedUpdate() { }
         public virtual void ArtificialLateUpdate() { }
+    }
+
+    public enum GamemodeType
+    {
+        None = 0,
+        FriendzoneGM = 1
     }
 }
 

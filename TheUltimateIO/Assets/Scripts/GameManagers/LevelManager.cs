@@ -1,11 +1,10 @@
 ﻿using Character;
+using Gamemodes;
+using Leaderboard;
 using Photon.Pun;
 using Sirenix.OdinInspector;
-using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using Leaderboard;
-using Gamemodes;
 
 public class LevelManager : MonoBehaviourPun
 {
@@ -29,7 +28,7 @@ public class LevelManager : MonoBehaviourPun
 
         _leaderboardMng = new LeaderboardManager(this);
 
-        if(photonView.IsMine)
+        if (photonView.IsMine)
             _leaderboardMng.table = FindObjectOfType<LeaderboardTable>();
 
         UpdateUserPoints(PhotonNetwork.NickName, 0);
@@ -53,6 +52,34 @@ public class LevelManager : MonoBehaviourPun
     [PunRPC]
     private void RPCUpdateLeaderboardTables(string[] names, int[] points)
     { _leaderboardMng.UpdateTableInfo(names, points); }
+
+    private GamemodeType _actualGMType;
+    public void ChangeGMType(GamemodeType newType)
+    { photonView.RPC("RPCChangeGMType", RpcTarget.MasterClient, newType); }
+
+    [PunRPC]
+    private void RPCChangeGMType(GamemodeType newType)
+    { 
+        _actualGMType = newType;
+    }
+
+    public void UpdateGM(params object[] allParams)
+    { photonView.RPC("RPCUpdateGM", RpcTarget.All, allParams); }
+
+    [PunRPC]
+    public void RPCUpdateGM(params object[] allParams)
+    {
+        switch (_actualGMType)
+        {
+            case GamemodeType.None:
+                break;
+            case GamemodeType.FriendzoneGM:
+                break;
+            default:
+                break;
+        }
+    }
+
 
     private void Update()
     {
