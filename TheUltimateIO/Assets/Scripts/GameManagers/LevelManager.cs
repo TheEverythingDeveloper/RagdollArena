@@ -39,7 +39,11 @@ public class LevelManager : MonoBehaviourPun
         player.position = new Vector3(Random.Range(minXPos, maxXPos), yPos, Random.Range(minZPos, maxZPos));
         UpdateUserPoints(PhotonNetwork.NickName, -10);
     }
-
+    public void RemoveUserLeaderboard()
+    {
+        Debug.Log(PhotonNetwork.NickName + " se fue de la partida.");
+        _leaderboardMng.UpdateUserPoints(PhotonNetwork.NickName, Leaderboard.LeaderboardManager.REMOVE);
+    }
     public void UpdateUserPoints(string nickName, int addedPoints)
     { photonView.RPC("RPCUpdateUserPoints", RpcTarget.MasterClient, nickName, addedPoints); }
 

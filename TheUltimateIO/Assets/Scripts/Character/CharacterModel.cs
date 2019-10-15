@@ -122,6 +122,7 @@ namespace Character
         public void AddPoint(int points)
         {
             _lvlMng.UpdateUserPoints(PhotonNetwork.NickName, points);
+
         }
     }
 

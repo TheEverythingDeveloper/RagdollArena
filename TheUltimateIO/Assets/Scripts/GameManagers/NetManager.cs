@@ -61,7 +61,8 @@ public class NetManager : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
-        _lvlmng.UpdateUserPoints(PhotonNetwork.NickName, Leaderboard.LeaderboardManager.REMOVE); //desconectarse del ranking
+        _lvlmng.RemoveUserLeaderboard();
+        //_lvlmng.UpdateUserPoints(PhotonNetwork.NickName, Leaderboard.LeaderboardManager.REMOVE); //desconectarse del ranking
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -69,6 +70,7 @@ public class NetManager : MonoBehaviourPunCallbacks
         Debug.LogWarning(PhotonNetwork.LocalPlayer.NickName +
             " has been disconnected from server for reason: " + cause.ToString());
 
-       _lvlmng.UpdateUserPoints(PhotonNetwork.NickName, Leaderboard.LeaderboardManager.REMOVE); //desconectarse del ranking
+        _lvlmng.RemoveUserLeaderboard();
+        //_lvlmng.UpdateUserPoints(PhotonNetwork.NickName, Leaderboard.LeaderboardManager.REMOVE); //desconectarse del ranking
     }
 }
