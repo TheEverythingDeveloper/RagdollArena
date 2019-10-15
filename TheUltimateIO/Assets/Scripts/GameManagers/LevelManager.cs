@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using Leaderboard;
+using Gamemodes;
 
 public class LevelManager : MonoBehaviourPun
 {
@@ -13,6 +14,7 @@ public class LevelManager : MonoBehaviourPun
     [ShowIf("ShowIfOffline", true, true)]
     [SerializeField] private GameObject _myCamera;
     private LeaderboardManager _leaderboardMng;
+    public LayerMask playerFriendsLayermask;
 
     public void ArtificialAwake()
     {
@@ -22,6 +24,7 @@ public class LevelManager : MonoBehaviourPun
             new Vector3(Random.Range(-2f, 2f), 1, Random.Range(-2f, 2f)), Quaternion.identity);
         user.GetComponentInChildren<CharacterModel>().name = PhotonNetwork.NickName;
         user.GetComponentInChildren<Character3DUI>().photonView.RPC("RPCUpdateNickname", RpcTarget.AllBuffered, PhotonNetwork.NickName);
+        GGM.Instance.user = user.GetComponentInChildren<CharacterModel>();
 
         _leaderboardMng = new LeaderboardManager(this);
 

@@ -47,6 +47,9 @@ MonoBehaviour:
   offlineMode: 0
   _myCamera: {fileID: 8916013261022743022, guid: c44d1b27258ad4844b84351f150f19ca,
     type: 3}
+  playerFriendsLayermask:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!114 &968
 MonoBehaviour:
   m_ObjectHideFlags: 0

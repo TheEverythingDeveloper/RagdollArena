@@ -12,11 +12,14 @@ namespace Character
         private List<IConstructable> _allConstructables = new List<IConstructable>();
         private CharacterMovement _movementController;
 
+        private LevelManager _lvlMng;
         public string nickname;
         public Rigidbody pelvisRb;
         public Animator anim;
         private Color _color;
         private Renderer[] _allMyRenderers;
+        [Tooltip("Radio que va a tener el jugador para comprobar cosas como cuantos amigos tiene alrededor, etc")]
+        public float contactRadius = 4f;
         public float speed = 60f;
         public float jumpSpeed = 200f;
         public float rotationSpeed = 2f;
@@ -33,9 +36,12 @@ namespace Character
 
         public event Action OnJump = delegate { }; //se llama cada vez que saltamos
         public event Action<bool> OnCrowned = delegate { }; //se llama cuando agarramos la corona o perdemos la corona
+        public Func<int> GetActiveModeValue; //Va a conseguir el valor importante del modo de juego actual (amigos, puntos, etc)
 
         private void Awake()
         {
+            _lvlMng = FindObjectOfType<LevelManager>();
+
             _allMyRenderers = GetComponentsInChildren<Renderer>();
 
             var characterView = new CharacterView(this);
@@ -58,7 +64,8 @@ namespace Character
             _allConstructables.Add(_movementController);
             _allUpdatables.Add(_movementController);
             _allUpdatables.Add(new CharacterCamera(this, pelvisRb));
-            _allUpdatables.Add(new CharacterPointsManager(this, FindObjectOfType<LevelManager>(), PhotonNetwork.NickName));
+            _allUpdatables.Add(new CharacterPointsManager(this, _lvlMng, PhotonNetwork.NickName));
+            _allUpdatables.Add(new CharacterFriendsManager(this, _lvlMng.playerFriendsLayermask));
 
             var colorA = _allMyRenderers[0].material.GetColor("_ColorA");
             var colorB = _allMyRenderers[0].material.GetColor("_ColorB");
@@ -69,6 +76,12 @@ namespace Character
                 new float[] { colorC.r, colorC.g, colorC.b });
 
             ArtificialAwakes();
+        }
+
+        private void OnDrawGizmos()
+        {
+            if(pelvisRb != null)
+                Gizmos.DrawWireSphere(pelvisRb.transform.position, contactRadius);
         }
 
         public void Crowned(bool on) => OnCrowned(on);

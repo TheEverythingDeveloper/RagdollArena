@@ -5,6 +5,7 @@ using System;
 using Random = UnityEngine.Random;
 using System.Linq;
 using Utilities;
+using Character;
 
 namespace Gamemodes
 {
@@ -13,14 +14,17 @@ namespace Gamemodes
     /// </summary>
     public class GGM : MonoBehaviour
     {
+        public static GGM Instance; //singleton porque solo va a haber un GGM si o si
         public List<GameMode> allGameModes = new List<GameMode>();
         public GameMode actualGM;
         private GameModePanel _gameModePanel;
         private TimeManager _timeMng;
         private float _randomTime;
+        public CharacterModel user;
 
         private void Awake()
         {
+            Instance = this;
             _gameModePanel = transform.parent.GetComponentInChildren<GameModePanel>();
             allGameModes = GetComponentsInChildren<GameMode>().ToList();
             allGameModes.Add(null);

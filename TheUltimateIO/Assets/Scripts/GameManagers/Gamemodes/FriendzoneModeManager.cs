@@ -40,21 +40,11 @@ namespace Gamemodes
         {
             allCombinations = new List<Tuple<int, int>>
             {
-                new Tuple<int, int>(0,0),
-                new Tuple<int, int>(1,1),
-                new Tuple<int, int>(1,2),
-                new Tuple<int, int>(2,2),
-                new Tuple<int, int>(2,4),
-                new Tuple<int, int>(2,5),
-                new Tuple<int, int>(3,3),
-                new Tuple<int, int>(3,4),
-                new Tuple<int, int>(3,5),
-                new Tuple<int, int>(4,4),
-                new Tuple<int, int>(4,5),
-                new Tuple<int, int>(4,6),
-                new Tuple<int, int>(5,7),
-                new Tuple<int, int>(5,8),
-                new Tuple<int, int>(5,10)
+                new Tuple<int, int>(0,0), new Tuple<int, int>(1,1), new Tuple<int, int>(1,2),
+                new Tuple<int, int>(2,2), new Tuple<int, int>(2,4), new Tuple<int, int>(2,5),
+                new Tuple<int, int>(3,3), new Tuple<int, int>(3,4), new Tuple<int, int>(3,5),
+                new Tuple<int, int>(4,4), new Tuple<int, int>(4,5), new Tuple<int, int>(4,6),
+                new Tuple<int, int>(5,7), new Tuple<int, int>(5,8), new Tuple<int, int>(5,10)
             };
             actualCombination = allCombinations[4];
             _waveTotalTime = waveTime;
@@ -90,7 +80,11 @@ namespace Gamemodes
         {
             if (!_gameModeOn) return;
 
-            _timeMng.ArtificialUpdate();
+            if(_timeMng != null)
+                _timeMng.ArtificialUpdate();
+
+            //Debug.Log(GGM.Instance.user.GetActiveModeValue() +" is the amount of friends");
+            _actualFriendsText.text = GGM.Instance.user.GetActiveModeValue().ToString();
         }
 
         protected override void StartGameMode()
@@ -107,7 +101,8 @@ namespace Gamemodes
         private void SetCombinations()
         {
             //setear los valores de rango del modo de juego
-            var newCombinations = allCombinations.Where(x => x.Item2 <= PhotonNetwork.CurrentRoom.PlayerCount).ToList();
+            var amountOfPlayers = PhotonNetwork.CurrentRoom.PlayerCount;
+            var newCombinations = allCombinations.Where(x => x.Item2 <= amountOfPlayers).ToList();
             if (newCombinations.Count >= 1)
                 actualCombination = newCombinations[Random.Range(0, newCombinations.Count)];
             _minFriendsText.text = actualCombination.Item1.ToString();
