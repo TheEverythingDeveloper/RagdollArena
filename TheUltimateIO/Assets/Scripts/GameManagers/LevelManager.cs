@@ -66,15 +66,16 @@ public class LevelManager : MonoBehaviourPun
         _actualGMType = newType;
     }
 
-    public void NewGM(GameMode gm)
+    public void NewGM(GamemodeType gameModeTypeID)
     {
-        photonView.RPC("RPCNewGameMode", RpcTarget.All, gm);
+        int ID = (int)gameModeTypeID;
+        photonView.RPC("RPCNewGameMode", RpcTarget.AllBuffered, ID);
     }
 
     [PunRPC]
-    private void RPCNewGameMode(GameMode gm)
+    private void RPCNewGameMode(int gameModeTypeID)
     {
-        Gamemodes.GGM.Instance.StartGameMode(gm);
+        GGM.Instance.StartGameMode(gameModeTypeID);
     }
 
     public void UpdateGM(params object[] allParams)

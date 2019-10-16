@@ -28,13 +28,13 @@ namespace Gamemodes
             Instance = this;
             _lvlManager = FindObjectOfType<LevelManager>();
             _gameModePanel = transform.parent.GetComponentInChildren<GameModePanel>();
-            //allGameModes = GetComponentsInChildren<GameMode>().ToList();
+            allGameModes = GetComponentsInChildren<GameMode>().ToList();
             allGameModes.Add(null);
             allGameModes.Select(x =>
             {
                 if(x != null)
                 {
-                    Debug.Log("Gamemode: " + x.gameModeName);
+                    Debug.LogWarning("Gamemode: " + x.gameModeName);
                     x.gameObject.SetActive(false);
                 }
                 return x;
@@ -88,21 +88,22 @@ namespace Gamemodes
                  newGameMode.gameObject.SetActive(true);
                  Debug.Log("Gamemode changed to " + newGameMode.gameModeName);
 
-                 if (_lvlManager) _lvlManager.NewGM(newGameMode);
+                if (_lvlManager) _lvlManager.NewGM(newGameMode.gamemodeType);
                  else
                 {
                     _lvlManager = FindObjectOfType<LevelManager>();
-                    _lvlManager.NewGM(newGameMode);
+                    _lvlManager.NewGM(newGameMode.gamemodeType);
                 }
                 //newGameMode.gameObject.SetActive(true);
                 //StartGameMode(newGameMode);
             }
         }
 
-        public void StartGameMode(GameMode newGM)
+        public void StartGameMode(int gameModeTypeID)
         {
-            Debug.LogWarning("new mode: "+ newGM.gameModeName);
-            actualGM = newGM;
+            Debug.LogWarning("new mode: "+ gameModeTypeID);
+
+            actualGM = allGameModes[gameModeTypeID];
             actualGM.gameObject.SetActive(true);
             actualGM.OnGamemodeEnded += ChangeGeneralGamemode;
             actualGM.GamemodeActivation(true);
