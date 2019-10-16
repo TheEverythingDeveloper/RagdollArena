@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 2434608017379718049}
   - component: {fileID: 2434608017379718055}
   - component: {fileID: 2434608017379718054}
-  m_Layer: 13
+  m_Layer: 14
   m_Name: Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,6 +191,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: d2001a0367d72c9449dea3c050b35e04, type: 3}
       propertyPath: m_Name
       value: bush_2_autumn_pal
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: d2001a0367d72c9449dea3c050b35e04, type: 3}
+      propertyPath: m_Layer
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: d2001a0367d72c9449dea3c050b35e04, type: 3}
       propertyPath: m_LocalPosition.x
