@@ -21,6 +21,7 @@ public class LevelManager : MonoBehaviourPun
     public void ArtificialAwake()
     {
         Debug.Log("Starting Level Manager");
+        pointsSpawn = GameObject.Find("AllSpawnPoint");
         _points.AddRange(GetComponentsInChildren<Transform>());
         var user = PhotonNetwork.Instantiate("User",
             PositionRandom(), Quaternion.identity);
