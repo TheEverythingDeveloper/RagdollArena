@@ -258,6 +258,7 @@ MonoBehaviour:
   playersLayermask:
     serializedVersion: 2
     m_Bits: 1024
+  heightDestroy: -5
 --- !u!65 &466286050006121857
 BoxCollider:
   m_ObjectHideFlags: 0
