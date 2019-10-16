@@ -37,7 +37,10 @@ namespace Character
                 if (_taken)
                 {
                     if(sp && sp.connectedBody)
+                    {
+                        photonView.ObservedComponents.Remove(sp);
                         sp.connectedBody.AddForce((sp.connectedBody.transform.position - myModel.pelvisRb.transform.position).normalized * myModel.pushForce, ForceMode.Impulse);
+                    }
 
                     DestroyImmediate(GetComponent<SpringJoint>());
                     _taken = false;
@@ -51,10 +54,14 @@ namespace Character
             sp.connectedBody = collision.rigidbody;
             sp.spring = 12000;
             sp.breakForce = 4000;
+            photonView.ObservedComponents.Add(sp);
             _taken = true;
         }
         private void OnJointBreak(float breakForce)
         {
+            if (sp)
+                photonView.ObservedComponents.Remove(sp);
+
             _taken = false;
         }
     }
