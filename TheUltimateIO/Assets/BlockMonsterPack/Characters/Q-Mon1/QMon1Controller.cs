@@ -47,9 +47,12 @@ public class QMon1Controller : MonoBehaviour
             else
                 actualTarget = null;
 
+            NearCollidersExtraMethod(nearCharacters);
             yield return new WaitForSeconds(randomTime);
         }
     }
+
+    protected virtual void NearCollidersExtraMethod(List<Collider> nearColliders) { }
 
     private void Update()
     {
