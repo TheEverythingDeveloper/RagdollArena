@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7646fb352ff04c44b9538164b180c394, type: 3}
+  m_Name: Barriles noise_IE 1
+  m_EditorClassIdentifier: 
+  actualRadiusLayer:
+    serializedVersion: 2
+    m_Bits: 513
+  implosiveSpeed: 0
+  active: 0
+  randomNoise: 7.8761845
+  outerTransform: {fileID: 0}
+  innerTransform: {fileID: 0}
+  outerRadius: 57.896088
+  innerRadius: 5.9750166
+  affectYAxis: 0
+  nonSelectedObjectMaterial: {fileID: 2100000, guid: 84f640ef12452fc418e09fcde870e6ee,
+    type: 2}
+  selectedObjectMaterial: {fileID: 2100000, guid: f6a0da41da6e9504aa72fc16bcb99a94,
+    type: 2}
+  distanceGradient: 1
+  nearColor: {r: 1, g: 0, b: 0.12061596, a: 1}
+  middleColor: {r: 0.5, g: 0.027290821, b: 0.560308, a: 1}
+  farColor: {r: 0, g: 0.054581642, b: 1, a: 1}
