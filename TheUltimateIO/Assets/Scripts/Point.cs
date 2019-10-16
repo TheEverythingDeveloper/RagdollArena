@@ -6,12 +6,11 @@ using Photon.Pun;
 public class Point : MonoBehaviourPun
 {
     public int points;
-
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        if(other.gameObject.layer == Layers.CHARACTER || other.gameObject.layer == Layers.PLAYER)
+        if (collision.gameObject.layer == Layers.CHARACTER || collision.gameObject.layer == Layers.PLAYER)
         {
-            other.GetComponentInParent<Character.CharacterModel>().AddPoint(points);
+            collision.gameObject.GetComponentInParent<Character.CharacterModel>().AddPoint(points);
             PhotonNetwork.Destroy(gameObject);
         }
     }
