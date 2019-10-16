@@ -36,7 +36,7 @@ namespace Character
                 activeTaken = false;
                 if (_taken)
                 {
-                    if(sp)
+                    if(sp && sp.connectedBody)
                         sp.connectedBody.AddForce((sp.connectedBody.transform.position - myModel.pelvisRb.transform.position).normalized * myModel.pushForce, ForceMode.Impulse);
 
                     DestroyImmediate(GetComponent<SpringJoint>());
