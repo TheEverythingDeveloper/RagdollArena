@@ -41,23 +41,35 @@ namespace Character
                         sp.connectedBody.AddForce((sp.connectedBody.transform.position - myModel.pelvisRb.transform.position).normalized * myModel.pushForce, ForceMode.Impulse);
                     }
 
-                    DestroyImmediate(GetComponent<SpringJoint>());
-                    _taken = false;
+                    RPCRemoveSP();
                 }
             }
         }
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.gameObject.layer == Layers.PLAYER || _taken || !activeTaken) return;
+            RPCAddSP(collision);
+        }
+        [PunRPC]
+        void RPCAddSP(Collision col)
+        {
             sp = gameObject.AddComponent<SpringJoint>();
-            sp.connectedBody = collision.rigidbody;
+            sp.connectedBody = col.rigidbody;
             sp.spring = 12000;
             sp.breakForce = 4000;
             _taken = true;
         }
+        [PunRPC]
+        void RPCRemoveSP()
+        {
+            if(GetComponent<SpringJoint>())
+                DestroyImmediate(GetComponent<SpringJoint>());
+
+            _taken = false;
+        }
         private void OnJointBreak(float breakForce)
         {
-            _taken = false;
+            RPCRemoveSP();
         }
     }
 }

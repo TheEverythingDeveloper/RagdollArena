@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.4964127, b: 0.57481724, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -123,6 +123,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SelectableBodyPart (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2090030107564629052, guid: 8692c308d4ef72f49ad0b869f0cb23ce,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3366829450498705765, guid: 8692c308d4ef72f49ad0b869f0cb23ce,
         type: 3}
@@ -1175,7 +1180,7 @@ PrefabInstance:
     - target: {fileID: 7361207624729106105, guid: 8692c308d4ef72f49ad0b869f0cb23ce,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7361207624729106105, guid: 8692c308d4ef72f49ad0b869f0cb23ce,
         type: 3}
@@ -1195,7 +1200,7 @@ PrefabInstance:
     - target: {fileID: 7361207624729106105, guid: 8692c308d4ef72f49ad0b869f0cb23ce,
         type: 3}
       propertyPath: m_text
-      value: Hair
+      value: Shirt
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8692c308d4ef72f49ad0b869f0cb23ce, type: 3}
@@ -2753,7 +2758,7 @@ PrefabInstance:
     - target: {fileID: 7361207624729106105, guid: 8692c308d4ef72f49ad0b869f0cb23ce,
         type: 3}
       propertyPath: m_text
-      value: Shirt
+      value: Pants
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8692c308d4ef72f49ad0b869f0cb23ce, type: 3}
