@@ -11,6 +11,7 @@ namespace Character
         private List<IUpdatable> _allUpdatables = new List<IUpdatable>();
         private List<IConstructable> _allConstructables = new List<IConstructable>();
         private CharacterMovement _movementController;
+        public GameObject _ragdollCapsule;
 
         private LevelManager _lvlMng;
         public string nickname;
@@ -57,6 +58,7 @@ namespace Character
             allChilds.Select(x =>
             {
                 x.gameObject.layer = Layers.PLAYER;
+                _ragdollCapsule.layer = Layers.RAGDOLL;
                 return x;
             }).ToList();
 

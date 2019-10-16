@@ -251,6 +251,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
+  pushForce: 60
   _model: {fileID: 44974260}
   actualTarget: {fileID: 0}
   viewRadius: 10.63

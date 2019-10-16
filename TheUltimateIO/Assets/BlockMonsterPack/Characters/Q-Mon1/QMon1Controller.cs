@@ -9,6 +9,7 @@ public class QMon1Controller : MonoBehaviour
     private Animator _anim;
     private Rigidbody _rb;
     public float speed;
+    public float pushForce;
     public GameObject _model;
     public Transform actualTarget;
     public float viewRadius;
@@ -19,6 +20,16 @@ public class QMon1Controller : MonoBehaviour
         _anim = GetComponent<Animator>();
         _rb = GetComponent<Rigidbody>();
         StartCoroutine(GetNearestPlayerCoroutine(Random.Range(0.5f,4f)));
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        var model = collision.gameObject.GetComponentInParent<CharacterModel>();
+        if(model != null)
+        {
+            Debug.LogWarning("choco contra el jugador");
+            model.pelvisRb.AddForce((model.pelvisRb.transform.position - transform.position).normalized * pushForce, ForceMode.Impulse);
+        }
     }
 
     private IEnumerator GetNearestPlayerCoroutine(float randomTime)
