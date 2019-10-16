@@ -2468,7 +2468,7 @@ Transform:
   m_LocalScale: {x: 2.6275275, y: 3.361041, z: 5.8767805}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &116023515
 PrefabInstance:
@@ -4868,6 +4868,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TestUncontrollablePlayer (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2764526258223918627, guid: 7f502a34e5a33a2499810574d5b652d7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2764526258223918779, guid: 7f502a34e5a33a2499810574d5b652d7,
         type: 3}
@@ -9407,7 +9412,7 @@ Transform:
   m_Children:
   - {fileID: 561657922}
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &420443132
 PrefabInstance:
@@ -11025,7 +11030,7 @@ Transform:
   - {fileID: 435866132}
   - {fileID: 1630025617}
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &474318607
 PrefabInstance:
@@ -11171,7 +11176,7 @@ Transform:
   m_LocalScale: {x: 3.361041, y: 3.361041, z: 0.87435615}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!64 &487359639
 MeshCollider:
@@ -12480,7 +12485,7 @@ Transform:
   - {fileID: 863739525}
   - {fileID: 925153893}
   m_Father: {fileID: 0}
-  m_RootOrder: 19
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &538599598
 PrefabInstance:
@@ -15265,7 +15270,7 @@ Transform:
   m_LocalScale: {x: 3.361041, y: 3.361041, z: 1.1784573}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 18
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!64 &661756242
 MeshCollider:
@@ -18104,7 +18109,7 @@ Transform:
   - {fileID: 1924966199}
   - {fileID: 57535327}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &779940303
 PrefabInstance:
@@ -27083,12 +27088,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   namePrefabResource: Q-Mon1
   minTimeSpawn: 3
-  maxTimeSpawn: 5
-  minX: -10
-  maxX: 10
+  maxTimeSpawn: 30
+  minX: -50
+  maxX: 50
   y: 5
-  minZ: -10
-  maxZ: 10
+  minZ: -50
+  maxZ: 50
 --- !u!4 &1166344087
 Transform:
   m_ObjectHideFlags: 0
@@ -27958,7 +27963,7 @@ Transform:
   m_LocalScale: {x: 2.857826, y: 3.361041, z: 5.8767805}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1209758339
 GameObject:
@@ -28965,6 +28970,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TestUncontrollablePlayer (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2764526258223918627, guid: 7f502a34e5a33a2499810574d5b652d7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2764526258223918779, guid: 7f502a34e5a33a2499810574d5b652d7,
         type: 3}
@@ -30811,6 +30821,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TestUncontrollablePlayer (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2764526258223918627, guid: 7f502a34e5a33a2499810574d5b652d7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2764526258223918779, guid: 7f502a34e5a33a2499810574d5b652d7,
         type: 3}
@@ -33913,6 +33928,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestUncontrollablePlayer (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2764526258223918627, guid: 7f502a34e5a33a2499810574d5b652d7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2764526258223918779, guid: 7f502a34e5a33a2499810574d5b652d7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -36651,114 +36671,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1523448733}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1526302294
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1526302299}
-  - component: {fileID: 1526302298}
-  - component: {fileID: 1526302297}
-  - component: {fileID: 1526302296}
-  - component: {fileID: 1526302295}
-  m_Layer: 0
-  m_Name: Cube
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!54 &1526302295
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1526302294}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
---- !u!65 &1526302296
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1526302294}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &1526302297
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1526302294}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 0
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
---- !u!33 &1526302298
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1526302294}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &1526302299
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1526302294}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.0024414, y: 1.64, z: 7.09}
-  m_LocalScale: {x: 1.6948812, y: 2.607216, z: 1.0612093}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 10
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1532847354
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -36874,11 +36786,11 @@ MonoBehaviour:
   namePrefabResource: Point
   minTimeSpawn: 3
   maxTimeSpawn: 5
-  minX: -10
-  maxX: 10
+  minX: -50
+  maxX: 50
   y: 5
-  minZ: -10
-  maxZ: 10
+  minZ: -50
+  maxZ: 50
 --- !u!4 &1533151134
 Transform:
   m_ObjectHideFlags: 0
@@ -38665,13 +38577,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   namePrefabResource: Q-Mon4
-  minTimeSpawn: 3
-  maxTimeSpawn: 5
-  minX: -10
-  maxX: 10
+  minTimeSpawn: 10
+  maxTimeSpawn: 20
+  minX: -50
+  maxX: 50
   y: 5
-  minZ: -10
-  maxZ: 10
+  minZ: -50
+  maxZ: 50
 --- !u!1 &1591510573
 GameObject:
   m_ObjectHideFlags: 8
@@ -42656,7 +42568,7 @@ Transform:
   - {fileID: 1927758391}
   - {fileID: 1591198969}
   m_Father: {fileID: 0}
-  m_RootOrder: 20
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1792547856
 PrefabInstance:
@@ -45515,13 +45427,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   namePrefabResource: Q-Mon2
-  minTimeSpawn: 3
-  maxTimeSpawn: 5
-  minX: -10
-  maxX: 10
+  minTimeSpawn: 5
+  maxTimeSpawn: 10
+  minX: -50
+  maxX: 50
   y: 5
-  minZ: -10
-  maxZ: 10
+  minZ: -50
+  maxZ: 50
 --- !u!1001 &1928845821
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -47238,7 +47150,7 @@ Transform:
   - {fileID: 827121352}
   - {fileID: 1982235673}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: -97.27, z: 0}
 --- !u!1001 &1996481628
 PrefabInstance:
@@ -52296,6 +52208,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TestUncontrollablePlayer
+      objectReference: {fileID: 0}
+    - target: {fileID: 2764526258223918627, guid: 7f502a34e5a33a2499810574d5b652d7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2764526258223918779, guid: 7f502a34e5a33a2499810574d5b652d7,
         type: 3}

@@ -10,10 +10,11 @@ public class Point : MonoBehaviourPun
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == Layers.CHARACTER || collision.gameObject.layer == Layers.PLAYER)
+        if (collision.gameObject.layer == Layers.CHARACTER || collision.gameObject.layer == Layers.PLAYER || collision.gameObject.layer == Layers.MONSTER)
         {
             if(collision.gameObject.GetComponentInParent<Character.CharacterModel>())
                 collision.gameObject.GetComponentInParent<Character.CharacterModel>().AddPoint(points);
+
             PhotonNetwork.Destroy(gameObject);
         }
     }

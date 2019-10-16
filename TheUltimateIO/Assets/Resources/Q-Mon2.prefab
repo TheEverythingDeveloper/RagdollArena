@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1740350323022809965}
   - component: {fileID: 966567236358360349}
   - component: {fileID: 466286050006121857}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Q-Mon2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -190,7 +190,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8490034276250321876}
   - component: {fileID: 8490034276238987996}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Q-Mon2_Objt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -281,7 +281,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8490034276250321882}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Q-Mon2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -312,7 +312,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8490034276250321884}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -345,7 +345,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8490034276250321886}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Position
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -379,7 +379,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8490034276250321888}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Leg_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -410,7 +410,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8490034276250321890}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Leg_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -441,7 +441,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8490034276250321892}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Hip_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -472,7 +472,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8490034276250321894}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Hip_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -503,7 +503,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8490034276250321896}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Feet_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -534,7 +534,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8490034276250321898}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Feet_R_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -564,7 +564,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8490034276250321900}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Feet_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -595,7 +595,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8490034276250321902}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Feet_L_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -625,7 +625,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8490034276250321904}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Control_SS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -656,7 +656,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8490034276250321906}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Control_SS_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -686,7 +686,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8490034276250321908}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Control_Leg_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -717,7 +717,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8490034276250321910}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Control_Leg_R_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -747,7 +747,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8490034276250321912}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Control_Leg_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -778,7 +778,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8490034276250321914}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Control_Leg_L_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -808,7 +808,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8490034276250321916}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -839,7 +839,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8490034276250321918}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Body_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}

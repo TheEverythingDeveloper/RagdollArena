@@ -9,4 +9,5 @@ public class Layers : MonoBehaviour
     public static int CHARACTER = 11;
     public static int PLAYER = 12;
     public static int COLLECT = 13;
+    public static int MONSTER = 15;
 }
