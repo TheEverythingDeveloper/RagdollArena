@@ -25,6 +25,7 @@ namespace Gamemodes
         private void Awake()
         {
             Instance = this;
+            return;
             _lvlManager = FindObjectOfType<LevelManager>();
             _gameModePanel = transform.parent.GetComponentInChildren<GameModePanel>();
             allGameModes = GetComponentsInChildren<GameMode>().ToList();
@@ -43,6 +44,7 @@ namespace Gamemodes
 
         private void Update()
         {
+            return;
             if (_timeMng != null)
                 _timeMng.ArtificialUpdate();
 
@@ -52,16 +54,19 @@ namespace Gamemodes
 
         public void OnFreeTimeUpdate(float actualTime)
         {
+            return;
             Debug.Log("Free Time: " + (_randomTime - actualTime));
         }
 
         public void ChangeGeneralGamemode()
         {
+            return;
             ChangeGamemode((GamemodeType)Random.Range(0, allGameModes.Count));
         }
 
         public void ChangeGamemode(GamemodeType gamemodeID)
         {
+            return;
             Debug.LogWarning("Changing gamemode...");
             GameMode newGameMode = allGameModes[Mathf.Clamp((int)gamemodeID, 0, allGameModes.Count - 1)];
 
@@ -99,6 +104,7 @@ namespace Gamemodes
 
         public void StartGameMode(int gameModeTypeID)
         {
+            return;
             Debug.LogWarning("new mode: " + gameModeTypeID);
 
             actualGM = allGameModes[gameModeTypeID];

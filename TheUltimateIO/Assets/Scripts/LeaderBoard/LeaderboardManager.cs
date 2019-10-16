@@ -37,6 +37,9 @@ namespace Leaderboard
 
         public IEnumerator InactivePlayersCoroutine()
         {
+            _enabled = false; //descomentar esto cuando rehagamos esta parte
+
+
             while (_enabled)
             {
                 yield return new WaitForSeconds(5f);

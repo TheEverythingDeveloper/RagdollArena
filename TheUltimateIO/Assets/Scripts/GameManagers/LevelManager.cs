@@ -24,7 +24,7 @@ public class LevelManager : MonoBehaviourPun
             new Vector3(Random.Range(minXPos, maxXPos), yPos, Random.Range(minZPos, maxZPos)), Quaternion.identity);
         user.GetComponentInChildren<CharacterModel>().name = PhotonNetwork.NickName;
         user.GetComponentInChildren<Character3DUI>().photonView.RPC("RPCUpdateNickname", RpcTarget.AllBuffered, PhotonNetwork.NickName);
-        GGM.Instance.user = user.GetComponentInChildren<CharacterModel>();
+        //GGM.Instance.user = user.GetComponentInChildren<CharacterModel>();
 
         _leaderboardMng = new LeaderboardManager(this);
 
