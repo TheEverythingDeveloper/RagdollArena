@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using Character;
+using Photon.Pun;
 
 public class QMon1Controller : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class QMon1Controller : MonoBehaviour
     public Transform actualTarget;
     public float viewRadius;
     public LayerMask playersLayermask;
+    public int heightDestroy = -5;
 
     private void Awake()
     {
@@ -51,7 +53,8 @@ public class QMon1Controller : MonoBehaviour
 
     private void Update()
     {
-        if(actualTarget != null)
+        if (transform.position.y < heightDestroy) QMonDestroy();
+        if (actualTarget != null)
         {
             transform.forward = actualTarget.transform.position - transform.position;
         }
@@ -70,5 +73,10 @@ public class QMon1Controller : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, viewRadius);
+    }
+
+    void QMonDestroy()
+    {
+        PhotonNetwork.Destroy(gameObject);
     }
 }
