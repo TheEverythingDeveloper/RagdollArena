@@ -41,14 +41,14 @@ namespace Character
                         sp.connectedBody.AddForce((sp.connectedBody.transform.position - myModel.pelvisRb.transform.position).normalized * myModel.pushForce, ForceMode.Impulse);
                     }
 
-                    RPCRemoveSP();
+                    photonView.RPC("RPCRemoveSP", RpcTarget.AllBuffered);
                 }
             }
         }
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.gameObject.layer == Layers.PLAYER || _taken || !activeTaken) return;
-            RPCAddSP(collision);
+            photonView.RPC("RPCAddSP", RpcTarget.AllBuffered, collision);
         }
         [PunRPC]
         void RPCAddSP(Collision col)

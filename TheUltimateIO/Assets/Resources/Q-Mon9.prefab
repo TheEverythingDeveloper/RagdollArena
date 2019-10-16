@@ -171,8 +171,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a720d5f116ba244ea4beb6885587217, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 7
-  pushForce: 0
+  speed: 10
+  pushForce: 10
   _model: {fileID: 0}
   actualTarget: {fileID: 0}
   viewRadius: 10.8
