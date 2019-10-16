@@ -58,7 +58,7 @@ namespace Gamemodes
 
         public void ChangeGeneralGamemode()
         {
-            ChangeGamemode(GamemodeType.FriendzoneGM);
+            ChangeGamemode((GamemodeType)Random.Range(0, allGameModes.Count));
         }
 
         public void ChangeGamemode(GamemodeType gamemodeID)
@@ -86,7 +86,7 @@ namespace Gamemodes
             else
             {
                  newGameMode.gameObject.SetActive(true);
-                 Debug.Log("Gamemode changed to " + newGameMode.gameModeName);
+                 Debug.LogWarning("Gamemode changed to " + newGameMode.gameModeName);
 
                 if (_lvlManager) _lvlManager.NewGM(newGameMode.gamemodeType);
                  else
