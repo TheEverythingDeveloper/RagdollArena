@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using Photon.Pun;
-
+using System.Collections.Generic;
 namespace Character
 {
     public class CharacterHands : MonoBehaviourPun
@@ -54,7 +54,9 @@ namespace Character
             sp.connectedBody = collision.rigidbody;
             sp.spring = 12000;
             sp.breakForce = 4000;
-            photonView.ObservedComponents.Add(sp);
+            List<Component> x = photonView.ObservedComponents;
+            x.Add(sp);
+            photonView.ObservedComponents = x;
             _taken = true;
         }
         private void OnJointBreak(float breakForce)
