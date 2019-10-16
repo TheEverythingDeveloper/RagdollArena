@@ -50,11 +50,7 @@ MonoBehaviour:
   playerFriendsLayermask:
     serializedVersion: 2
     m_Bits: 1024
-  minXPos: 0
-  maxXPos: 0
-  minZPos: 0
-  maxZPos: 0
-  yPos: 0
+  pointsSpawn: {fileID: 0}
 --- !u!114 &968
 MonoBehaviour:
   m_ObjectHideFlags: 0

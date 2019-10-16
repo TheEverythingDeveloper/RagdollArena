@@ -17,12 +17,12 @@ public class LevelManager : MonoBehaviourPun
     public LayerMask playerFriendsLayermask;
     [Tooltip("Posiciones random de spawneo")]
     public GameObject pointsSpawn;
-    List<Transform> _points = new List<Transform>();
+    Transform[] _points;
     public void ArtificialAwake()
     {
         Debug.Log("Starting Level Manager");
         pointsSpawn = GameObject.Find("AllSpawnPoint");
-        _points.AddRange(GetComponentsInChildren<Transform>());
+        _points = pointsSpawn.GetComponentsInChildren<Transform>();
         var user = PhotonNetwork.Instantiate("User",
             PositionRandom(), Quaternion.identity);
         user.GetComponentInChildren<CharacterModel>().name = PhotonNetwork.NickName;
@@ -47,7 +47,7 @@ public class LevelManager : MonoBehaviourPun
     }
     Vector3 PositionRandom()
     {
-        var selectRandom = Random.Range(0, _points.Count);
+        var selectRandom = Random.Range(0, _points.Length);
         return _points[selectRandom].position;
     }
     public void UpdateUserPoints(string nickName, int addedPoints)
