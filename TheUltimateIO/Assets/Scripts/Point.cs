@@ -12,7 +12,7 @@ public class Point : MonoBehaviourPun
         if(other.gameObject.layer == Layers.CHARACTER || other.gameObject.layer == Layers.PLAYER)
         {
             other.GetComponentInParent<Character.CharacterModel>().AddPoint(points);
-            PhotonNetwork.Destroy(photonView);
+            PhotonNetwork.Destroy(gameObject);
         }
     }
 }

@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using Character;
 using System;
-using Random = UnityEngine.Random;
+using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using Utilities;
-using Character;
+using Random = UnityEngine.Random;
 
 namespace Gamemodes
 {
@@ -32,7 +31,7 @@ namespace Gamemodes
             allGameModes.Add(null);
             allGameModes.Select(x =>
             {
-                if(x != null)
+                if (x != null)
                 {
                     Debug.LogWarning("Gamemode: " + x.gameModeName);
                     x.gameObject.SetActive(false);
@@ -64,14 +63,13 @@ namespace Gamemodes
         public void ChangeGamemode(GamemodeType gamemodeID)
         {
             Debug.LogWarning("Changing gamemode...");
-            GameMode newGameMode = allGameModes[Mathf.Clamp((int)gamemodeID, 0,allGameModes.Count - 1)];
+            GameMode newGameMode = allGameModes[Mathf.Clamp((int)gamemodeID, 0, allGameModes.Count - 1)];
 
-            if(actualGM != null)
+            if (actualGM != null)
             {
                 if (actualGM.gameObject != null) //seria el previo en realidad porque no se actualizo todavia
                     actualGM.gameObject.SetActive(false);
             }
-            
 
             if (newGameMode == null)
             {
@@ -85,13 +83,13 @@ namespace Gamemodes
             }
             else
             {
-                 newGameMode.gameObject.SetActive(true);
-                 Debug.LogWarning("Gamemode changed to " + newGameMode.gameModeName);
+                newGameMode.gameObject.SetActive(true);
+                Debug.LogWarning("Gamemode changed to " + newGameMode.gameModeName);
 
                 if (_lvlManager) _lvlManager.NewGM(newGameMode.gamemodeType);
-                 else
+                else
                 {
-                    _lvlManager = FindObjectOfType<LevelManager>();
+                    _lvlManager = UnityEngine.Object.FindObjectOfType<LevelManager>();
                     _lvlManager.NewGM(newGameMode.gamemodeType);
                 }
                 //newGameMode.gameObject.SetActive(true);
@@ -101,7 +99,7 @@ namespace Gamemodes
 
         public void StartGameMode(int gameModeTypeID)
         {
-            Debug.LogWarning("new mode: "+ gameModeTypeID);
+            Debug.LogWarning("new mode: " + gameModeTypeID);
 
             actualGM = allGameModes[gameModeTypeID];
             actualGM.gameObject.SetActive(true);
