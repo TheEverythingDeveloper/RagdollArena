@@ -36,12 +36,15 @@ namespace Character
         public float sqrMagnitudeInTimeSpeed;
         [Tooltip("Altura minima en la que el player debe volver")]
         public float heightRespawn = -3f;
+        [Tooltip("Fuerza para lanzar cosas")]
+        public float pushForce;
 
         public event Action<int> OnPointsUpdate = delegate { }; //se llama cada vez que ganamos o perdemos puntos
         public event Action OnJump = delegate { }; //se llama cada vez que saltamos
         public event Action<bool> OnCrowned = delegate { }; //se llama cuando agarramos la corona o perdemos la corona
         public Func<int> GetActiveModeValue; //Va a conseguir el valor importante del modo de juego actual (amigos, puntos, etc)
 
+        public List<CharacterHands> hands = new List<CharacterHands>();
         private void Awake()
         {
             _lvlMng = FindObjectOfType<LevelManager>();
@@ -125,6 +128,16 @@ namespace Character
         {
             _lvlMng.UpdateUserPoints(PhotonNetwork.NickName, points);
 
+        }
+
+        public bool OnClickPlayer()
+        {
+            foreach (var item in hands)
+            {
+                if (item.activeTaken) return true;
+            }
+
+            return false;
         }
     }
 

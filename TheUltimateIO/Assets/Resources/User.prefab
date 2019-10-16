@@ -466,6 +466,7 @@ MonoBehaviour:
   myModel: {fileID: 0}
   _hand: {fileID: 0}
   buttonMouse: 1
+  activeTaken: 0
 --- !u!114 &7853497188495180422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -481,6 +482,7 @@ MonoBehaviour:
   myModel: {fileID: 0}
   _hand: {fileID: 0}
   buttonMouse: 0
+  activeTaken: 0
 --- !u!65 &4732710854764244275
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -675,6 +677,10 @@ PrefabInstance:
       propertyPath: _ragdollCapsule
       value: 
       objectReference: {fileID: 4804963312701883434}
+    - target: {fileID: 581, guid: 5902c9be90972cf429bc3820e10dd5d0, type: 3}
+      propertyPath: pushForce
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 582, guid: 5902c9be90972cf429bc3820e10dd5d0, type: 3}
       propertyPath: viewIdField
       value: 0

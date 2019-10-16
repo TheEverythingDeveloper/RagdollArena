@@ -8,12 +8,16 @@ namespace Character
         public CharacterModel myModel;
         public Rigidbody _hand;
         public int buttonMouse;
-        bool _taken, _activeTaken;
+        public bool activeTaken;
+        bool _taken;
+        SpringJoint sp;
+
         private void Awake()
         {
             if (!photonView.IsMine) return;
             myModel = GetComponentInParent<CharacterModel>();
             _hand = GetComponent<Rigidbody>();
+            myModel.hands.Add(this);
         }
 
         private void FixedUpdate()
@@ -24,13 +28,15 @@ namespace Character
             {
                 _hand.velocity = Vector3.zero;
                 _hand.AddForce(myModel.pelvisRb.transform.up * 50, ForceMode.Impulse);
-                _activeTaken = true;
+                activeTaken = true;
             }
+
             if (Input.GetMouseButtonUp(buttonMouse))
             {
-                _activeTaken = false;
+                activeTaken = false;
                 if (_taken)
                 {
+                    sp.connectedBody.AddForce((sp.connectedBody.transform.position - myModel.pelvisRb.transform.position).normalized * myModel.pushForce, ForceMode.Impulse);
                     DestroyImmediate(GetComponent<SpringJoint>());
                     _taken = false;
                 }
@@ -38,8 +44,8 @@ namespace Character
         }
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject.layer == Layers.PLAYER || _taken || !_activeTaken) return;
-            SpringJoint sp = gameObject.AddComponent<SpringJoint>();
+            if (collision.gameObject.layer == Layers.PLAYER || _taken || !activeTaken) return;
+            sp = gameObject.AddComponent<SpringJoint>();
             sp.connectedBody = collision.rigidbody;
             sp.spring = 12000;
             sp.breakForce = 4000;

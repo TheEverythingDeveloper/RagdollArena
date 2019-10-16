@@ -29,8 +29,8 @@ public class QMon1Controller : MonoBehaviour
         var model = collision.gameObject.GetComponentInParent<CharacterModel>();
         if(model != null)
         {
-            Debug.LogWarning("choco contra el jugador");
-            model.pelvisRb.AddForce((model.pelvisRb.transform.position - transform.position).normalized * pushForce, ForceMode.Impulse);
+            if(!model.OnClickPlayer())
+                model.pelvisRb.AddForce((model.pelvisRb.transform.position - transform.position).normalized * pushForce, ForceMode.Impulse);
         }
     }
 

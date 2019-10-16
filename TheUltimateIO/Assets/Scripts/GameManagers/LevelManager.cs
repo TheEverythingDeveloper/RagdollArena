@@ -5,6 +5,7 @@ using Photon.Pun;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using System.Collections.Generic;
 
 public class LevelManager : MonoBehaviourPun
 {
@@ -15,13 +16,14 @@ public class LevelManager : MonoBehaviourPun
     private LeaderboardManager _leaderboardMng;
     public LayerMask playerFriendsLayermask;
     [Tooltip("Posiciones random de spawneo")]
-    public float minXPos, maxXPos, minZPos, maxZPos, yPos;
+    public GameObject pointsSpawn;
+    List<Transform> _points = new List<Transform>();
     public void ArtificialAwake()
     {
         Debug.Log("Starting Level Manager");
-
+        _points.AddRange(GetComponentsInChildren<Transform>());
         var user = PhotonNetwork.Instantiate("User",
-            new Vector3(Random.Range(minXPos, maxXPos), yPos, Random.Range(minZPos, maxZPos)), Quaternion.identity);
+            PositionRandom(), Quaternion.identity);
         user.GetComponentInChildren<CharacterModel>().name = PhotonNetwork.NickName;
         user.GetComponentInChildren<Character3DUI>().photonView.RPC("RPCUpdateNickname", RpcTarget.AllBuffered, PhotonNetwork.NickName);
         //GGM.Instance.user = user.GetComponentInChildren<CharacterModel>();
@@ -39,8 +41,13 @@ public class LevelManager : MonoBehaviourPun
 
     public void RespawnRandom(Transform player)
     {
-        player.position = new Vector3(Random.Range(minXPos, maxXPos), yPos, Random.Range(minZPos, maxZPos));
+        player.position = PositionRandom();
         UpdateUserPoints(PhotonNetwork.NickName, -10);
+    }
+    Vector3 PositionRandom()
+    {
+        var selectRandom = Random.Range(0, _points.Count);
+        return _points[selectRandom].position;
     }
     public void UpdateUserPoints(string nickName, int addedPoints)
     { photonView.RPC("RPCUpdateUserPoints", RpcTarget.MasterClient, nickName, addedPoints); }
