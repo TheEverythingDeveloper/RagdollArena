@@ -48,13 +48,14 @@ namespace Character
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.gameObject.layer == Layers.PLAYER || _taken || !activeTaken) return;
-            photonView.RPC("RPCAddSP", RpcTarget.AllBuffered, collision);
+            photonView.RPC("RPCAddSP", RpcTarget.AllBuffered, JsonUtility.ToJson(collision));
         }
         [PunRPC]
-        void RPCAddSP(Collision col)
+        void RPCAddSP(string col)
         {
+            var collision = JsonUtility.FromJson<Collision>(col);
             sp = gameObject.AddComponent<SpringJoint>();
-            sp.connectedBody = col.rigidbody;
+            sp.connectedBody = collision.rigidbody;
             sp.spring = 12000;
             sp.breakForce = 4000;
             _taken = true;
