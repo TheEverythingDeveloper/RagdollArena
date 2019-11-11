@@ -1,0 +1,75 @@
+﻿using UnityEngine;
+using System.Linq;
+
+public class SpawnedCube : MonoBehaviour
+{
+    private int _life = 1;
+    private float _size = 1;
+    public int Life
+    {
+        get { return _life; }
+        set { _life = Mathf.Max(0, value); if (_life == 0) BreakCube(); }
+    }
+    public float Size
+    {
+        get { return _size; }
+        set
+        {
+            _size = Mathf.Max(0, value);
+            transform.localScale = new Vector3(_size, _size, _size);
+        }
+    }
+
+    public SpawnedCube SetSize(float size) { Size = size; return this; }
+    public SpawnedCube SetLife(int life) { Life = life; return this; }
+
+    private Rigidbody _rb;
+    private BoxCollider _boxColl;
+    private MeshRenderer _meshRen;
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody>();
+        _boxColl = GetComponent<BoxCollider>();
+        _meshRen = GetComponent<MeshRenderer>();
+        _rb.isKinematic = true;
+        _boxColl.enabled = false;
+    }
+
+    public bool IsColliding(LayerMask _collideLayermask)
+    {
+        return Physics.OverlapBox
+            (transform.position + new Vector3(0,_size/2f,0), new Vector3(_size, _size, _size) / 2f, Quaternion.identity, _collideLayermask).Count() > 0;
+    }
+
+    public SpawnedCube SetColor(Color newColor)
+    {
+        _meshRen.material.color = newColor;
+        return this;
+    }
+
+    public SpawnedCube CorrectPosition(Vector3 newPos)
+    {
+        transform.position = new Vector3(newPos.x, newPos.y + Size / 2f, newPos.z);
+        return this;
+    }
+
+    /// <summary>
+    /// "Constructor" de cuando spawneamos el cubo
+    /// </summary>
+    /// <param name="isPreCube">Si es true significa que no es un cubo real, todavia no tiene collider ni rigidbody</param>
+    public SpawnedCube Constructor(bool isPreCube)
+    {
+        if (isPreCube) return this;
+
+        _rb.isKinematic = false;
+        _boxColl.enabled = true;
+        return this;
+    }
+
+    private void BreakCube()
+    {
+        //cambiar la layer
+        //activar animacion de romperse
+    }
+}
