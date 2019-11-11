@@ -1,15 +1,12 @@
 ﻿using System;
 
-namespace IA2
+namespace FSM
 {
 	public class Transition<T>
     {
 		public event Action<T> OnTransition = delegate { };
-		public T Input { get { return input; } }
-		public State<T> TargetState { get { return targetState;  } }
-
-		T input;
-		State<T> targetState;
+		T _input;
+		public State<T> targetState;
 
 
         public void OnTransitionExecute(T input)
@@ -19,7 +16,7 @@ namespace IA2
 
 		public Transition(T input, State<T> targetState)
         {
-			this.input = input;
+			this._input = input;
 			this.targetState = targetState;
 		}
 	}

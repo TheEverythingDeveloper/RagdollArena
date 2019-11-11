@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using IA2;
+using FSM;
 using System;
 
 public class Monster : MonoBehaviour, IDamageable
@@ -12,7 +12,7 @@ public class Monster : MonoBehaviour, IDamageable
     public float speed;
     public float velocityDamageCube;
     public GameObject cube; //TODO Aca script del cubo para atacar
-    EventFSM<MonsterStates> _myFsm;
+    FSM<MonsterStates> _myFsm;
 
     public enum MonsterStates
     {
@@ -50,12 +50,7 @@ public class Monster : MonoBehaviour, IDamageable
             //LifeCube -= velocityDamageCube * Time.deltaTime;
         };
 
-        _myFsm = new EventFSM<MonsterStates>(moving);
-    }
-
-    private void SendInputToFSM(MonsterStates inp)
-    {
-        _myFsm.SendInput(inp);
+        _myFsm = new FSM<MonsterStates>(moving);
     }
 
     private void Update()
@@ -71,13 +66,13 @@ public class Monster : MonoBehaviour, IDamageable
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject == cube)
-            SendInputToFSM(MonsterStates.ATTACK);
+            _myFsm.ChangeState(MonsterStates.ATTACK);
     }
 
     private void OnCollisionExit(Collision collision)
     {
         if (collision.gameObject == cube)
-            SendInputToFSM(MonsterStates.MOVE);
+            _myFsm.ChangeState(MonsterStates.MOVE);
     }
 
     public void Damage(float damage)
@@ -86,7 +81,7 @@ public class Monster : MonoBehaviour, IDamageable
 
         if(_life <= 0)
         {
-            SendInputToFSM(MonsterStates.DIE);
+            _myFsm.ChangeState(MonsterStates.DIE);
         }
     }
 }

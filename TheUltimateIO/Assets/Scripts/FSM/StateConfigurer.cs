@@ -1,22 +1,23 @@
 using System.Collections.Generic;
 
-namespace IA2 {
+namespace FSM
+{
 	public class StateConfigurer<T>
     {
-		State<T> instance;
-		Dictionary<T, Transition<T>> transitions = new Dictionary<T, Transition<T>>();
+		State<T> _instance;
+		Dictionary<T, Transition<T>> _transitions = new Dictionary<T, Transition<T>>();
 
 		public StateConfigurer(State<T> state) {
-			instance = state;
+			_instance = state;
 		}
 
 		public StateConfigurer<T> SetTransition(T input, State<T> target) {
-			transitions.Add(input, new Transition<T>(input, target));
+			_transitions.Add(input, new Transition<T>(input, target));
 			return this;
 		}
 
 		public void Done() {
-			instance.Configure(transitions);
+			_instance.Configure(_transitions);
 		}
 	}
 
