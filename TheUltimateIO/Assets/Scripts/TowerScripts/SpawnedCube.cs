@@ -84,4 +84,13 @@ public class SpawnedCube : MonoBehaviour, IDamageable
     {
         Life -= damage;
     }
+
+    public void Explosion(Vector3 origin, float force)
+    {
+        Vector3 difference = transform.position - origin;
+        float magnitude = difference.magnitude;
+
+        _rb.AddForce(difference * force, ForceMode.Impulse);
+        Damage(magnitude * force);
+    }
 }

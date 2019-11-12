@@ -22,7 +22,7 @@ TagManager:
   - Environment
   - Collectable
   - Monster
-  - SpawneableZone
+  - ConstructionBlock
   - 
   - 
   - 

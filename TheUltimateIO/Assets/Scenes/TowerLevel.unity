@@ -144,7 +144,7 @@ MonoBehaviour:
   _spawningCube: 0
   _spawnLayermask:
     serializedVersion: 2
-    m_Bits: 65536
+    m_Bits: 66048
   wheelSizeSpeed: 10
   minMaxSize: {x: 0.5, y: 5}
 --- !u!4 &350825501
@@ -172,6 +172,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Grenade
+      objectReference: {fileID: 0}
+    - target: {fileID: 4449232434148303103, guid: 8ead26412fbfcb24eaf08b727f93c77e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4449232434148303099, guid: 8ead26412fbfcb24eaf08b727f93c77e,
         type: 3}
@@ -227,6 +232,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3528924211298110751, guid: 8ead26412fbfcb24eaf08b727f93c77e,
+        type: 3}
+      propertyPath: explodeLayermask.m_Bits
+      value: 65537
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8ead26412fbfcb24eaf08b727f93c77e, type: 3}
@@ -324,7 +334,7 @@ GameObject:
   - component: {fileID: 1827127228}
   - component: {fileID: 1827127227}
   - component: {fileID: 1827127226}
-  m_Layer: 16
+  m_Layer: 9
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
