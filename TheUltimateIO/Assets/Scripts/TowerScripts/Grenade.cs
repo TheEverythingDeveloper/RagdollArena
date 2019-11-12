@@ -39,9 +39,10 @@ public class Grenade : MonoBehaviour
                 .Where(x => x.GetComponentInChildren<IDamageable>() != null)
                 .Select(x =>
                 {
+                    Debug.Log("llego aca con " + x.name);
                     x.GetComponentInChildren<IDamageable>().Explosion(transform.position, explosionForce);
                     return x;
-                });
+                }).ToList();
     }
 
     private void OnDrawGizmos()
