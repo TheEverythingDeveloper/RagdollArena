@@ -18,6 +18,14 @@ namespace Character
             {
                 _myModel.TryJump();
             }
+            if(Input.GetKeyDown(KeyCode.E))
+            {
+                _myModel.TryGrenade();
+            }
+            if (Input.GetKeyUp(KeyCode.E))
+            {
+                _myModel.ThrowGrenade();
+            }
         }
 
         public void ArtificialFixedUpdate() { }

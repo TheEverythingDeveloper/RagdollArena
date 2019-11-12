@@ -12,9 +12,11 @@ namespace Character
         Quaternion _lookRotation;
         Vector3 _direction;
         float _sqrMagnitudeInTime;
+        private LayerMask _floorLayers;
 
-        public CharacterMovement(CharacterModel model, Rigidbody pelvis, Quaternion initialRot)
+        public CharacterMovement(CharacterModel model, Rigidbody pelvis, Quaternion initialRot, LayerMask floorLayers)
         {
+            _floorLayers = floorLayers;
             _myModel = model;
             _pelvisRb = pelvis;
             _initialRot = initialRot;
@@ -38,14 +40,14 @@ namespace Character
             Debug.DrawLine(_myModel.transform.position,
                 _myModel.transform.position + Vector3.down * _myModel.inAirDistance,
                 _inAir ? Color.red : Color.green);
-            _inAir = !Physics.Raycast(_pelvisRb.transform.position, Vector3.down, _myModel.inAirDistance, 1 << Layers.FLOOR);
+            _inAir = !Physics.Raycast(_pelvisRb.transform.position, Vector3.down, _myModel.inAirDistance, _floorLayers);
 
             _sqrMagnitudeInTime = Mathf.Lerp(_sqrMagnitudeInTime, _pelvisRb.velocity.sqrMagnitude,
                 _myModel.sqrMagnitudeInTimeSpeed * Time.deltaTime);
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity , 1 << Layers.FLOOR))
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity , _floorLayers))
             {
                 if (Vector3.Distance(hit.point, _pelvisRb.transform.position) < 2) return;
                 _direction = (hit.point - _pelvisRb.transform.position).normalized;

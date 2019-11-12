@@ -47,8 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7f66b18cc2862c4f99545e0904e0ebc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionRadius: 5
-  explosionForce: 5
+  explosionRadius: 8
+  explosionForce: 25
   explodeLayermask:
     serializedVersion: 2
     m_Bits: 65537

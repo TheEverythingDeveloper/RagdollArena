@@ -5,7 +5,6 @@ public enum SpawnItem
     None = 0,
     ConstructionBlock = 1,
     ConstructionBlockIron = 2,
-    Grenade = 3
 }
 
 public class CubeSpawner : MonoBehaviour
@@ -53,7 +52,7 @@ public class CubeSpawner : MonoBehaviour
         {
             Destroy(_preSpawnedCube.gameObject);
 
-            _preSpawnedCube = Instantiate((GameObject)Resources.Load(SpawnItem.ConstructionBlock.ToString()), Vector3.zero, Quaternion.identity)
+            _preSpawnedCube = Instantiate((GameObject)Resources.Load(spawningCube.ToString()), Vector3.zero, Quaternion.identity)
                             .GetComponent<SpawnedCube>();
 
             _preSpawnedCube
@@ -65,7 +64,7 @@ public class CubeSpawner : MonoBehaviour
             _preSpawnedCube.gameObject.SetActive(true);
         }
     }
-
+    
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1)) //nada
@@ -74,8 +73,6 @@ public class CubeSpawner : MonoBehaviour
             SpawningItem = SpawnItem.ConstructionBlock;
         else if (Input.GetKeyDown(KeyCode.Alpha3)) //bloque construccion reforzada
             SpawningItem = SpawnItem.ConstructionBlockIron;
-        else if (Input.GetKeyDown(KeyCode.Alpha4)) //granada
-            SpawningItem = SpawnItem.Grenade;
 
         if (_spawningItem == 0) return;
 

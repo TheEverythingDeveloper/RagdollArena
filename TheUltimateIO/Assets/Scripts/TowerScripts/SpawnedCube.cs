@@ -17,6 +17,7 @@ public class SpawnedCube : MonoBehaviour, IDamageable
         set
         {
             _size = Mathf.Max(0, value);
+            _rb.mass = _size * 5f;
             transform.localScale = new Vector3(_size, _size, _size);
         }
     }

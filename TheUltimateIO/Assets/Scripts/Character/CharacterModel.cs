@@ -1,5 +1,6 @@
 ﻿using Photon.Pun;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace Character
         private LevelManager _lvlMng;
         public string nickname;
         public Rigidbody pelvisRb;
+
         public Animator anim;
         private Color _color;
         private Renderer[] _allMyRenderers;
@@ -38,6 +40,15 @@ namespace Character
         public float heightRespawn = -3f;
         [Tooltip("Fuerza para lanzar cosas")]
         public float pushForce;
+        [Tooltip("Velocidad de lanzamiento de granada")]
+        public float grenadeThrowSpeed;
+        private float _grenadeThrowSpeed;
+        [Tooltip("Cuanto para arriba va a tirar las granadas")]
+        public float grenadeYThrowSpeed;
+        [Tooltip("Este va a ser la velocidad a la que va a subir el grenadethrowspeed cuando apretamos")]
+        public float grenadeThrowSpeedThreshold;
+        public LayerMask floorLayers;
+
 
         public event Action<int> OnPointsUpdate = delegate { }; //se llama cada vez que ganamos o perdemos puntos
         public event Action OnJump = delegate { }; //se llama cada vez que saltamos
@@ -68,7 +79,7 @@ namespace Character
             anim = GetComponent<Animator>();
 
             _allUpdatables.Add(new CharacterController(this));
-            _movementController = new CharacterMovement(this, pelvisRb, pelvisRb.transform.localRotation);
+            _movementController = new CharacterMovement(this, pelvisRb, pelvisRb.transform.localRotation, floorLayers);
             _allConstructables.Add(_movementController);
             _allUpdatables.Add(_movementController);
             _allUpdatables.Add(new CharacterCamera(this, pelvisRb));
@@ -88,14 +99,43 @@ namespace Character
 
         private void OnDrawGizmos()
         {
-            if(pelvisRb != null)
+            if (pelvisRb != null)
                 Gizmos.DrawWireSphere(pelvisRb.transform.position, contactRadius);
         }
 
         public void UpdatePoints(int addedPoints) => OnPointsUpdate(addedPoints);
         public void Crowned(bool on) => OnCrowned(on);
         public void TryJump() { if (_movementController.inAir) return; OnJump(); }
+        public void TryGrenade()
+        {
+            if (_throwGrenadeCoroutine != null)
+                StopCoroutine(_throwGrenadeCoroutine);
+            _throwGrenadeCoroutine = StartCoroutine(ThrowGrenadeCoroutine());
+        }
+        private Coroutine _throwGrenadeCoroutine;
+        IEnumerator ThrowGrenadeCoroutine()
+        {
+            _grenadeThrowSpeed = 0;
+            while (true)
+            {
+                _grenadeThrowSpeed = 
+                    Mathf.Clamp(_grenadeThrowSpeed + Time.deltaTime * grenadeThrowSpeedThreshold ,0.1f,grenadeThrowSpeed);
+                yield return new WaitForEndOfFrame();
+            }
+        }
+        public void ThrowGrenade()
+        {
+            StopCoroutine(_throwGrenadeCoroutine);
 
+            GameObject grenade = Instantiate((GameObject)Resources.Load("Grenade"),
+                pelvisRb.transform.position + transform.forward * 2f, Quaternion.identity);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            Physics.Raycast(ray, out hit, Mathf.Infinity, floorLayers);
+            grenade.GetComponent<Rigidbody>()
+                .AddForce((hit.point - pelvisRb.transform.position + Vector3.up * grenadeYThrowSpeed).normalized
+                * _grenadeThrowSpeed * Time.deltaTime, ForceMode.Impulse);
+        }
         private void Start() { if (!photonView.IsMine) return; ArtificialStart(); }
         private void Update() { if (!photonView.IsMine && pelvisRb != null) return; ArtificialUpdate(); }
         private void FixedUpdate() { if (!photonView.IsMine) return; ArtificialFixedUpdate(); }

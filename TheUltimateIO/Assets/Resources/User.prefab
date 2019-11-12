@@ -681,6 +681,22 @@ PrefabInstance:
       propertyPath: pushForce
       value: 50
       objectReference: {fileID: 0}
+    - target: {fileID: 581, guid: 5902c9be90972cf429bc3820e10dd5d0, type: 3}
+      propertyPath: jumpSpeed
+      value: 7500
+      objectReference: {fileID: 0}
+    - target: {fileID: 581, guid: 5902c9be90972cf429bc3820e10dd5d0, type: 3}
+      propertyPath: grenadeThrowSpeed
+      value: 700
+      objectReference: {fileID: 0}
+    - target: {fileID: 581, guid: 5902c9be90972cf429bc3820e10dd5d0, type: 3}
+      propertyPath: grenadeYThrowSpeed
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 581, guid: 5902c9be90972cf429bc3820e10dd5d0, type: 3}
+      propertyPath: grenadeThrowSpeedThreshold
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: 582, guid: 5902c9be90972cf429bc3820e10dd5d0, type: 3}
       propertyPath: viewIdField
       value: 0
