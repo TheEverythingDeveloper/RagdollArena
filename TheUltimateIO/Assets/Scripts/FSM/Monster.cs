@@ -12,6 +12,7 @@ public class Monster : MonoBehaviour, IDamageable
     float _life;
     public float speed;
     public float velocityDamageCube;
+    public float timeResetList;
     public SpawnedCube target;
     List<SpawnedCube> cubes = new List<SpawnedCube>();
     FSM<MonsterStates> _myFsm;
@@ -27,8 +28,6 @@ public class Monster : MonoBehaviour, IDamageable
     {
         _life = maxLife;
         _rb = gameObject.GetComponent<Rigidbody>();
-
-        CreateListTargets();
 
         var moving = new State<MonsterStates>("Moving");
         var attack = new State<MonsterStates>("Attack");
@@ -56,10 +55,27 @@ public class Monster : MonoBehaviour, IDamageable
         _myFsm = new FSM<MonsterStates>(moving);
     }
 
+    void Start()
+    {
+        CreateListTargets();
+    }
+
     void CreateListTargets()
     {
-        var targets = FindObjectsOfType<SpawnedCube>().Where(x => x.GetComponent<IDamageable>() != null).ToList();
-        cubes = targets;
+        StartCoroutine(UpdateListTarget());
+    }
+
+    IEnumerator UpdateListTarget()
+    {
+        var targets = new List<SpawnedCube>();
+        var waitForSeconds = new WaitForSeconds(timeResetList);
+
+        while (true)
+        {
+            targets = FindObjectsOfType<SpawnedCube>().Where(x => x.GetComponent<IDamageable>() != null).ToList();
+            cubes = targets;
+            yield return waitForSeconds;
+        }
     }
 
     void FindTarget()
