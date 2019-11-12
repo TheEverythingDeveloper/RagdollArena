@@ -49,6 +49,7 @@ public class Monster : MonoBehaviour, IDamageable
         //ATTACK
         attack.OnUpdate += () =>
         {
+            Debug.Log("Attack");
             target.GetComponent<IDamageable>().Damage(velocityDamageCube * Time.deltaTime);
         };
 
@@ -72,7 +73,7 @@ public class Monster : MonoBehaviour, IDamageable
 
         while (true)
         {
-            targets = FindObjectsOfType<SpawnedCube>().Where(x => x.GetComponent<IDamageable>() != null).ToList();
+            targets = FindObjectsOfType<SpawnedCube>().Where(x => x.Life > 0).ToList();
             cubes = targets;
             yield return waitForSeconds;
         }
@@ -98,13 +99,13 @@ public class Monster : MonoBehaviour, IDamageable
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject == target)
+        if(collision.gameObject == target.gameObject)
             _myFsm.ChangeState(MonsterStates.ATTACK);
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject == target)
+        if (collision.gameObject == target.gameObject)
             _myFsm.ChangeState(MonsterStates.MOVE);
     }
 
