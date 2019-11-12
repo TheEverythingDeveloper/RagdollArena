@@ -105,8 +105,7 @@ public class Monster : MonoBehaviour, IDamageable
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject == target.gameObject)
-            _myFsm.ChangeState(MonsterStates.MOVE);
+        _myFsm.ChangeState(MonsterStates.MOVE);
     }
 
     public void Damage(float damage)
