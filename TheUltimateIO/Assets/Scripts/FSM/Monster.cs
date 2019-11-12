@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FSM;
 using System;
+using System.Linq;
 
 public class Monster : MonoBehaviour, IDamageable
 {
@@ -11,7 +12,8 @@ public class Monster : MonoBehaviour, IDamageable
     float _life;
     public float speed;
     public float velocityDamageCube;
-    public GameObject cube; //TODO Aca script del cubo para atacar
+    public SpawnedCube target;
+    List<SpawnedCube> cubes = new List<SpawnedCube>();
     FSM<MonsterStates> _myFsm;
 
     public enum MonsterStates
@@ -26,6 +28,8 @@ public class Monster : MonoBehaviour, IDamageable
         _life = maxLife;
         _rb = gameObject.GetComponent<Rigidbody>();
 
+        CreateListTargets();
+
         var moving = new State<MonsterStates>("Moving");
         var attack = new State<MonsterStates>("Attack");
         var die = new State<MonsterStates>("Die");
@@ -37,7 +41,7 @@ public class Monster : MonoBehaviour, IDamageable
         //MOVING
         moving.OnUpdate += () =>
         {
-            transform.forward = cube.transform.position - transform.position;
+            transform.forward = target.transform.position - transform.position;
         };
         moving.OnFixedUpdate += () =>
         {
@@ -46,32 +50,45 @@ public class Monster : MonoBehaviour, IDamageable
         //ATTACK
         attack.OnUpdate += () =>
         {
-            Debug.Log("ATACO");
-            //LifeCube -= velocityDamageCube * Time.deltaTime;
+            target.GetComponent<IDamageable>().Damage(velocityDamageCube * Time.deltaTime);
         };
 
         _myFsm = new FSM<MonsterStates>(moving);
     }
 
+    void CreateListTargets()
+    {
+        var targets = FindObjectsOfType<SpawnedCube>().Where(x => x.GetComponent<IDamageable>() != null).ToList();
+        cubes = targets;
+    }
+
+    void FindTarget()
+    {
+        target = cubes.OrderBy(x => x.Life).FirstOrDefault();
+    }
+
     private void Update()
     {
+        FindTarget();
+        if (target == null) return;
         _myFsm.Update();
     }
 
     private void FixedUpdate()
     {
+        if (target == null) return;
         _myFsm.FixedUpdate();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject == cube)
+        if(collision.gameObject == target)
             _myFsm.ChangeState(MonsterStates.ATTACK);
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject == cube)
+        if (collision.gameObject == target)
             _myFsm.ChangeState(MonsterStates.MOVE);
     }
 
