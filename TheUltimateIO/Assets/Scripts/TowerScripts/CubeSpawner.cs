@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
-using System.Linq;
 
 public class CubeSpawner : MonoBehaviour
 {
@@ -18,13 +16,14 @@ public class CubeSpawner : MonoBehaviour
     [SerializeField] private LayerMask _spawnLayermask;
     private SpawnedCube _preSpawnedCube;
     public float wheelSizeSpeed;
+    public Vector2 minMaxSize;
 
     private void Awake()
     {
         _preSpawnedCube = Instantiate((GameObject)Resources.Load("SpawnedCube"), Vector3.zero, Quaternion.identity)
                     .GetComponent<SpawnedCube>();
 
-        _preSpawnedCube.SetLife(1).SetSize(1f).Constructor(true).CorrectPosition(Vector3.zero);
+        _preSpawnedCube.SetLife(1f).SetSize(1f).Constructor(true).CorrectPosition(Vector3.zero);
 
         _preSpawnedCube.gameObject.SetActive(false);
 
@@ -71,9 +70,10 @@ public class CubeSpawner : MonoBehaviour
 
         if (_preSpawnedCube != null)
         {
-            _preSpawnedCube.SetSize(_preSpawnedCube.Size + Input.mouseScrollDelta.y * wheelSizeSpeed * Time.deltaTime);
+            float newSize = Mathf.Clamp(_preSpawnedCube.Size + Input.mouseScrollDelta.y * wheelSizeSpeed * Time.deltaTime, minMaxSize.x, minMaxSize.y);
+            _preSpawnedCube.SetSize(newSize);
             _preSpawnedCube.CorrectPosition(hit.point);
-            if(_preSpawnedCube.IsColliding(_spawnLayermask))
+            if (_preSpawnedCube.IsColliding(_spawnLayermask))
             {
                 _preSpawnedCube.SetColor(Color.red);
             }

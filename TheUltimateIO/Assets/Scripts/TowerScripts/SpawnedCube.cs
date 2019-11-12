@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
 using System.Linq;
 
-public class SpawnedCube : MonoBehaviour
+public class SpawnedCube : MonoBehaviour, IDamageable
 {
-    private int _life = 1;
+    private float _life = 1;
+    private float _maxLife;
     private float _size = 1;
-    public int Life
+    public float Life
     {
         get { return _life; }
-        set { _life = Mathf.Max(0, value); if (_life == 0) BreakCube(); }
+        set { _life = Mathf.Max(0, value); if (_life == 0) UpdateHealthState(_life, _maxLife); BreakCube(); }
     }
     public float Size
     {
@@ -21,7 +22,7 @@ public class SpawnedCube : MonoBehaviour
     }
 
     public SpawnedCube SetSize(float size) { Size = size; return this; }
-    public SpawnedCube SetLife(int life) { Life = life; return this; }
+    public SpawnedCube SetLife(float life) { _maxLife = life; Life = life; return this; }
 
     private Rigidbody _rb;
     private BoxCollider _boxColl;
@@ -67,9 +68,20 @@ public class SpawnedCube : MonoBehaviour
         return this;
     }
 
+    private void UpdateHealthState(float life, float maxLife)
+    {
+        _meshRen.material.color = _meshRen.material.color * (life / maxLife);
+        _meshRen.material.color = new Color(_meshRen.material.color.r, _meshRen.material.color.g, _meshRen.material.color.b, 1f);
+    }
+
     private void BreakCube()
     {
         //cambiar la layer
         //activar animacion de romperse
+    }
+
+    public void Damage(float damage)
+    {
+        Life -= damage;
     }
 }
