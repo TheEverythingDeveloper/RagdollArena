@@ -1,14 +1,22 @@
 ﻿using UnityEngine;
 
+public enum SpawnItem
+{
+    None = 0,
+    ConstructionBlock = 1,
+    ConstructionBlockIron = 2,
+    Grenade = 3
+}
+
 public class CubeSpawner : MonoBehaviour
 {
-    [SerializeField] private int _spawningCube;
-    public int SpawningCube
+    [SerializeField] private SpawnItem _spawningItem;
+    public SpawnItem SpawningItem
     {
-        get { return _spawningCube; }
+        get { return _spawningItem; }
         set
         {
-            _spawningCube = value;
+            _spawningItem = value;
             ChangePreSpawnedCube(value);
         }
     }
@@ -20,17 +28,21 @@ public class CubeSpawner : MonoBehaviour
 
     private void Awake()
     {
-        _preSpawnedCube = Instantiate((GameObject)Resources.Load("SpawnedCube"), Vector3.zero, Quaternion.identity)
+        _preSpawnedCube = Instantiate((GameObject)Resources.Load(SpawnItem.ConstructionBlock.ToString()), Vector3.zero, Quaternion.identity)
                     .GetComponent<SpawnedCube>();
 
-        _preSpawnedCube.SetLife(1f).SetSize(1f).Constructor(true).CorrectPosition(Vector3.zero);
+        _preSpawnedCube
+            .SetLife(1f)
+            .SetSize(1f)
+            .Constructor(true)
+            .CorrectPosition(Vector3.zero);
 
         _preSpawnedCube.gameObject.SetActive(false);
 
         ChangePreSpawnedCube(0);
     }
 
-    private void ChangePreSpawnedCube(int spawningCube)
+    private void ChangePreSpawnedCube(SpawnItem spawningCube)
     {
         if (spawningCube == 0)
         {
@@ -41,10 +53,14 @@ public class CubeSpawner : MonoBehaviour
         {
             Destroy(_preSpawnedCube.gameObject);
 
-            _preSpawnedCube = Instantiate((GameObject)Resources.Load("SpawnedCube"), Vector3.zero, Quaternion.identity)
+            _preSpawnedCube = Instantiate((GameObject)Resources.Load(SpawnItem.ConstructionBlock.ToString()), Vector3.zero, Quaternion.identity)
                             .GetComponent<SpawnedCube>();
 
-            _preSpawnedCube.SetLife(spawningCube).SetSize(spawningCube).Constructor(true).CorrectPosition(Vector3.zero);
+            _preSpawnedCube
+                .SetLife((int)spawningCube)
+                .SetSize((int)spawningCube)
+                .Constructor(true)
+                .CorrectPosition(Vector3.zero);
 
             _preSpawnedCube.gameObject.SetActive(true);
         }
@@ -52,14 +68,16 @@ public class CubeSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            SpawningCube = SpawningCube == 1 ? 0 : 1;
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-            SpawningCube = SpawningCube == 2 ? 0 : 2;
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-            SpawningCube = SpawningCube == 3 ? 0 : 3;
+        if (Input.GetKeyDown(KeyCode.Alpha1)) //nada
+            SpawningItem = SpawnItem.None;
+        else if (Input.GetKeyDown(KeyCode.Alpha2)) //bloque construction
+            SpawningItem = SpawnItem.ConstructionBlock;
+        else if (Input.GetKeyDown(KeyCode.Alpha3)) //bloque construccion reforzada
+            SpawningItem = SpawnItem.ConstructionBlockIron;
+        else if (Input.GetKeyDown(KeyCode.Alpha4)) //granada
+            SpawningItem = SpawnItem.Grenade;
 
-        if (_spawningCube == 0) return;
+        if (_spawningItem == 0) return;
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -86,7 +104,7 @@ public class CubeSpawner : MonoBehaviour
                 if (Input.GetMouseButtonDown(0))
                 {
                     if (_canSpawn)
-                        SpawnCube(SpawningCube, hit.point);
+                        SpawnCube(SpawningItem, hit.point);
                     else
                         Debug.Log("No se pudo spawnear");
                 }
@@ -94,12 +112,17 @@ public class CubeSpawner : MonoBehaviour
         }
     }
 
-    public void SpawnCube(int spawnCube, Vector3 hitPos)
+    public void SpawnCube(SpawnItem spawnCube, Vector3 hitPos)
     {
-        Debug.Log("se spawneo el cubo " + spawnCube);
-        var spawnedCube = Instantiate((GameObject)Resources.Load("SpawnedCube"), hitPos, Quaternion.identity)
+        Debug.Log("se spawneo el cubo " + spawnCube.ToString());
+        var spawnedCube = Instantiate((GameObject)Resources.Load(spawnCube.ToString()), hitPos, Quaternion.identity)
             .GetComponent<SpawnedCube>();
 
-        spawnedCube.SetLife(spawnCube).SetSize(_preSpawnedCube.Size).Constructor(false).CorrectPosition(hitPos).SetColor(Color.white);
+        spawnedCube
+            .SetLife((int)spawnCube)
+            .SetSize(_preSpawnedCube.Size)
+            .Constructor(false)
+            .CorrectPosition(hitPos)
+            .SetColor(Color.white);
     }
 }
