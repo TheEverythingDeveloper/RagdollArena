@@ -167,7 +167,11 @@ namespace Character
         public void AddPoint(int points)
         {
             _lvlMng.UpdateUserPoints(PhotonNetwork.NickName, points);
-
+            var cubeSpawner = FindObjectOfType<CubeSpawner>();
+            if(cubeSpawner != null)
+            {
+                cubeSpawner.ConstructionPoints += points;
+            }
         }
 
         public bool OnClickPlayer()

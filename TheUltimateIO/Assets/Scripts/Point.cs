@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Character;
 
 public class Point : MonoBehaviourPun
 {
@@ -12,8 +13,8 @@ public class Point : MonoBehaviourPun
     {
         if (collision.gameObject.layer == Layers.CHARACTER || collision.gameObject.layer == Layers.PLAYER || collision.gameObject.layer == Layers.MONSTER)
         {
-            if(collision.gameObject.GetComponentInParent<Character.CharacterModel>())
-                collision.gameObject.GetComponentInParent<Character.CharacterModel>().AddPoint(points);
+            if(collision.gameObject.GetComponentInParent<CharacterModel>())
+                collision.gameObject.GetComponentInParent<CharacterModel>().AddPoint(points);
 
             PhotonNetwork.Destroy(gameObject);
         }

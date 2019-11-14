@@ -10,6 +10,7 @@ public class TowerSceneManager : MonoBehaviour
 {
     public List<MonsterWave> monsterWavesList = new List<MonsterWave>();
     [SerializeField] private GameObject _monsterPrefab;
+    [SerializeField] private GameObject _constructionPointPrefab;
     public float generalDifficulty;
     public float spawnWidth;
 
@@ -28,10 +29,6 @@ public class TowerSceneManager : MonoBehaviour
 
     IEnumerator SpawnEnemies()
     {
-        float rnd = Random.Range(5f,10f); //cambiar esto a un numero mas grande para que las oleadas tengan mas tiempo de espera
-        yield return new WaitForSeconds(rnd);
-
-        Debug.Log("spawn");
         List<Monster> intermediateList = new List<Monster>();
         List<CharacterModel> allPlayers = FindObjectsOfType<CharacterModel>().ToList();
         //IA2-P1 : Aggregate 01 (este aggregate va a ser acumular dificultad, teniendo en cuenta las posiciones de los players que hayan)
@@ -45,12 +42,23 @@ public class TowerSceneManager : MonoBehaviour
 
         for (int i = 0; i < Mathf.Max(3,Mathf.RoundToInt(difficulty)); i++)
         {
+            Vector3 randomPos = new Vector3(Random.Range(-spawnWidth, spawnWidth), 2, Random.Range(-spawnWidth, spawnWidth));
+
             intermediateList.Add(Instantiate(_monsterPrefab, 
-                centerOfSpawn + new Vector3(Random.Range(-spawnWidth,spawnWidth), 2, Random.Range(-spawnWidth,spawnWidth)), Quaternion.identity).GetComponent<Monster>());
+                centerOfSpawn + randomPos, Quaternion.identity).GetComponent<Monster>());
+
+            for (int j = 0; j < 3; j++)
+            {
+                randomPos = new Vector3(Random.Range(-spawnWidth, spawnWidth), 2, Random.Range(-spawnWidth, spawnWidth));
+                Instantiate(_constructionPointPrefab, centerOfSpawn + randomPos, Quaternion.identity);
+            }
+            
         }
 
         monsterWavesList.Add(new MonsterWave(intermediateList));
 
+        float rnd = Random.Range(20f,50f); //cambiar esto a un numero mas grande para que las oleadas tengan mas tiempo de espera
+        yield return new WaitForSeconds(rnd);
         StartCoroutine(SpawnEnemies());
     }
 

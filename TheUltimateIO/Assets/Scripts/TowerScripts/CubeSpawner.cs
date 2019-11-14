@@ -1,4 +1,8 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+using System.Collections;
+using UnityEngine.UI;
+using TMPro;
 
 public enum SpawnItem
 {
@@ -20,13 +24,33 @@ public class CubeSpawner : MonoBehaviour
         }
     }
     private bool _canSpawn;
+    private bool _cooldownOn;
+    public float spawnCooldown = 0.5f;
+    [SerializeField] private float _constructionPointsAmount;
+    public float ConstructionPoints
+    {
+        get { return _constructionPointsAmount; }
+        set
+        {
+            _constructionPointsAmount = Mathf.RoundToInt(Mathf.Clamp(value, 0, 100000));
+            _constructionPointsText.text = _constructionPointsAmount.ToString();
+        }
+    }
     [SerializeField] private LayerMask _spawnLayermask;
     private SpawnedCube _preSpawnedCube;
     public float wheelSizeSpeed;
     public Vector2 minMaxSize;
 
+    #region UI
+    TextMeshProUGUI _constructionPointsText;
+    [SerializeField] Image _constructionCooldownImg;
+    #endregion
+
     private void Awake()
     {
+        _constructionPointsText = GetComponentInChildren<TextMeshProUGUI>();
+        ConstructionPoints = _constructionPointsAmount;
+
         _preSpawnedCube = Instantiate((GameObject)Resources.Load(SpawnItem.ConstructionBlock.ToString()), Vector3.zero, Quaternion.identity)
                     .GetComponent<SpawnedCube>();
 
@@ -62,7 +86,22 @@ public class CubeSpawner : MonoBehaviour
             _preSpawnedCube.gameObject.SetActive(true);
         }
     }
-    
+
+    IEnumerator SpawnCubeCooldown()
+    {
+        _cooldownOn = true;
+        _preSpawnedCube.SetColor(Color.red);
+        float t = 0;
+        while(t < spawnCooldown)
+        {
+            t += Time.deltaTime;
+            _constructionCooldownImg.fillAmount = t / spawnCooldown;
+            yield return new WaitForEndOfFrame();
+        }
+        _cooldownOn = false;
+        _preSpawnedCube.SetColor(Color.green);
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1)) //nada
@@ -72,7 +111,7 @@ public class CubeSpawner : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Alpha3)) //bloque construccion reforzada
             SpawningItem = SpawnItem.ConstructionBlockIron;
 
-        if (_spawningItem == 0) return;
+        if (_spawningItem == 0 || _cooldownOn) return;
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -98,8 +137,11 @@ public class CubeSpawner : MonoBehaviour
 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    if (_canSpawn)
+                    if (_canSpawn && ConstructionPoints > 0)
+                    {
+                        StartCoroutine(SpawnCubeCooldown());
                         SpawnCube(SpawningItem, hit.point);
+                    }
                     else
                         Debug.Log("No se pudo spawnear");
                 }
@@ -112,6 +154,8 @@ public class CubeSpawner : MonoBehaviour
         Debug.Log("se spawneo el cubo " + spawnCube.ToString());
         var spawnedCube = Instantiate((GameObject)Resources.Load(spawnCube.ToString()), hitPos, Quaternion.identity)
             .GetComponent<SpawnedCube>();
+
+        ConstructionPoints -= _preSpawnedCube.Size;
 
         spawnedCube
             .SetLife((int)spawnCube)

@@ -683,7 +683,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 581, guid: 5902c9be90972cf429bc3820e10dd5d0, type: 3}
       propertyPath: jumpSpeed
-      value: 7500
+      value: 6800
       objectReference: {fileID: 0}
     - target: {fileID: 581, guid: 5902c9be90972cf429bc3820e10dd5d0, type: 3}
       propertyPath: grenadeThrowSpeed
