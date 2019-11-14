@@ -13,6 +13,7 @@ public class Monster : MonoBehaviour, IDamageable
     public float speed;
     public float velocityDamageCube;
     public float timeResetList;
+    [Tooltip("Mientras mas de esto tenga, mas alcance a escuchar a su alrededor")] public float hearCapabilityRadius; 
     public SpawnedCube target;
     List<SpawnedCube> cubes = new List<SpawnedCube>();
     FSM<MonsterStates> _myFsm;
@@ -59,6 +60,12 @@ public class Monster : MonoBehaviour, IDamageable
     void Start()
     {
         CreateListTargets();
+    }
+
+    public void CallMonster(Vector3 pos)
+    {
+        //aca se llama al monstruo en caso de que haya pasado algo
+        Debug.Log("Monster call to " + pos);
     }
 
     void CreateListTargets()

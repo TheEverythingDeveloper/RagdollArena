@@ -53,13 +53,11 @@ public class CubeSpawner : MonoBehaviour
             Destroy(_preSpawnedCube.gameObject);
 
             _preSpawnedCube = Instantiate((GameObject)Resources.Load(spawningCube.ToString()), Vector3.zero, Quaternion.identity)
-                            .GetComponent<SpawnedCube>();
-
-            _preSpawnedCube
-                .SetLife((int)spawningCube)
-                .SetSize((int)spawningCube)
-                .Constructor(true)
-                .CorrectPosition(Vector3.zero);
+                            .GetComponent<SpawnedCube>()
+                            .SetLife((int)spawningCube)
+                            .SetSize((int)spawningCube)
+                            .Constructor(true)
+                            .CorrectPosition(Vector3.zero);
 
             _preSpawnedCube.gameObject.SetActive(true);
         }
