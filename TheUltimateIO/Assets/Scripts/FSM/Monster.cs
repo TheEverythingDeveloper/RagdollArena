@@ -7,15 +7,19 @@ using System.Linq;
 
 public class Monster : MonoBehaviour, IDamageable
 {
-    Rigidbody _rb;
+    protected Rigidbody _rb;
     public float maxLife;
-    float _life;
+    protected float _life;
     public float speed;
     public float velocityDamageCube;
     public float timeResetList;
-    public SpawnedCube target;
-    List<SpawnedCube> cubes = new List<SpawnedCube>();
-    FSM<MonsterStates> _myFsm;
+    public float distView;
+    protected SpawnedCube target;
+    protected SpawnedCube blockWalk;
+    public LayerMask maskEnemies;
+    protected List<SpawnedCube> cubes = new List<SpawnedCube>();
+    protected FSM<MonsterStates> _myFsm;
+    protected ParticleSystem _particles;
 
     public enum MonsterStates
     {
@@ -24,10 +28,11 @@ public class Monster : MonoBehaviour, IDamageable
         DIE
     }
 
-    void Awake()
+    protected virtual void Awake()
     {
         _life = maxLife;
         _rb = gameObject.GetComponent<Rigidbody>();
+        _particles = GetComponent<ParticleSystem>();
 
         var moving = new State<MonsterStates>("Moving");
         var attack = new State<MonsterStates>("Attack");
@@ -46,69 +51,105 @@ public class Monster : MonoBehaviour, IDamageable
         {
             _rb.velocity += transform.forward * speed * Time.deltaTime;
         };
+        moving.OnExit += x =>
+        {
+            _rb.velocity = Vector3.zero;
+        };
         //ATTACK
+        attack.OnEnter += x =>
+        {
+            _particles.Play();
+        };
         attack.OnUpdate += () =>
         {
-            Debug.Log("Attack");
-            target.GetComponent<IDamageable>().Damage(velocityDamageCube * Time.deltaTime);
+            if(blockWalk)
+                blockWalk.GetComponent<IDamageable>().Damage(velocityDamageCube * Time.deltaTime);
+            else
+                target.GetComponent<IDamageable>().Damage(velocityDamageCube * Time.deltaTime);
+        };
+        attack.OnExit += x =>
+        {
+            _particles.Stop();
         };
 
         _myFsm = new FSM<MonsterStates>(moving);
     }
 
-    void Start()
+    protected virtual void Start()
     {
         CreateListTargets();
     }
 
-    void CreateListTargets()
+    protected void CreateListTargets()
     {
         StartCoroutine(UpdateListTarget());
     }
 
-    IEnumerator UpdateListTarget()
+    protected IEnumerator UpdateListTarget()
     {
-        var targets = new List<SpawnedCube>();
         var waitForSeconds = new WaitForSeconds(timeResetList);
 
         while (true)
         {
-            targets = FindObjectsOfType<SpawnedCube>().Where(x => x.Life > 0).ToList();
-            cubes = targets;
+            ConditionList();
             yield return waitForSeconds;
         }
     }
 
-    void FindTarget()
+    protected virtual void ConditionList()
     {
-        target = cubes.OrderBy(x => x.Life).FirstOrDefault();
+        var targets = FindObjectsOfType<SpawnedCube>().Where(x => x.Life > 0).ToList();
+        cubes = targets;
     }
 
-    private void Update()
+    protected virtual void ConditionTarget()
     {
-        FindTarget();
-        if (target == null) return;
+
+    }
+
+    protected virtual void Update()
+    {
+        ConditionTarget();
+        if (target == null)
+        {
+            if (_myFsm.ActualState() != MonsterStates.MOVE)
+                _myFsm.ChangeState(MonsterStates.MOVE);
+
+            return;
+        }
+        RayTarget();
         _myFsm.Update();
     }
 
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         if (target == null) return;
         _myFsm.FixedUpdate();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    protected virtual void RayTarget()
     {
-        if(collision.gameObject == target.gameObject)
-            _myFsm.ChangeState(MonsterStates.ATTACK);
+        RaycastHit hit;
+
+        if(Physics.Raycast(transform.position, transform.forward, out hit, distView, maskEnemies))
+        {
+            var cube = hit.collider.GetComponent<SpawnedCube>();
+
+            if (cube == null) return;
+
+            blockWalk = cube == target? null : cube;
+
+            if (_myFsm.ActualState() != MonsterStates.ATTACK)
+                _myFsm.ChangeState(MonsterStates.ATTACK);
+
+        }else if(_myFsm.ActualState() != MonsterStates.MOVE)
+        {
+            _myFsm.ChangeState(MonsterStates.MOVE);
+            blockWalk = null;
+        }
     }
 
-    private void OnCollisionExit(Collision collision)
-    {
-        _myFsm.ChangeState(MonsterStates.MOVE);
-    }
-
-    public void Damage(float damage)
+    public virtual void Damage(float damage)
     {
         _life -= damage;
 
@@ -118,7 +159,7 @@ public class Monster : MonoBehaviour, IDamageable
         }
     }
 
-    public void Explosion(Vector3 origin, float force)
+    public virtual void Explosion(Vector3 origin, float force)
     {
         Vector3 difference = transform.position - origin;
         float magnitude = difference.magnitude;
