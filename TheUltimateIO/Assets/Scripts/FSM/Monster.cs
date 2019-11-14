@@ -21,6 +21,8 @@ public class Monster : MonoBehaviour, IDamageable
     protected FSM<MonsterStates> _myFsm;
     protected ParticleSystem _particles;
 
+    [Tooltip("Mientras mas de esto tenga, mas alcance a escuchar a su alrededor")] public float hearCapabilityRadius;
+
     public enum MonsterStates
     {
         MOVE,
@@ -166,5 +168,11 @@ public class Monster : MonoBehaviour, IDamageable
 
         _rb.AddForce(difference * force, ForceMode.Impulse);
         Damage(magnitude * force);
+    }
+
+    public void CallMonster(Vector3 pos)
+    {
+        //aca se llama al monstruo en caso de que haya pasado algo
+        Debug.Log("Monster call to " + pos);
     }
 }
