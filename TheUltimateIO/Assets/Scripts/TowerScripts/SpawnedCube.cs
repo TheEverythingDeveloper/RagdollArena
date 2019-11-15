@@ -88,7 +88,7 @@ public class SpawnedCube : MonoBehaviour, IDamageable
     public void Damage(float damage)
     {
         Life -= damage;
-        if (Life <= 0) gameObject.SetActive(false);
+        if (Life <= 0) GetComponent<GridEntity>().DestroyGameObject();
     }
 
     public void Explosion(Vector3 origin, float force)

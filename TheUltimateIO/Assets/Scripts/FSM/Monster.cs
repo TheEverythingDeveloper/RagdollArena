@@ -14,10 +14,10 @@ public class Monster : MonoBehaviour, IDamageable
     public float velocityDamageCube;
     public float timeResetList;
     public float distView;
-    protected SpawnedCube target;
-    protected SpawnedCube blockWalk;
+    public SpawnedCube target;
+    public SpawnedCube blockWalk;
     public LayerMask maskEnemies;
-    public List<SpawnedCube> cubes = new List<SpawnedCube>();
+    protected List<SpawnedCube> cubes = new List<SpawnedCube>();
     protected FSM<MonsterStates> _myFsm;
     protected ParticleSystem _particles;
     protected Queries _queries;
@@ -49,12 +49,19 @@ public class Monster : MonoBehaviour, IDamageable
         StateConfigurer.Create(attack).SetTransition(MonsterStates.IDLE, idle).SetTransition(MonsterStates.MOVE, moving).SetTransition(MonsterStates.DIE, die).Done();
         StateConfigurer.Create(die).Done();
 
-        //IDLE
+        idle.OnEnter += x =>
+        {
+            if (cubes.Count > 0) ConditionTarget();
+        };
         idle.OnUpdate += () =>
         {
             InIdle();
         };
-        //MOVING
+        idle.OnExit += x =>
+        {
+
+        };
+
         moving.OnUpdate += () =>
         {
             MovingUpdate();
@@ -67,7 +74,7 @@ public class Monster : MonoBehaviour, IDamageable
         {
             _rb.velocity = Vector3.zero;
         };
-        //ATTACK
+
         attack.OnEnter += x =>
         {
             _particles.Play();
@@ -84,7 +91,7 @@ public class Monster : MonoBehaviour, IDamageable
             _particles.Stop();
         };
 
-        _myFsm = new FSM<MonsterStates>(moving);
+        _myFsm = new FSM<MonsterStates>(idle);
     }
 
     protected virtual void Start()
@@ -97,6 +104,8 @@ public class Monster : MonoBehaviour, IDamageable
     protected virtual void InIdle()
     {
         if (target != null) _myFsm.ChangeState(MonsterStates.MOVE);
+
+        if (cubes.Count > 0) ConditionTarget();
     }
 
     protected virtual void MovingUpdate()
@@ -136,12 +145,12 @@ public class Monster : MonoBehaviour, IDamageable
     #region Updates
     protected virtual void Update()
     {
-        if (cubes.Count > 0) ConditionTarget();
-
         if (target == null)
         {
             if (_myFsm.ActualState() != MonsterStates.IDLE)
+            {
                 _myFsm.ChangeState(MonsterStates.IDLE);
+            }
         }
         RayTarget();
         _myFsm.Update();
@@ -189,9 +198,9 @@ public class Monster : MonoBehaviour, IDamageable
             if (_myFsm.ActualState() != MonsterStates.ATTACK)
                 _myFsm.ChangeState(MonsterStates.ATTACK);
 
-        }else if(_myFsm.ActualState() != MonsterStates.MOVE)
+        }else if(_myFsm.ActualState() == MonsterStates.ATTACK)
         {
-            _myFsm.ChangeState(MonsterStates.MOVE);
+            _myFsm.ChangeState(MonsterStates.IDLE);
             blockWalk = null;
             target = null;
         }

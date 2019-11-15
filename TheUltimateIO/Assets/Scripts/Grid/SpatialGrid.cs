@@ -39,6 +39,12 @@ public class SpatialGrid : MonoBehaviour
         e.OnMove += UpdateEntity;
         UpdateEntity(e);
     }
+    public void DestroyCubeGrid(GridEntity entity)
+    {
+        var currentPos = GetPositionInGrid(entity.gameObject.transform.position);
+
+        buckets[currentPos.Item1, currentPos.Item2].Remove(entity);
+    }
     public void UpdateEntity(GridEntity entity)
     {
         var lastPos = lastPositions.ContainsKey(entity) ? lastPositions[entity] : Outside;

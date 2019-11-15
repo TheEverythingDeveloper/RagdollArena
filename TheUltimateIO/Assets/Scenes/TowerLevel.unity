@@ -291,7 +291,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterWavesList: []
-  _monsterPrefab: {fileID: 2311710388399058155, guid: b31d6b6c6a88703459cedc00f220e809,
+  _monsterPrefab: {fileID: 7782486213767776566, guid: bdd8b6ad244ca164395648d8680f0868,
     type: 3}
   _constructionPointPrefab: {fileID: 4716353248944008624, guid: 5d3cce8e60640434c8d0a595bd345801,
     type: 3}
