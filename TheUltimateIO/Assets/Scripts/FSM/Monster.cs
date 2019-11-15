@@ -30,7 +30,7 @@ public class Monster : MonoBehaviour, IDamageable
         DIE
     }
 
-    protected virtual void Awake()
+    protected void Awake()
     {
         _life = maxLife;
         _rb = gameObject.GetComponent<Rigidbody>();
@@ -47,11 +47,11 @@ public class Monster : MonoBehaviour, IDamageable
         //MOVING
         moving.OnUpdate += () =>
         {
-            transform.forward = target.transform.position - transform.position;
+            MovingUpdate();
         };
         moving.OnFixedUpdate += () =>
         {
-            _rb.velocity += transform.forward * speed * Time.deltaTime;
+            MovingFixedUpdate();
         };
         moving.OnExit += x =>
         {
@@ -82,7 +82,54 @@ public class Monster : MonoBehaviour, IDamageable
         CreateListTargets();
     }
 
-    protected void CreateListTargets()
+    #region Moving
+    protected virtual void MovingUpdate()
+    {
+        if (target == null) return;
+        transform.forward = target.transform.position - transform.position;
+    }
+
+    protected virtual void MovingFixedUpdate()
+    {
+        if (target == null) return;
+        _rb.velocity += transform.forward * speed * Time.deltaTime;
+    }
+    #endregion
+
+    #region Conditions
+    protected virtual void ConditionList()
+    {
+        var targets = FindObjectsOfType<SpawnedCube>().Where(x => x.Life > 0).ToList();
+        cubes = targets;
+    }
+
+    protected virtual void ConditionTarget()
+    {
+
+    }
+    #endregion
+
+    #region Updates
+    protected virtual void Update()
+    {
+        ConditionTarget();
+        if (target == null)
+        {
+            if (_myFsm.ActualState() != MonsterStates.MOVE)
+                _myFsm.ChangeState(MonsterStates.MOVE);
+        }
+        RayTarget();
+        _myFsm.Update();
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        _myFsm.FixedUpdate();
+    }
+    #endregion
+
+    #region ListTarget
+    protected virtual void CreateListTargets()
     {
         StartCoroutine(UpdateListTarget());
     }
@@ -97,37 +144,7 @@ public class Monster : MonoBehaviour, IDamageable
             yield return waitForSeconds;
         }
     }
-
-    protected virtual void ConditionList()
-    {
-        var targets = FindObjectsOfType<SpawnedCube>().Where(x => x.Life > 0).ToList();
-        cubes = targets;
-    }
-
-    protected virtual void ConditionTarget()
-    {
-
-    }
-
-    protected virtual void Update()
-    {
-        ConditionTarget();
-        if (target == null)
-        {
-            if (_myFsm.ActualState() != MonsterStates.MOVE)
-                _myFsm.ChangeState(MonsterStates.MOVE);
-
-            return;
-        }
-        RayTarget();
-        _myFsm.Update();
-    }
-
-    protected virtual void FixedUpdate()
-    {
-        if (target == null) return;
-        _myFsm.FixedUpdate();
-    }
+    #endregion
 
     protected virtual void RayTarget()
     {
@@ -139,7 +156,10 @@ public class Monster : MonoBehaviour, IDamageable
 
             if (cube == null) return;
 
-            blockWalk = cube == target? null : cube;
+            if (target == null)
+                target = cube;
+            else
+                 blockWalk = cube == target? null : cube;
 
             if (_myFsm.ActualState() != MonsterStates.ATTACK)
                 _myFsm.ChangeState(MonsterStates.ATTACK);
@@ -148,6 +168,7 @@ public class Monster : MonoBehaviour, IDamageable
         {
             _myFsm.ChangeState(MonsterStates.MOVE);
             blockWalk = null;
+            target = null;
         }
     }
 
@@ -158,7 +179,13 @@ public class Monster : MonoBehaviour, IDamageable
         if(_life <= 0)
         {
             _myFsm.ChangeState(MonsterStates.DIE);
+            Die();
         }
+    }
+
+    public virtual void Die()
+    {
+        Destroy(gameObject);
     }
 
     public virtual void Explosion(Vector3 origin, float force)
