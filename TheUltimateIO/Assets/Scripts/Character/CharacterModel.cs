@@ -127,7 +127,7 @@ namespace Character
         {
             StopCoroutine(_throwGrenadeCoroutine);
 
-            GameObject grenade = Instantiate((GameObject)Resources.Load("Grenade"),
+            GameObject grenade = PhotonNetwork.Instantiate("Grenade",
                 pelvisRb.transform.position + transform.forward * 2f, Quaternion.identity);
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;

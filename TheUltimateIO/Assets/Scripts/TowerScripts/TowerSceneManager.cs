@@ -5,6 +5,7 @@ using Character;
 using System.Linq;
 using System;
 using Random = UnityEngine.Random;
+using Photon.Pun;
 
 public class TowerSceneManager : MonoBehaviour
 {
@@ -44,13 +45,13 @@ public class TowerSceneManager : MonoBehaviour
         {
             Vector3 randomPos = new Vector3(Random.Range(-spawnWidth, spawnWidth), 2, Random.Range(-spawnWidth, spawnWidth));
 
-            intermediateList.Add(Instantiate(_monsterPrefab, 
+            intermediateList.Add(PhotonNetwork.Instantiate("MonsterMinSize", 
                 centerOfSpawn + randomPos, Quaternion.identity).GetComponent<Monster>());
 
             for (int j = 0; j < 3; j++)
             {
                 randomPos = new Vector3(Random.Range(-spawnWidth, spawnWidth), 2, Random.Range(-spawnWidth, spawnWidth));
-                Instantiate(_constructionPointPrefab, centerOfSpawn + randomPos, Quaternion.identity);
+                PhotonNetwork.Instantiate("ConstructionPoint", centerOfSpawn + randomPos, Quaternion.identity);
             }
             
         }

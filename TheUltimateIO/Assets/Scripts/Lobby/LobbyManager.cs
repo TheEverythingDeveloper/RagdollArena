@@ -14,14 +14,16 @@ namespace Lobby
         private NetManager _netMng;
         [SerializeField] private TMP_InputField _nicknameInputField;
         [SerializeField] private GameObject _nicknamePanel;
+        public int sceneID;
 
         private void Awake()
         {
             _netMng = FindObjectOfType<NetManager>();
         }
 
-        public void StartButton()
+        public void StartButton(int newSceneID)
         {
+            sceneID = newSceneID;
             _nicknamePanel.SetActive(true);
         }
 
@@ -40,7 +42,7 @@ namespace Lobby
 
         public void StartGame()
         {
-            _netMng.Connect();
+            _netMng.Connect(sceneID);
         }
     }
 }

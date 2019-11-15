@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.UI;
 using TMPro;
+using Photon.Pun;
 
 public enum SpawnItem
 {
@@ -152,7 +153,7 @@ public class CubeSpawner : MonoBehaviour
     public void SpawnCube(SpawnItem spawnCube, Vector3 hitPos)
     {
         Debug.Log("se spawneo el cubo " + spawnCube.ToString());
-        var spawnedCube = Instantiate((GameObject)Resources.Load(spawnCube.ToString()), hitPos, Quaternion.identity)
+        var spawnedCube = PhotonNetwork.Instantiate(spawnCube.ToString(), hitPos, Quaternion.identity)
             .GetComponent<SpawnedCube>();
 
         ConstructionPoints -= _preSpawnedCube.Size;

@@ -1980,10 +1980,6 @@ MonoBehaviour:
   - {x: 35.269566, y: 33.41922, z: 0}
   - {x: 51.325787, y: 33.41922, z: 0}
   - {x: 51.325787, y: 10.507534, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
   m_currentColours:
   - serializedVersion: 2
     rgba: 4294967295
@@ -2009,14 +2005,6 @@ MonoBehaviour:
     rgba: 4294967295
   - serializedVersion: 2
     rgba: 4294967295
-  - serializedVersion: 2
-    rgba: 0
-  - serializedVersion: 2
-    rgba: 0
-  - serializedVersion: 2
-    rgba: 0
-  - serializedVersion: 2
-    rgba: 0
 --- !u!222 &1503604027
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2941,7 +2929,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2010862692
 MonoBehaviour:
   m_ObjectHideFlags: 0

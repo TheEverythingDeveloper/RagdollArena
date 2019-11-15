@@ -7,6 +7,7 @@ public class NetManager : MonoBehaviourPunCallbacks
 {
     public string nickname = "GenericNickname";
     public string gameVersion = "0.0.1";
+    public int sceneID;
 
     private void Start()
     {
@@ -15,8 +16,9 @@ public class NetManager : MonoBehaviourPunCallbacks
         PhotonNetwork.GameVersion = gameVersion;
     }
 
-    public void Connect()
+    public void Connect(int newSceneID)
     {
+        sceneID = newSceneID;
         PhotonNetwork.ConnectUsingSettings();
     }
 
@@ -35,7 +37,7 @@ public class NetManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log(PhotonNetwork.LocalPlayer.NickName + " has entered the room :" + PhotonNetwork.CurrentRoom + "!");
-        PhotonNetwork.LoadLevel("MainScene");
+        PhotonNetwork.LoadLevel(sceneID);
         if (PhotonNetwork.CurrentRoom.PlayerCount <= 1) //es decir que somos el que creo el room
         {
             var go = PhotonNetwork.Instantiate("LevelManager", transform.position, Quaternion.identity);
