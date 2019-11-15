@@ -6,6 +6,7 @@ public class SpawnedCube : MonoBehaviour, IDamageable
     private float _life = 1;
     private float _maxLife;
     private float _size = 1;
+
     public float Life
     {
         get { return _life; }
@@ -46,7 +47,7 @@ public class SpawnedCube : MonoBehaviour, IDamageable
 
     public SpawnedCube SetColor(Color newColor)
     {
-        _meshRen.material.color = newColor;
+        _meshRen.material.color = newColor; 
         return this;
     }
 
@@ -56,13 +57,16 @@ public class SpawnedCube : MonoBehaviour, IDamageable
         return this;
     }
 
+    public bool preCube; //saber si se spawneo o no
+
     /// <summary>
     /// "Constructor" de cuando spawneamos el cubo
     /// </summary>
     /// <param name="isPreCube">Si es true significa que no es un cubo real, todavia no tiene collider ni rigidbody</param>
     public SpawnedCube Constructor(bool isPreCube)
     {
-        if (isPreCube) return this;
+        preCube = isPreCube;
+        if (preCube) return this;
 
         _rb.isKinematic = false;
         _boxColl.enabled = true;
