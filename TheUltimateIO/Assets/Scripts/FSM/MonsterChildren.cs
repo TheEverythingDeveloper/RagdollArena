@@ -14,20 +14,35 @@ public class MonsterChildren : Monster
 
     }
 
+    private void Update()
+    {
+        _positionMonster = player.position + distPlayer;
+
+        RayTarget();
+        _myFsm.Update();
+    }
+
+    protected override void InIdle()
+    {
+        if (Vector3.Distance(transform.position, _positionMonster) > 2)
+        {
+            _myFsm.ChangeState(MonsterStates.MOVE);
+        }
+
+    }
+
     protected override void MovingUpdate()
     {
         transform.forward = _positionMonster - transform.position;
+
+        if (Vector3.Distance(transform.position, _positionMonster) < 2)
+        {
+             _myFsm.ChangeState(MonsterStates.IDLE);
+        }
     }
     protected override void MovingFixedUpdate()
     {
-        if (_idle) return;
         _rb.velocity += transform.forward * speed * Time.deltaTime;
-    }
-
-    protected override void ConditionTarget()
-    {
-        _positionMonster = player.position + distPlayer;
-        _idle = Vector3.Distance(transform.position, _positionMonster) < 2;
     }
 
     public override void Die()

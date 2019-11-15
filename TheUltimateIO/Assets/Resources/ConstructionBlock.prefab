@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2501914215295795843}
   - component: {fileID: 1231964361532343997}
   - component: {fileID: 1851330639271091571}
+  - component: {fileID: 766383664918299277}
   m_Layer: 16
   m_Name: ConstructionBlock
   m_TagString: Untagged
@@ -50,6 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d9751b5a1467b845ac8fda1d104ac7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  preCube: 0
 --- !u!33 &6243196535240019209
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -178,3 +180,15 @@ MonoBehaviour:
   m_SynchronizeAngularVelocity: 0
   m_TeleportEnabled: 0
   m_TeleportIfDistanceGreaterThan: 3
+--- !u!114 &766383664918299277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6243196535240019212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac49b2b6d50c7a749bea4d8294713dac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

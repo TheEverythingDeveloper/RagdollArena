@@ -81,7 +81,6 @@ public class SpawnedCube : MonoBehaviour, IDamageable
 
     private void BreakCube()
     {
-        //Destroy(gameObject);
         //cambiar la layer
         //activar animacion de romperse
     }
@@ -89,7 +88,7 @@ public class SpawnedCube : MonoBehaviour, IDamageable
     public void Damage(float damage)
     {
         Life -= damage;
-        if (Life <= 0) Destroy(gameObject);
+        if (Life <= 0) gameObject.SetActive(false);
     }
 
     public void Explosion(Vector3 origin, float force)

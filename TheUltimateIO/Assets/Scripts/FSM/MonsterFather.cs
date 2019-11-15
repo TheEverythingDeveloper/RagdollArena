@@ -22,6 +22,14 @@ public class MonsterFather : Monster
         _rb.velocity += transform.forward * speed * Time.deltaTime;
     }
 
+    private void Update()
+    {
+        if (cubes.Count > 0) ConditionTarget();
+
+        RayTarget();
+        _myFsm.Update();
+    }
+
     public void CallFather(Vector3 pos)
     {
         var m = (GameObject)Instantiate(Resources.Load("MonsterChildren"), Vector3.zero, Quaternion.identity);
@@ -37,6 +45,8 @@ public class MonsterFather : Monster
         var targets = FindObjectsOfType<CharacterModel>().ToList();
         _player = targets.OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).FirstOrDefault().pelvisRb.transform;
 
+        if (_player == null) return;
+
         for (int i = 0; i < positionsChildren.Count; i++)
         {
             var m = (GameObject)Instantiate(Resources.Load("MonsterChildren"), Vector3.zero, Quaternion.identity);
@@ -46,7 +56,7 @@ public class MonsterFather : Monster
             childrens.Add(newMonster);
         }
 
-        var tupleChildrens = childrens.Zip(positionsChildren, (c, p) => Tuple.Create(c, p));
+        var tupleChildrens = childrens.Zip(positionsChildren, (c, p) => Tuple.Create(c, p));//IA2-P1
         tupleChildrens.Select(x => x.Item1.distPlayer = x.Item2).ToList();
     }
 

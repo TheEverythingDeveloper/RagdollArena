@@ -199,6 +199,7 @@ GameObject:
   - component: {fileID: 982915668279112660}
   - component: {fileID: 5306824993474583226}
   - component: {fileID: 5372730025472123073}
+  - component: {fileID: 7144860869017080951}
   m_Layer: 0
   m_Name: MonsterChildren
   m_TagString: Untagged
@@ -4961,6 +4962,23 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!114 &7144860869017080951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1889000653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a13e56912cd12994d84bf893fd779f87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBox: 0
+  radius: 13.18
+  targetGrid: {fileID: 0}
+  width: 5
+  height: 5
 --- !u!1 &1991038673
 GameObject:
   m_ObjectHideFlags: 0

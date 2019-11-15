@@ -17,14 +17,16 @@ public class Monster : MonoBehaviour, IDamageable
     protected SpawnedCube target;
     protected SpawnedCube blockWalk;
     public LayerMask maskEnemies;
-    protected List<SpawnedCube> cubes = new List<SpawnedCube>();
+    public List<SpawnedCube> cubes = new List<SpawnedCube>();
     protected FSM<MonsterStates> _myFsm;
     protected ParticleSystem _particles;
+    protected Queries _queries;
 
     [Tooltip("Mientras mas de esto tenga, mas alcance a escuchar a su alrededor")] public float hearCapabilityRadius;
 
     public enum MonsterStates
     {
+        IDLE,
         MOVE,
         ATTACK,
         DIE
@@ -32,18 +34,26 @@ public class Monster : MonoBehaviour, IDamageable
 
     protected void Awake()
     {
+        _queries = GetComponent<Queries>();
         _life = maxLife;
         _rb = gameObject.GetComponent<Rigidbody>();
         _particles = GetComponent<ParticleSystem>();
 
+        var idle = new State<MonsterStates>("Idle");
         var moving = new State<MonsterStates>("Moving");
         var attack = new State<MonsterStates>("Attack");
         var die = new State<MonsterStates>("Die");
 
-        StateConfigurer.Create(moving).SetTransition(MonsterStates.ATTACK, attack).SetTransition(MonsterStates.DIE, die).Done();
-        StateConfigurer.Create(attack).SetTransition(MonsterStates.MOVE, moving).SetTransition(MonsterStates.DIE, die).Done();
+        StateConfigurer.Create(idle).SetTransition(MonsterStates.MOVE, moving).SetTransition(MonsterStates.ATTACK, attack).SetTransition(MonsterStates.DIE, die).Done();
+        StateConfigurer.Create(moving).SetTransition(MonsterStates.IDLE, idle).SetTransition(MonsterStates.ATTACK, attack).SetTransition(MonsterStates.DIE, die).Done();
+        StateConfigurer.Create(attack).SetTransition(MonsterStates.IDLE, idle).SetTransition(MonsterStates.MOVE, moving).SetTransition(MonsterStates.DIE, die).Done();
         StateConfigurer.Create(die).Done();
 
+        //IDLE
+        idle.OnUpdate += () =>
+        {
+            InIdle();
+        };
         //MOVING
         moving.OnUpdate += () =>
         {
@@ -83,15 +93,29 @@ public class Monster : MonoBehaviour, IDamageable
     }
 
     #region Moving
+
+    protected virtual void InIdle()
+    {
+        if (target != null) _myFsm.ChangeState(MonsterStates.MOVE);
+    }
+
     protected virtual void MovingUpdate()
     {
-        if (target == null) return;
+        if (target == null)
+        {
+            _myFsm.ChangeState(MonsterStates.IDLE);
+            return;
+        }
         transform.forward = target.transform.position - transform.position;
     }
 
     protected virtual void MovingFixedUpdate()
     {
-        if (target == null) return;
+        if (target == null)
+        {
+            _myFsm.ChangeState(MonsterStates.IDLE);
+            return;
+        }
         _rb.velocity += transform.forward * speed * Time.deltaTime;
     }
     #endregion
@@ -99,7 +123,7 @@ public class Monster : MonoBehaviour, IDamageable
     #region Conditions
     protected virtual void ConditionList()
     {
-        var targets = FindObjectsOfType<SpawnedCube>().Where(x => x.Life > 0).ToList();
+        var targets = _queries.ObjectsInGrid().Select(x => x.gameObject.GetComponent<SpawnedCube>()).Where(x => x.Life > 0 && !x.preCube).ToList();
         cubes = targets;
     }
 
@@ -112,11 +136,12 @@ public class Monster : MonoBehaviour, IDamageable
     #region Updates
     protected virtual void Update()
     {
-        ConditionTarget();
+        if (cubes.Count > 0) ConditionTarget();
+
         if (target == null)
         {
-            if (_myFsm.ActualState() != MonsterStates.MOVE)
-                _myFsm.ChangeState(MonsterStates.MOVE);
+            if (_myFsm.ActualState() != MonsterStates.IDLE)
+                _myFsm.ChangeState(MonsterStates.IDLE);
         }
         RayTarget();
         _myFsm.Update();

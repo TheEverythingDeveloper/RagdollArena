@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 6243196535240019223}
   - component: {fileID: 8877040119804817997}
   - component: {fileID: 568595515307800219}
+  - component: {fileID: 3268678063355959613}
   m_Layer: 16
   m_Name: ConstructionBlockIron
   m_TagString: Untagged
@@ -49,6 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d9751b5a1467b845ac8fda1d104ac7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  preCube: 0
 --- !u!33 &6243196535240019209
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -178,3 +180,15 @@ MonoBehaviour:
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
+--- !u!114 &3268678063355959613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6243196535240019212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac49b2b6d50c7a749bea4d8294713dac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
