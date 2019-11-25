@@ -10,6 +10,7 @@ public enum SpawnItem
     None = 0,
     ConstructionBlock = 1,
     ConstructionBlockIron = 2,
+    ConstructionBlockAttraction = 3
 }
 
 public class CubeSpawner : MonoBehaviour
@@ -111,6 +112,8 @@ public class CubeSpawner : MonoBehaviour
             SpawningItem = SpawnItem.ConstructionBlock;
         else if (Input.GetKeyDown(KeyCode.Alpha3)) //bloque construccion reforzada
             SpawningItem = SpawnItem.ConstructionBlockIron;
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+            SpawningItem = SpawnItem.ConstructionBlockAttraction;
 
         if (_spawningItem == 0 || _cooldownOn) return;
 

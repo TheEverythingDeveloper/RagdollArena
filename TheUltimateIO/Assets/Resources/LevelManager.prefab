@@ -51,6 +51,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   pointsSpawn: {fileID: 0}
+  finishLevel: 0
+  pointsToWin: 0
+  panelWin: {fileID: 0}
+  nameWinner: {fileID: 0}
 --- !u!114 &968
 MonoBehaviour:
   m_ObjectHideFlags: 0
