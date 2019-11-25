@@ -90,9 +90,9 @@ namespace Character
             _allUpdatables.Add(new CharacterPointsManager(this, _lvlMng, PhotonNetwork.NickName));
             _allUpdatables.Add(new CharacterFriendsManager(this, _lvlMng.playerFriendsLayermask));
 
-            var colorA = _allMyRenderers[0].material.GetColor("_ColorA");
-            var colorB = _allMyRenderers[0].material.GetColor("_ColorB");
-            var colorC = _allMyRenderers[0].material.GetColor("_ColorC");
+            var colorA = _allMyRenderers[1].material.GetColor("_ColorA");
+            var colorB = _allMyRenderers[1].material.GetColor("_ColorB");
+            var colorC = _allMyRenderers[1].material.GetColor("_ColorC");
             photonView.RPC("RPCUpdateColor", RpcTarget.AllBuffered,
                 new float[] { colorA.r, colorA.g, colorA.b },
                 new float[] { colorB.r, colorB.g, colorB.b },
