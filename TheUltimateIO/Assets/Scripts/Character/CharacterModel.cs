@@ -200,21 +200,21 @@ namespace Character
             else _counterDrunk = 0;
         }
 
-        public void DrunkEffectDesactive(params object[] allParams)
+        public void DrunkEffectDesactive()
         {
             if (!photonView.IsMine) return;
 
             _drunkActive = false;
             _counterDrunk = 0;
-            photonView.RPC("ParticlesDrunk", RpcTarget.All, allParams, false);
+            photonView.RPC("ParticlesDrunk", RpcTarget.All, false);
             _movementController.ChangeControls(true);
         }
 
-        IEnumerator Drunk(params object[] allParams)
+        IEnumerator Drunk()
         {
             var waitForEndOfFrame = new WaitForEndOfFrame();
             _movementController.ChangeControls(false);
-            photonView.RPC("ParticlesDrunk", RpcTarget.All, allParams, true);
+            photonView.RPC("ParticlesDrunk", RpcTarget.All, true);
             while (_drunkActive)
             {
                 _counterDrunk += Time.deltaTime;

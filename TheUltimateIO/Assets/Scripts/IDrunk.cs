@@ -5,5 +5,5 @@ using UnityEngine;
 public interface IDrunk
 {
     void DrunkEffectActive();
-    void DrunkEffectDesactive(params object[] allParams);
+    void DrunkEffectDesactive();
 }
