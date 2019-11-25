@@ -22,7 +22,7 @@ public class LevelManager : MonoBehaviourPun
     public bool finishLevel;
     public float pointsToWin;
     public GameObject panelWin;
-    public TextMeshProUGUI nameWinner;
+    public TextMeshProUGUI[] nameWinner;
 
     public void ArtificialAwake()
     {
@@ -110,14 +110,19 @@ public class LevelManager : MonoBehaviourPun
     }
 
     [PunRPC]
-    void FinishLevel(string name)
+    void FinishLevel(string[] name)
     {
         finishLevel = true;
         panelWin.SetActive(true);
-        nameWinner.text = name;
+
+        for (int i = 0; i < nameWinner.Length; i++)
+        {
+            var n = name[i] != null ? name[i] : "-";
+            nameWinner[i].text = n;
+        }      
     }
 
-    public void Winner(string name)
+    public void Winner(string[] name)
     {
         photonView.RPC("FinishLevel", RpcTarget.AllBuffered, name);
     }
