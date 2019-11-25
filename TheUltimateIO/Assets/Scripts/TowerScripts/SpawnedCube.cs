@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Linq;
 
-public class SpawnedCube : MonoBehaviour, IDamageable
+public class SpawnedCube : MonoBehaviour, IDamageable, IAttractable
 {
     private float _life = 1;
     private float _maxLife;
@@ -34,7 +34,7 @@ public class SpawnedCube : MonoBehaviour, IDamageable
     {
         _rb = GetComponent<Rigidbody>();
         _boxColl = GetComponent<BoxCollider>();
-        _meshRen = GetComponent<MeshRenderer>();
+        _meshRen = GetComponentInChildren<MeshRenderer>();
         _rb.isKinematic = true;
         _boxColl.enabled = false;
     }
@@ -98,5 +98,10 @@ public class SpawnedCube : MonoBehaviour, IDamageable
 
         _rb.AddForce(difference * force, ForceMode.Impulse);
         Damage(magnitude * force);
+    }
+
+    public void Attract(Vector3 attractedZone, float attractedForce)
+    {
+        _rb.AddForce((attractedZone - transform.position).normalized * attractedForce);
     }
 }
