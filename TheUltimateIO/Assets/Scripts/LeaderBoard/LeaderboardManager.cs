@@ -61,6 +61,8 @@ namespace Leaderboard
 
         private void UpdateOrder()
         {
+            if (_lvlMng.finishLevel) return;
+
             allUserData = allUserData.OrderByDescending(x => x.Value.points).
                                       ToDictionary(x => x.Value.nickname, y => y.Value);
 
@@ -68,6 +70,8 @@ namespace Leaderboard
             string[] allNicknames = allUserData.Select(x => x.Value.nickname).ToArray();
             int[] allPoints = allUserData.Select(x => x.Value.points).ToArray();
             _lvlMng.UpdateLeaderboardTables(allNicknames, allPoints);
+
+            if (allPoints[0] >= _lvlMng.pointsToWin) _lvlMng.Winner(allNicknames[0]);
         }
 
         public void UpdateTableInfo(string[] nicknames, int[] points)

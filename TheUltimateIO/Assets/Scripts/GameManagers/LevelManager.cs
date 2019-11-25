@@ -110,11 +110,16 @@ public class LevelManager : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void FinishLevel(string name)
+    void FinishLevel(string name)
     {
         finishLevel = true;
         panelWin.SetActive(true);
         nameWinner.text = name;
+    }
+
+    public void Winner(string name)
+    {
+        photonView.RPC("FinishLevel", RpcTarget.AllBuffered, name);
     }
 
 
