@@ -70,7 +70,7 @@ MonoBehaviour:
   floorLayers:
     serializedVersion: 2
     m_Bits: 66049
-  timeDrunk: 3
+  timeDrunk: 8
   particlesDrunk: {fileID: 2404149365917377722}
   hands: []
 --- !u!114 &582

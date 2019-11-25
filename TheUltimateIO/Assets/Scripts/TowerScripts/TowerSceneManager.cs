@@ -39,7 +39,10 @@ public class TowerSceneManager : MonoBehaviour
         Tuple<Vector3, int> average = allPlayers.Aggregate(
             Tuple.Create(Vector3.zero, 0), (acum, current) => 
             acum = Tuple.Create(acum.Item1 + current.transform.position, acum.Item2+1));
-        Vector3 centerOfSpawn = average.Item1 / average.Item2;
+        Vector3 centerOfSpawn = Vector3.zero;
+
+        if(average.Item2 < 1)
+            centerOfSpawn = average.Item1 / average.Item2;
 
         for (int i = 0; i < Mathf.Max(3,Mathf.RoundToInt(difficulty)); i++)
         {

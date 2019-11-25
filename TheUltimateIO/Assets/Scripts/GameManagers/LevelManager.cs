@@ -5,6 +5,7 @@ using Photon.Pun;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using TMPro;
 
 public class LevelManager : MonoBehaviourPun
 {
@@ -17,6 +18,12 @@ public class LevelManager : MonoBehaviourPun
     [Tooltip("Posiciones random de spawneo")]
     public GameObject pointsSpawn;
     Transform[] _points;
+
+    public bool finishLevel;
+    public float pointsToWin;
+    public GameObject panelWin;
+    public TextMeshProUGUI nameWinner;
+
     public void ArtificialAwake()
     {
         Debug.Log("Starting Level Manager");
@@ -100,6 +107,14 @@ public class LevelManager : MonoBehaviourPun
             default:
                 break;
         }
+    }
+
+    [PunRPC]
+    public void FinishLevel(string name)
+    {
+        finishLevel = true;
+        panelWin.SetActive(true);
+        nameWinner.text = name;
     }
 
 
