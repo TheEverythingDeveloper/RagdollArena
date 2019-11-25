@@ -26,6 +26,10 @@ namespace Character
             {
                 _myModel.ThrowGrenade();
             }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                _myModel.TryGrenadeDrunk();
+            }
         }
 
         public void ArtificialFixedUpdate() { }

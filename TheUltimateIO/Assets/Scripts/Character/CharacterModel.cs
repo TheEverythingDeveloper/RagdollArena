@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Character
 {
-    public class CharacterModel : MonoBehaviourPun
+    public class CharacterModel : MonoBehaviourPun, IDrunk
     {
         private List<IUpdatable> _allUpdatables = new List<IUpdatable>();
         private List<IConstructable> _allConstructables = new List<IConstructable>();
@@ -49,7 +49,11 @@ namespace Character
         public float grenadeThrowSpeedThreshold;
         public LayerMask floorLayers;
 
-
+        [Tooltip("Tiempo que dura la borrachera")]
+        public float timeDrunk;
+        public ParticleSystem particlesDrunk;
+        bool _drunkActive;
+        float _counterDrunk;
         public event Action<int> OnPointsUpdate = delegate { }; //se llama cada vez que ganamos o perdemos puntos
         public event Action OnJump = delegate { }; //se llama cada vez que saltamos
         public event Action<bool> OnCrowned = delegate { }; //se llama cuando agarramos la corona o perdemos la corona
@@ -182,6 +186,63 @@ namespace Character
             }
 
             return false;
+        }
+
+        public void DrunkEffectActive()
+        {
+            if (!photonView.IsMine) return;
+
+            if (!_drunkActive)
+            {
+                _drunkActive = true;
+                StartCoroutine(Drunk());
+            }
+            else _counterDrunk = 0;
+        }
+
+        public void DrunkEffectDesactive(params object[] allParams)
+        {
+            if (!photonView.IsMine) return;
+
+            _drunkActive = false;
+            _counterDrunk = 0;
+            photonView.RPC("ParticlesDrunk", RpcTarget.All, allParams, false);
+            _movementController.ChangeControls(true);
+        }
+
+        IEnumerator Drunk(params object[] allParams)
+        {
+            var waitForEndOfFrame = new WaitForEndOfFrame();
+            _movementController.ChangeControls(false);
+            photonView.RPC("ParticlesDrunk", RpcTarget.All, allParams, true);
+            while (_drunkActive)
+            {
+                _counterDrunk += Time.deltaTime;
+                if (_counterDrunk >= timeDrunk)
+                    _drunkActive = false;
+
+                yield return waitForEndOfFrame;
+            }
+            DrunkEffectDesactive();
+        }
+
+        [PunRPC]
+        void ParticlesDrunk(bool active)
+        {
+            if(active) particlesDrunk.Play();
+            else particlesDrunk.Stop();
+        }
+
+        public void TryGrenadeDrunk()
+        {
+            GameObject grenadeDrunk = PhotonNetwork.Instantiate("GrenadeDrunk",
+                pelvisRb.transform.position + (transform.forward * 2f) + (transform.up * 3f), Quaternion.identity);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            Physics.Raycast(ray, out hit, Mathf.Infinity, floorLayers);
+            grenadeDrunk.GetComponent<Rigidbody>()
+                .AddForce((hit.point - pelvisRb.transform.position).normalized
+                * 20, ForceMode.Impulse);
         }
     }
 

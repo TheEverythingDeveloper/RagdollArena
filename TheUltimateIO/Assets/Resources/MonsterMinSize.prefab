@@ -4896,6 +4896,8 @@ MonoBehaviour:
   velocityDamageCube: 1
   timeResetList: 0.5
   distView: 2
+  target: {fileID: 0}
+  blockWalk: {fileID: 0}
   maskEnemies:
     serializedVersion: 2
     m_Bits: 65536
