@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using Photon.Pun;
 
 public class GrenadeDrunk : MonoBehaviour
 {
@@ -11,6 +10,6 @@ public class GrenadeDrunk : MonoBehaviour
         {
             drunk.DrunkEffectActive();
         }
-        Destroy(gameObject);
+        PhotonNetwork.Destroy(gameObject);
     }
 }
