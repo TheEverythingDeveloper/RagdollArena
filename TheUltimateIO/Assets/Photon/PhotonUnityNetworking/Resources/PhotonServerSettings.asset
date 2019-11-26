@@ -53,5 +53,7 @@ MonoBehaviour:
   - RPCRemoveSP
   - ParticlesDrunk
   - FinishLevel
+  - AddNameWaiting
+  - FirstAddNameWaiting
   DisableAutoOpenWizard: 1
   ShowSettings: 1
