@@ -129,6 +129,11 @@ public class LevelManager : MonoBehaviourPun
         photonView.RPC("FinishLevel", RpcTarget.AllBuffered, top1, top2, top3);
     }
 
+    public void BackMenu()
+    {
+        PhotonNetwork.LoadLevel(0);
+        Destroy(gameObject);
+    }
 
     private void Update()
     {
@@ -166,4 +171,5 @@ public class LevelManager : MonoBehaviourPun
 
         _leaderboardMng.table = FindObjectOfType<LeaderboardTable>();
     }
+
 }
