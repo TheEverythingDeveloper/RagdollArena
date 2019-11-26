@@ -110,21 +110,23 @@ public class LevelManager : MonoBehaviourPun
     }
 
     [PunRPC]
-    void FinishLevel(string[] name)
+    void FinishLevel(string top1, string top2, string top3)
     {
         finishLevel = true;
         panelWin.SetActive(true);
 
-        for (int i = 0; i < nameWinner.Length; i++)
-        {
-            var n = name[i] != null ? name[i] : "-";
-            nameWinner[i].text = n;
-        }      
+        nameWinner[0].text = top1;
+        nameWinner[1].text = top2;
+        nameWinner[2].text = top3;
     }
 
     public void Winner(string[] name)
     {
-        photonView.RPC("FinishLevel", RpcTarget.AllBuffered, name);
+        var top1 = name.Length > 0 ? name[0] : "-";
+        var top2 = name.Length > 1 ? name[1] : "-";
+        var top3 = name.Length > 2 ? name[2] : "-";
+
+        photonView.RPC("FinishLevel", RpcTarget.AllBuffered, top1, top2, top3);
     }
 
 
