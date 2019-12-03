@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Photon.Realtime;
+using Photon.Pun;
+using Photon;
 
 public class Grenade : MonoBehaviour
 {
@@ -43,6 +46,7 @@ public class Grenade : MonoBehaviour
                     x.GetComponentInChildren<IDamageable>().Explosion(transform.position, explosionForce);
                     return x;
                 }).ToList();
+        PhotonNetwork.Destroy(gameObject);
     }
 
     private void OnDrawGizmos()

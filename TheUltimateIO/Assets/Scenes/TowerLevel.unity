@@ -1232,10 +1232,6 @@ MonoBehaviour:
   - {x: 35.269566, y: 33.41922, z: 0}
   - {x: 51.325787, y: 33.41922, z: 0}
   - {x: 51.325787, y: 10.507534, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
   m_currentColours:
   - serializedVersion: 2
     rgba: 4294967295
@@ -1261,14 +1257,6 @@ MonoBehaviour:
     rgba: 4294967295
   - serializedVersion: 2
     rgba: 4294967295
-  - serializedVersion: 2
-    rgba: 0
-  - serializedVersion: 2
-    rgba: 0
-  - serializedVersion: 2
-    rgba: 0
-  - serializedVersion: 2
-    rgba: 0
 --- !u!222 &1503604027
 CanvasRenderer:
   m_ObjectHideFlags: 0
