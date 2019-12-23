@@ -11,7 +11,9 @@ public class OfflineManager : MonoBehaviour
     public static void OfflineModeON()
     {
         Debug.Log("Offline mode : ON");
-        if(SceneManager.GetActiveScene().name != "MainScene" && SceneManager.GetActiveScene().name != "TowerLevel")
+        if(SceneManager.GetActiveScene().name != "MainScene"
+            && SceneManager.GetActiveScene().name != "TowerLevel" 
+            && SceneManager.GetActiveScene().name != "TwoTeams")
         {
             Debug.LogError("Se necesita estar en la escena MainScene para activar modo offline");
             return;

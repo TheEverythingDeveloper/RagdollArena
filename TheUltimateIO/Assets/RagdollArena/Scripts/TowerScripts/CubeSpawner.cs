@@ -104,6 +104,10 @@ public class CubeSpawner : MonoBehaviour
         _preSpawnedCube.SetColor(Color.green);
     }
 
+    float _newSize;
+    float _lastGridSize;
+    float _lastCubeSize;
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1)) //nada
@@ -126,9 +130,19 @@ public class CubeSpawner : MonoBehaviour
 
         if (_preSpawnedCube != null)
         {
-            float newSize = Mathf.Clamp(_preSpawnedCube.Size + Input.mouseScrollDelta.y * wheelSizeSpeed * Time.deltaTime, minMaxSize.x, minMaxSize.y);
-            _preSpawnedCube.SetSize(newSize);
-            _preSpawnedCube.CorrectPosition(hit.point);
+            _newSize = Mathf.Clamp(_lastCubeSize + Input.mouseScrollDelta.y * wheelSizeSpeed * Time.deltaTime, minMaxSize.x, minMaxSize.y);
+            Debug.Log(_newSize);
+            _lastCubeSize = _newSize;
+            float gridSize = Mathf.Ceil(_newSize) - 0.003f;
+            if(_preSpawnedCube.Size != gridSize)
+            {
+                Debug.Log("Cambio el tamanio a " + gridSize);
+                _preSpawnedCube.SetSize(gridSize);
+                _lastCubeSize = gridSize;
+            }
+            float scaleOffset = (1 - (_preSpawnedCube.Size % 2))* 0.5f;
+            Vector3 gridHitPoint = new Vector3(Mathf.Ceil(hit.point.x) - scaleOffset, Mathf.Ceil(hit.point.y), Mathf.Ceil(hit.point.z) - scaleOffset);
+            _preSpawnedCube.CorrectPosition(gridHitPoint);
             if (_preSpawnedCube.IsColliding(_spawnLayermask))
             {
                 _preSpawnedCube.SetColor(Color.red);
@@ -144,7 +158,7 @@ public class CubeSpawner : MonoBehaviour
                     if (_canSpawn && ConstructionPoints > 0)
                     {
                         StartCoroutine(SpawnCubeCooldown());
-                        SpawnCube(SpawningItem, hit.point);
+                        SpawnCube(SpawningItem, gridHitPoint);
                     }
                     else
                         Debug.Log("No se pudo spawnear");

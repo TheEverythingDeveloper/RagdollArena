@@ -14,10 +14,11 @@ public class TowerSceneManager : MonoBehaviour
     [SerializeField] private GameObject _constructionPointPrefab;
     public float generalDifficulty;
     public float spawnWidth;
+    public bool online;
 
     private void Start()
     {
-        StartCoroutine(SpawnEnemies());
+        //StartCoroutine(SpawnEnemies());
     }
 
     public void Update()
@@ -28,7 +29,7 @@ public class TowerSceneManager : MonoBehaviour
         }
     }
 
-    IEnumerator SpawnEnemies()
+    /*IEnumerator SpawnEnemies()
     {
         List<Monster> intermediateList = new List<Monster>();
         List<CharacterModel> allPlayers = FindObjectsOfType<CharacterModel>().ToList();
@@ -54,9 +55,11 @@ public class TowerSceneManager : MonoBehaviour
             for (int j = 0; j < 3; j++)
             {
                 randomPos = new Vector3(Random.Range(-spawnWidth, spawnWidth), 2, Random.Range(-spawnWidth, spawnWidth));
-                PhotonNetwork.Instantiate("ConstructionPoint", centerOfSpawn + randomPos, Quaternion.identity);
+                if (online)
+                    PhotonNetwork.Instantiate("ConstructionPoint", centerOfSpawn + randomPos, Quaternion.identity);
+                else
+                    Instantiate(Resources.Load("ConstructionPoint"), centerOfSpawn + randomPos, Quaternion.identity);
             }
-            
         }
 
         monsterWavesList.Add(new MonsterWave(intermediateList));
@@ -64,7 +67,7 @@ public class TowerSceneManager : MonoBehaviour
         float rnd = Random.Range(20f,50f); //cambiar esto a un numero mas grande para que las oleadas tengan mas tiempo de espera
         yield return new WaitForSeconds(rnd);
         StartCoroutine(SpawnEnemies());
-    }
+    }*/
 
     private void CallEveryNearMonster(Vector3 pos)
     {
