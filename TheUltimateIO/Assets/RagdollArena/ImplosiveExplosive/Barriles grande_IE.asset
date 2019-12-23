@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actualRadiusLayer:
     serializedVersion: 2
-    m_Bits: 9
+    m_Bits: 1
   implosiveSpeed: 0
   active: 0
   randomNoise: 7.8761845

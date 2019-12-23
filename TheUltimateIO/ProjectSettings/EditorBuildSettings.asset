@@ -6,12 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Lobby.unity
+    path: Assets/RagdollArena/Scenes/Lobby.unity
     guid: 0288e818001825d43a9e3b17e2108d52
   - enabled: 1
-    path: Assets/Scenes/MainScene.unity
+    path: Assets/RagdollArena/Scenes/MainScene.unity
     guid: f05ff2b8d921bf04ea8ed0a5c3a4ac63
   - enabled: 1
-    path: Assets/Scenes/TowerLevel.unity
+    path: Assets/RagdollArena/Scenes/TowerLevel.unity
     guid: bc14c2cf07f1467498e5190dbb85c640
   m_configObjects: {}
