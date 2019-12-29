@@ -12,6 +12,10 @@ public class Controller : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
 
+        if (Server.Instance == null) Debug.LogError("SERVER INSTANCE");
+        if (LevelManager.Instance == null) Debug.LogError("LEVEL MANAGER INSTANCE");
+        if (photonView.Controller == null) Debug.LogError("PHOTON VIEW");
+
         Server.Instance.AddPlayer(photonView.Controller, LevelManager.Instance.SpawnUser());
     }
 
