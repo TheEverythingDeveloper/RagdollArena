@@ -12,14 +12,14 @@ public class Controller : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
 
-        StartCoroutine(DelayWaitForServer()); 
+        StartCoroutine(DelayWaitForServer()); //esta corrutina se llama porque el controller se crea antes que el server. Esto es ya que el server esperaba a los demas jugadores.
     }
 
     IEnumerator DelayWaitForServer()
     {
         yield return new WaitForSecondsRealtime(0.5f);
 
-        FindObjectOfType<Server>().AddPlayer(photonView.Controller);
+        Server.Instance.AddPlayer(photonView.Controller);
     }
 
     private void Update()
