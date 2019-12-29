@@ -19,7 +19,7 @@ public class Controller : MonoBehaviourPun
     {
         yield return new WaitForSecondsRealtime(0.5f);
 
-        Server.Instance.AddPlayer(photonView.Controller);
+        FindObjectOfType<Server>().AddPlayer(photonView.Controller);
     }
 
     private void Update()
