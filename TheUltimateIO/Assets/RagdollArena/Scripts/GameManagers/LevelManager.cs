@@ -51,12 +51,12 @@ public class LevelManager : MonoBehaviourPun
     [PunRPC]
     void FinishLevel(string top1, string top2, string top3)
     {
-        finishLevel = true;
+        /*finishLevel = true;
         panelWin.SetActive(true);
 
         nameWinner[0].text = top1;
         nameWinner[1].text = top2;
-        nameWinner[2].text = top3;
+        nameWinner[2].text = top3;*/
     }
 
     public void Winner(string[] name)

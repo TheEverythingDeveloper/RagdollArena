@@ -33,12 +33,15 @@ public class NetManager : MonoBehaviourPunCallbacks
     public void Connect(int newSceneID) //Inicio de conectarse despues del lobby
     {
         sceneID = newSceneID;
-        PhotonNetwork.ConnectUsingSettings(); 
+        PhotonNetwork.ConnectUsingSettings();
     }
 
     public override void OnConnectedToMaster()
     {
         print(PhotonNetwork.LocalPlayer.NickName + " has been connected to server!");
+        if (PhotonNetwork.CountOfPlayers <= 1)
+            _host = true;
+
         PhotonNetwork.JoinLobby(TypedLobby.Default);
     }
 
@@ -55,13 +58,10 @@ public class NetManager : MonoBehaviourPunCallbacks
     {
         Debug.Log(PhotonNetwork.LocalPlayer.NickName + " has entered the room :" + PhotonNetwork.CurrentRoom + "!");
 
-        if (PhotonNetwork.CurrentRoom.PlayerCount <= 1) //es decir que somos el que creo el room
-            _host = true;
-
         if (PhotonNetwork.CurrentRoom.PlayerCount < minPlayersStartGame)
             StartCoroutine(WaitingStart());
         else
-            PhotonNetwork.LoadLevel(sceneID);
+            SceneLoad();
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
@@ -83,6 +83,20 @@ public class NetManager : MonoBehaviourPunCallbacks
             yield return new WaitForEndOfFrame();
         }
         canvasWaitingStart.SetActive(false);
+        SceneLoad();
+    }
+
+    private void SceneLoad()
+    {
         PhotonNetwork.LoadLevel(sceneID);
+        SceneManager.sceneLoaded += StartGameTransition;
+    }
+
+    private void StartGameTransition(Scene scene, LoadSceneMode mode)
+    {
+        if (_host)
+            PhotonNetwork.Instantiate("Server", Vector3.zero, Quaternion.identity);
+        else
+            PhotonNetwork.Instantiate("Controller", Vector3.zero, Quaternion.identity);
     }
 }

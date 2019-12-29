@@ -34,7 +34,7 @@ namespace Lobby
             StartGame();
         }
 
-        public void StartGame()
+        public void StartGame() //intentar conectarse a una sala existente o crear una
         {
             NetManager.Instance.Connect(sceneID);
         }

@@ -55,5 +55,7 @@ MonoBehaviour:
   - FinishLevel
   - AddNameWaiting
   - FirstAddNameWaiting
+  - RPCChangePlayers
+  - RPCChangePlayer
   DisableAutoOpenWizard: 1
   ShowSettings: 1
