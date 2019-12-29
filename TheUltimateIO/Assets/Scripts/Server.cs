@@ -12,22 +12,41 @@ public class Server : MonoBehaviourPun
 
     private void Awake()
     {
+        if (!photonView.IsMine) return;
+
+        PackagePerSecond = 30;
+        photonView.RPC("SetInstance", RpcTarget.OthersBuffered, PackagePerSecond);
+    }
+    [PunRPC]
+    private void SetInstance(int packages) //setear instancia de singleton para cada usuario posible
+    {
         Instance = this;
-        AddPlayer(photonView.Controller, FindObjectOfType<CharacterModel>());
+    }
+
+    private void Start()
+    {
+        if (!photonView.IsMine) return;
+
+        AddPlayer(photonView.Controller, LevelManager.Instance.SpawnUser());
     }
 
     private void Update()
     {
+        if (!photonView.IsMine) return;
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            int counter = 0;
             foreach (var player in _allPlayers)
-                Debug.Log("<color=red>PLAYER = </color>" + player.Key.NickName);
+            {
+                counter++;
+                Debug.Log("<color=red>PLAYER "+counter+" = </color>" + player.Key.NickName);
+            }
         }
     }
 
     public void AddPlayer(Player newPhotonPlayer, CharacterModel newModel) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, newPhotonPlayer, newModel);
     public void RemovePlayer(Player toRemovePhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, toRemovePhotonPlayer, null);
-
     [PunRPC]
     private void RPCChangePlayer(Player photonPlayer, CharacterModel model)
     {

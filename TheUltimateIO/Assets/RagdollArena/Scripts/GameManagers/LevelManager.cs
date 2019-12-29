@@ -9,6 +9,7 @@ using TMPro;
 
 public class LevelManager : MonoBehaviourPun
 {
+    public static LevelManager Instance;
     public bool offlineMode;
     private bool ShowIfOffline() => offlineMode;
     [ShowIf("ShowIfOffline", true, true)]
@@ -93,14 +94,20 @@ public class LevelManager : MonoBehaviourPun
         }
     }
 
-    private void Awake() //Al ser instanciado en realidad por el netmanager, no se va a llamar excepto q estemos testeando
+    public CharacterModel SpawnUser()
     {
         pointsSpawn = GameObject.Find("AllSpawnPoint");
         _points = pointsSpawn.GetComponentsInChildren<Transform>();
-        var user = PhotonNetwork.Instantiate("User",
-            PositionRandom(), Quaternion.identity);
+        var user = PhotonNetwork.Instantiate("User", PositionRandom(), Quaternion.identity);
         user.GetComponentInChildren<CharacterModel>().name = PhotonNetwork.NickName;
         user.GetComponentInChildren<Character3DUI>().photonView.RPC("RPCUpdateNickname", RpcTarget.AllBuffered, PhotonNetwork.NickName);
+
+        return user.GetComponentInChildren<CharacterModel>();
+    }
+
+    private void Awake() //Al ser instanciado en realidad por el netmanager, no se va a llamar excepto q estemos testeando
+    {
+        Instance = this;
 
         _leaderboardMng = new LeaderboardManager(this);
 

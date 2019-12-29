@@ -12,4 +12,12 @@ public class Controller : MonoBehaviourPun
     {
         Server.Instance.AddPlayer(photonView.Controller, FindObjectOfType<CharacterModel>());
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PhotonNetwork.Disconnect();
+        }
+    }
 }
