@@ -15,7 +15,8 @@ public class Server : MonoBehaviourPun
         if (!photonView.IsMine) return;
 
         PackagesPerSecond = 30;
-        photonView.RPC("SetInstance", RpcTarget.OthersBuffered, PackagesPerSecond);
+        Instance = this;
+        photonView.RPC("SetInstance", RpcTarget.AllBuffered, PackagesPerSecond);
     }
     [PunRPC]
     private void SetInstance(int packages) //setear instancia de singleton para cada usuario posible
