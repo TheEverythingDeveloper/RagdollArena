@@ -17,9 +17,9 @@ public class Controller : MonoBehaviourPun
 
     IEnumerator DelayWaitForServer()
     {
-        yield return new WaitForSecondsRealtime(2f);
+        yield return new WaitForSecondsRealtime(0.5f);
 
-        FindObjectOfType<Server>().AddPlayer(photonView.Controller, LevelManager.Instance.SpawnUser());
+        FindObjectOfType<Server>().AddPlayer(photonView.Controller);
     }
 
     private void Update()

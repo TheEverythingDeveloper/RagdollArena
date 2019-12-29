@@ -20,7 +20,7 @@ public class Server : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
 
-        AddPlayer(photonView.Controller, LevelManager.Instance.SpawnUser());
+        AddPlayer(photonView.Controller);
     }
 
     private void Update()
@@ -38,12 +38,12 @@ public class Server : MonoBehaviourPun
         }
     }
 
-    public void AddPlayer(Player newPhotonPlayer, CharacterModel newModel) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, newPhotonPlayer, newModel);
+    public void AddPlayer(Player newPhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, newPhotonPlayer);
     public void RemovePlayer(Player toRemovePhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, toRemovePhotonPlayer, null);
     [PunRPC]
-    private void RPCChangePlayer(Player photonPlayer, CharacterModel model)
+    private void RPCChangePlayer(Player photonPlayer, bool add)
     {
-        if (model == null) //si estamos removiendo un jugador
+        if (add) //si estamos removiendo un jugador
         {
             if (!_allPlayers.ContainsKey(photonPlayer)) return; //en caso de que NO este en la lista, return
             Debug.Log("<color=red>Se fue de la partida un usuario!</color>");
@@ -52,6 +52,7 @@ public class Server : MonoBehaviourPun
         else
         {
             if (_allPlayers.ContainsKey(photonPlayer)) return; //en caso de que ya este en la lista, return
+            CharacterModel model = LevelManager.Instance.SpawnUser();
             Debug.Log("<color=green>Se unio a la partida un usuario! Se llama </color>"+photonPlayer.NickName);
             _allPlayers.Add(photonPlayer, model);
         }
