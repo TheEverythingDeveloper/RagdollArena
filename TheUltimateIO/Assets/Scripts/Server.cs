@@ -41,11 +41,6 @@ public class Server : MonoBehaviourPun
     public void AddPlayer(Player newPhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, newPhotonPlayer, true);
     public void RemovePlayer(Player toRemovePhotonPlayer)
     {
-        //if (toRemovePhotonPlayer == null) //lo cual significa que no se sabe cual se removio, pero se sabe que se removio alguien..
-        //{
-        //    photonView.RPC("RPCAnalyzeLeftPlayer", RpcTarget.MasterClient);
-        //    return;
-        //}
         photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, toRemovePhotonPlayer, false);
     }
     [PunRPC]
@@ -55,6 +50,7 @@ public class Server : MonoBehaviourPun
         {
             if (!_allPlayers.ContainsKey(photonPlayer)) return; //en caso de que NO este en la lista, return
             Debug.Log("<color=red>Se fue de la partida un usuario!</color>");
+            PhotonNetwork.Destroy(_allPlayers[photonPlayer].gameObject);
             _allPlayers.Remove(photonPlayer);
         }
         else
