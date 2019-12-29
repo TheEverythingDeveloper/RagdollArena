@@ -8,19 +8,20 @@ public class Server : MonoBehaviourPun
 {
     Dictionary<Player, CharacterModel> _allPlayers = new Dictionary<Player, CharacterModel>();
     public static Server Instance { get; private set; }
-    public int PackagePerSecond { get; private set; }
+    public int PackagesPerSecond { get; private set; }
 
     private void Awake()
     {
         if (!photonView.IsMine) return;
 
-        PackagePerSecond = 30;
-        photonView.RPC("SetInstance", RpcTarget.OthersBuffered, PackagePerSecond);
+        PackagesPerSecond = 30;
+        photonView.RPC("SetInstance", RpcTarget.OthersBuffered, PackagesPerSecond);
     }
     [PunRPC]
     private void SetInstance(int packages) //setear instancia de singleton para cada usuario posible
     {
         Instance = this;
+        PackagesPerSecond = packages;
     }
 
     private void Start()
@@ -40,7 +41,7 @@ public class Server : MonoBehaviourPun
             foreach (var player in _allPlayers)
             {
                 counter++;
-                Debug.Log("<color=red>PLAYER "+counter+" = </color>" + player.Key.NickName);
+                Debug.Log("<color=blue>PLAYER "+counter+" = </color>" + player.Key.NickName);
             }
         }
     }
@@ -53,13 +54,13 @@ public class Server : MonoBehaviourPun
         if (model == null) //si estamos removiendo un jugador
         {
             if (!_allPlayers.ContainsKey(photonPlayer)) return; //en caso de que NO este en la lista, return
-            Debug.Log("<color=green>Se unio a la partida un usuario! Se llama </color>"+photonPlayer.NickName);
+            Debug.Log("<color=red>Se fue de la partida un usuario!</color>");
             _allPlayers.Remove(photonPlayer);
         }
         else
         {
             if (_allPlayers.ContainsKey(photonPlayer)) return; //en caso de que ya este en la lista, return
-            Debug.Log("<color=red>Se fue de la partida un usuario!</color>");
+            Debug.Log("<color=green>Se unio a la partida un usuario! Se llama </color>"+photonPlayer.NickName);
             _allPlayers.Add(photonPlayer, model);
         }
     }

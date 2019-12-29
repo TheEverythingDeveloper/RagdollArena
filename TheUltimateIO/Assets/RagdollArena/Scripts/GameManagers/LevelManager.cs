@@ -7,7 +7,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 using TMPro;
 
-public class LevelManager : MonoBehaviourPun
+public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance;
     public bool offlineMode;
@@ -36,14 +36,14 @@ public class LevelManager : MonoBehaviourPun
         return _points[selectRandom].position;
     }
     public void UpdateUserPoints(string nickName, int addedPoints)
-    { photonView.RPC("RPCUpdateUserPoints", RpcTarget.MasterClient, nickName, addedPoints); }
+    { /*photonView.RPC("RPCUpdateUserPoints", RpcTarget.MasterClient, nickName, addedPoints);*/ }
 
     [PunRPC]
     private void RPCUpdateUserPoints(string newNickname, int addedPoints)
     { _leaderboardMng.UpdateUserPoints(newNickname, addedPoints); }
 
     public void UpdateLeaderboardTables(string[] names, int[] points)
-    { photonView.RPC("RPCUpdateLeaderboardTables", RpcTarget.AllBuffered, names, points); }
+    { /*photonView.RPC("RPCUpdateLeaderboardTables", RpcTarget.AllBuffered, names, points);*/ }
 
     [PunRPC]
     private void RPCUpdateLeaderboardTables(string[] names, int[] points)
@@ -66,7 +66,7 @@ public class LevelManager : MonoBehaviourPun
         var top2 = name.Length > 1 ? name[1] : "-";
         var top3 = name.Length > 2 ? name[2] : "-";
 
-        photonView.RPC("FinishLevel", RpcTarget.AllBuffered, top1, top2, top3);
+        /*photonView.RPC("FinishLevel", RpcTarget.AllBuffered, top1, top2, top3);*/
     }
 
     public void BackMenu()
@@ -77,7 +77,7 @@ public class LevelManager : MonoBehaviourPun
 
     private void Update()
     {
-        if (!photonView.IsMine) return;
+       /* if (!photonView.IsMine) return;*/
 
         if (Input.GetKeyDown(KeyCode.R)) //debugear el top del ranking en orden de mayor a menor
             _leaderboardMng.DebugTopRanking();
@@ -111,11 +111,11 @@ public class LevelManager : MonoBehaviourPun
 
         _leaderboardMng = new LeaderboardManager(this);
 
-        if (photonView.IsMine)
+        /*if (photonView.IsMine)
         {
             _leaderboardMng.table = FindObjectOfType<LeaderboardTable>();
             StartCoroutine(_leaderboardMng.InactivePlayersCoroutine());
-        }
+        }*/
 
         UpdateUserPoints(PhotonNetwork.NickName, 0);
     }

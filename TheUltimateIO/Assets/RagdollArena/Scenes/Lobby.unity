@@ -1773,7 +1773,7 @@ MonoBehaviour:
   nickname: GenericNickname
   gameVersion: 0.0.1
   sceneID: 0
-  minPlayersStartGame: 2
+  minPlayersStartGame: 1
   canvasWaitingStart: {fileID: 1594693126}
   textNamesPlayers: {fileID: 569379674}
   textWaiting: {fileID: 1174599266}
