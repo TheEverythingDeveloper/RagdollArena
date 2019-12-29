@@ -39,7 +39,15 @@ public class Server : MonoBehaviourPun
     }
 
     public void AddPlayer(Player newPhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, newPhotonPlayer, true);
-    public void RemovePlayer(Player toRemovePhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, toRemovePhotonPlayer, false);
+    public void RemovePlayer(Player toRemovePhotonPlayer)
+    {
+        //if (toRemovePhotonPlayer == null) //lo cual significa que no se sabe cual se removio, pero se sabe que se removio alguien..
+        //{
+        //    photonView.RPC("RPCAnalyzeLeftPlayer", RpcTarget.MasterClient);
+        //    return;
+        //}
+        photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, toRemovePhotonPlayer, false);
+    }
     [PunRPC]
     private void RPCChangePlayer(Player photonPlayer, bool add)
     {
