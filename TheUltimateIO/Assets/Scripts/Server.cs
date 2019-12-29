@@ -7,7 +7,7 @@ using UnityEngine;
 public class Server : MonoBehaviourPun
 {
     Dictionary<Player, CharacterModel> _allPlayers = new Dictionary<Player, CharacterModel>();
-    public static Server Instance { get; private set; }
+    public static Server Instance;
     public int PackagesPerSecond { get; private set; }
 
     private void Awake()
