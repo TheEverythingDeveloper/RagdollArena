@@ -38,12 +38,12 @@ public class Server : MonoBehaviourPun
         }
     }
 
-    public void AddPlayer(Player newPhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, newPhotonPlayer);
-    public void RemovePlayer(Player toRemovePhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, toRemovePhotonPlayer, null);
+    public void AddPlayer(Player newPhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, newPhotonPlayer, true);
+    public void RemovePlayer(Player toRemovePhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, toRemovePhotonPlayer, false);
     [PunRPC]
     private void RPCChangePlayer(Player photonPlayer, bool add)
     {
-        if (add) //si estamos removiendo un jugador
+        if (!add) //si estamos removiendo un jugador
         {
             if (!_allPlayers.ContainsKey(photonPlayer)) return; //en caso de que NO este en la lista, return
             Debug.Log("<color=red>Se fue de la partida un usuario!</color>");
