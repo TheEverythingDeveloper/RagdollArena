@@ -74,7 +74,7 @@ public class NetManager : MonoBehaviourPunCallbacks
         Debug.LogWarning("Disconnected because " + cause.ToString());
         //avisar que alguien se fue al server
 
-        FindObjectOfType<Server>().RemovePlayer(PhotonNetwork.LocalPlayer);
+        //FindObjectOfType<Server>().RemovePlayer(PhotonNetwork.LocalPlayer);
     }
 
     IEnumerator WaitingStart()

@@ -29,7 +29,7 @@ public class Controller : MonoBehaviourPun
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Debug.Log("<color=red>Desconectado de la partida actual</color>");
-            FindObjectOfType<Server>().RemovePlayer(PhotonNetwork.LocalPlayer);
+            FindObjectOfType<Server>().RemovePlayer(photonView.Controller);
             PhotonNetwork.Disconnect();
         }
     }
