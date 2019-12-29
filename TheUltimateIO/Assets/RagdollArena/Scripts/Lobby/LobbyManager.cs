@@ -11,15 +11,9 @@ namespace Lobby
 {
     public class LobbyManager : MonoBehaviourPun
     {
-        private NetManager _netMng;
         [SerializeField] private TMP_InputField _nicknameInputField;
         [SerializeField] private GameObject _nicknamePanel;
         public int sceneID;
-
-        private void Awake()
-        {
-            _netMng = FindObjectOfType<NetManager>();
-        }
 
         public void StartButton(int newSceneID)
         {
@@ -42,7 +36,7 @@ namespace Lobby
 
         public void StartGame()
         {
-            _netMng.Connect(sceneID);
+            NetManager.Instance.Connect(sceneID);
         }
     }
 }

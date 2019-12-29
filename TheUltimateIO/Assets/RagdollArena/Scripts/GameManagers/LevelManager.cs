@@ -24,28 +24,6 @@ public class LevelManager : MonoBehaviourPun
     public GameObject panelWin;
     public TextMeshProUGUI[] nameWinner;
 
-    public void ArtificialAwake()
-    {
-        Debug.Log("Starting Level Manager");
-        pointsSpawn = GameObject.Find("AllSpawnPoint");
-        _points = pointsSpawn.GetComponentsInChildren<Transform>();
-        var user = PhotonNetwork.Instantiate("User",
-            PositionRandom(), Quaternion.identity);
-        user.GetComponentInChildren<CharacterModel>().name = PhotonNetwork.NickName;
-        user.GetComponentInChildren<Character3DUI>().photonView.RPC("RPCUpdateNickname", RpcTarget.AllBuffered, PhotonNetwork.NickName);
-        //GGM.Instance.user = user.GetComponentInChildren<CharacterModel>();
-
-        _leaderboardMng = new LeaderboardManager(this);
-
-        if (photonView.IsMine)
-        {
-            _leaderboardMng.table = FindObjectOfType<LeaderboardTable>();
-            StartCoroutine(_leaderboardMng.InactivePlayersCoroutine());
-        }
-
-        UpdateUserPoints(PhotonNetwork.NickName, 0);
-    }
-
     public void RespawnRandom(Transform player)
     {
         player.position = PositionRandom();
@@ -69,46 +47,7 @@ public class LevelManager : MonoBehaviourPun
     [PunRPC]
     private void RPCUpdateLeaderboardTables(string[] names, int[] points)
     { _leaderboardMng.UpdateTableInfo(names, points); }
-
-    private GamemodeType _actualGMType;
-    public void ChangeGMType(GamemodeType newType)
-    { photonView.RPC("RPCChangeGMType", RpcTarget.MasterClient, newType); }
-
-    [PunRPC]
-    private void RPCChangeGMType(GamemodeType newType)
-    { 
-        _actualGMType = newType;
-    }
-
-    public void NewGM(GamemodeType gameModeTypeID)
-    {
-        int ID = (int)gameModeTypeID;
-        photonView.RPC("RPCNewGameMode", RpcTarget.AllBuffered, ID);
-    }
-
-    [PunRPC]
-    private void RPCNewGameMode(int gameModeTypeID)
-    {
-        GGM.Instance.StartGameMode(gameModeTypeID);
-    }
-
-    public void UpdateGM(params object[] allParams)
-    { photonView.RPC("RPCUpdateGM", RpcTarget.All, allParams); }
-
-    [PunRPC]
-    public void RPCUpdateGM(params object[] allParams)
-    {
-        switch (_actualGMType)
-        {
-            case GamemodeType.None:
-                break;
-            case GamemodeType.FriendzoneGM:
-                break;
-            default:
-                break;
-        }
-    }
-
+    
     [PunRPC]
     void FinishLevel(string top1, string top2, string top3)
     {
@@ -156,20 +95,21 @@ public class LevelManager : MonoBehaviourPun
 
     private void Awake() //Al ser instanciado en realidad por el netmanager, no se va a llamar excepto q estemos testeando
     {
-        PhotonNetwork.OfflineMode = offlineMode;
+        pointsSpawn = GameObject.Find("AllSpawnPoint");
+        _points = pointsSpawn.GetComponentsInChildren<Transform>();
+        var user = PhotonNetwork.Instantiate("User",
+            PositionRandom(), Quaternion.identity);
+        user.GetComponentInChildren<CharacterModel>().name = PhotonNetwork.NickName;
+        user.GetComponentInChildren<Character3DUI>().photonView.RPC("RPCUpdateNickname", RpcTarget.AllBuffered, PhotonNetwork.NickName);
 
-        if (PhotonNetwork.OfflineMode)
+        _leaderboardMng = new LeaderboardManager(this);
+
+        if (photonView.IsMine)
         {
-            Instantiate(_myCamera, transform.position, transform.localRotation);
-        }
-        else
-        {
-            if (photonView.IsMine) return;
+            _leaderboardMng.table = FindObjectOfType<LeaderboardTable>();
+            StartCoroutine(_leaderboardMng.InactivePlayersCoroutine());
         }
 
-        ArtificialAwake();
-
-        _leaderboardMng.table = FindObjectOfType<LeaderboardTable>();
+        UpdateUserPoints(PhotonNetwork.NickName, 0);
     }
-
 }

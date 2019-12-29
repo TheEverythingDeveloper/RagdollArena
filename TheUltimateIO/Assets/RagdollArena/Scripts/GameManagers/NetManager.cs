@@ -1,32 +1,39 @@
 ﻿using Photon.Pun;
 using Photon.Realtime;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 using System.Collections;
 using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class NetManager : MonoBehaviourPunCallbacks
 {
+    public static NetManager Instance { get; private set; }
+    private void Awake()
+    {
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
     public string nickname = "GenericNickname";
     public string gameVersion = "0.0.1";
     public int sceneID;
 
-    public int minPlayersStartGame;
+    private bool _host;
+
+    public int minPlayersStartGame; //cantidad de jugadores que tienen que haber entrado para que inicie el juego
     public GameObject canvasWaitingStart;
     public TextMeshProUGUI textNamesPlayers, textWaiting;
 
     private void Start()
     {
-        DontDestroyOnLoad(gameObject);
-
         PhotonNetwork.GameVersion = gameVersion;
         textWaiting.text = "There must be at least " + minPlayersStartGame + " players to start the game...";
     }
 
-    public void Connect(int newSceneID)
+    public void Connect(int newSceneID) //Inicio de conectarse despues del lobby
     {
         sceneID = newSceneID;
-        PhotonNetwork.ConnectUsingSettings();
+        PhotonNetwork.ConnectUsingSettings(); 
     }
 
     public override void OnConnectedToMaster()
@@ -38,7 +45,10 @@ public class NetManager : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log(PhotonNetwork.LocalPlayer.NickName + " has entered the lobby!");
-        PhotonNetwork.JoinRandomRoom();
+        if (_host)
+            PhotonNetwork.CreateRoom("MainRoom", new RoomOptions { MaxPlayers = 10 });
+        else
+            PhotonNetwork.JoinRandomRoom();
     }
 
     public override void OnJoinedRoom()
@@ -46,25 +56,12 @@ public class NetManager : MonoBehaviourPunCallbacks
         Debug.Log(PhotonNetwork.LocalPlayer.NickName + " has entered the room :" + PhotonNetwork.CurrentRoom + "!");
 
         if (PhotonNetwork.CurrentRoom.PlayerCount <= 1) //es decir que somos el que creo el room
-        {
-             var go = PhotonNetwork.Instantiate("LevelManager", transform.position, Quaternion.identity);
-             DontDestroyOnLoad(go);
-        }
+            _host = true;
 
         if (PhotonNetwork.CurrentRoom.PlayerCount < minPlayersStartGame)
             StartCoroutine(WaitingStart());
         else
-        {
             PhotonNetwork.LoadLevel(sceneID);
-            SceneManager.sceneLoaded += OnSceneLoaded;
-        }
-
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        Debug.LogWarning("OnSceneLoaded: " + scene.name);
-        FindObjectOfType<LevelManager>().ArtificialAwake();
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
@@ -72,31 +69,20 @@ public class NetManager : MonoBehaviourPunCallbacks
         Debug.LogWarning(returnCode + ": " + message);
         PhotonNetwork.CreateRoom(Random.Range(0, 9999).ToString(), new RoomOptions() { MaxPlayers = 19 });
     }
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        Debug.LogWarning("Disconnected because " + cause.ToString());
+    }
 
     IEnumerator WaitingStart()
     {
-        var waitForEndOfFrame = new WaitForEndOfFrame();
         canvasWaitingStart.SetActive(true);
         while (PhotonNetwork.CurrentRoom.PlayerCount < minPlayersStartGame)
         {
             Debug.Log("Waiting players...");
-            yield return waitForEndOfFrame;
+            yield return new WaitForEndOfFrame();
         }
         canvasWaitingStart.SetActive(false);
         PhotonNetwork.LoadLevel(sceneID);
-        SceneManager.sceneLoaded += OnSceneLoaded;
     }
-    /*
-    [PunRPC]
-    void AddNameWaiting(string name)
-    {
-        textNamesPlayers.text += " - " + name;
-    }
-
-    [PunRPC]
-    void FirstAddNameWaiting(string name)
-    {
-        textNamesPlayers.text += name;
-    }
-    */
 }
