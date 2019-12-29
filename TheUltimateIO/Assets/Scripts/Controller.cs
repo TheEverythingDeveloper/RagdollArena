@@ -12,6 +12,13 @@ public class Controller : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
 
+        StartCoroutine(DelayWaitForServer()); 
+    }
+
+    IEnumerator DelayWaitForServer()
+    {
+        yield return new WaitForSecondsRealtime(2f);
+
         FindObjectOfType<Server>().AddPlayer(photonView.Controller, LevelManager.Instance.SpawnUser());
     }
 
