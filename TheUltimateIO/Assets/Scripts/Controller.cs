@@ -5,6 +5,7 @@ using Photon;
 using Photon.Realtime;
 using Photon.Pun;
 using Character;
+using UnityEngine.SceneManagement;
 
 public class Controller : MonoBehaviourPun
 {
@@ -31,6 +32,8 @@ public class Controller : MonoBehaviourPun
             Debug.Log("<color=red>Desconectado de la partida actual</color>");
             FindObjectOfType<Server>().RemovePlayer(photonView.Controller);
             PhotonNetwork.Disconnect();
+            PhotonNetwork.LeaveRoom();
+            SceneManager.LoadScene(0);
         }
     }
 }
