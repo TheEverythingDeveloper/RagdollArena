@@ -53,11 +53,13 @@ public class Server : MonoBehaviourPun
         if (model == null) //si estamos removiendo un jugador
         {
             if (!_allPlayers.ContainsKey(photonPlayer)) return; //en caso de que NO este en la lista, return
+            Debug.Log("<color=green>Se unio a la partida un usuario! Se llama </color>"+photonPlayer.NickName);
             _allPlayers.Remove(photonPlayer);
         }
         else
         {
             if (_allPlayers.ContainsKey(photonPlayer)) return; //en caso de que ya este en la lista, return
+            Debug.Log("<color=red>Se fue de la partida un usuario!</color>");
             _allPlayers.Add(photonPlayer, model);
         }
     }
