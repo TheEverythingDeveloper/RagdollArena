@@ -1,5 +1,10 @@
-﻿using Photon.Pun;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using Photon;
+using Photon.Realtime;
+using Photon.Pun;
+using Character;
 
 public class Controller : MonoBehaviourPun
 {
@@ -7,12 +12,7 @@ public class Controller : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
 
-        Server.Instance = FindObjectOfType<Server>();
-
-        if (Server.Instance == null)
-            Debug.LogError("SERVER INSTANCE");
-
-        Server.Instance.AddPlayer(photonView.Controller, LevelManager.Instance.SpawnUser());
+        FindObjectOfType<Server>().AddPlayer(photonView.Controller, LevelManager.Instance.SpawnUser());
     }
 
     private void Update()

@@ -7,7 +7,6 @@ using UnityEngine;
 public class Server : MonoBehaviourPun
 {
     Dictionary<Player, CharacterModel> _allPlayers = new Dictionary<Player, CharacterModel>();
-    public static Server Instance;
     public int PackagesPerSecond { get; private set; }
 
     private void Awake()
@@ -15,14 +14,6 @@ public class Server : MonoBehaviourPun
         if (!photonView.IsMine) return;
 
         PackagesPerSecond = 30;
-        Instance = this;
-        photonView.RPC("SetInstance", RpcTarget.AllBuffered, PackagesPerSecond);
-    }
-    [PunRPC]
-    private void SetInstance(int packages) //setear instancia de singleton para cada usuario posible
-    {
-        Instance = this;
-        PackagesPerSecond = packages;
     }
 
     private void Start()

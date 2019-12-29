@@ -73,8 +73,8 @@ public class NetManager : MonoBehaviourPunCallbacks
     {
         Debug.LogWarning("Disconnected because " + cause.ToString());
         //avisar que alguien se fue al server
-        if (Server.Instance != null)
-            Server.Instance.RemovePlayer(null);
+
+        FindObjectOfType<Server>().RemovePlayer(null);
     }
 
     IEnumerator WaitingStart()
