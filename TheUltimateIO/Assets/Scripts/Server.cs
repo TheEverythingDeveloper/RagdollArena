@@ -1,6 +1,7 @@
 ﻿using Character;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -36,6 +37,31 @@ public class Server : MonoBehaviourPun
                 Debug.Log("<color=blue>PLAYER "+counter+" = </color>" + player.Key.NickName);
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Return))
+            StartCoroutine(StartGameCoroutine(5));
+    }
+
+    IEnumerator StartGameCoroutine(int waitSeconds)
+    {
+        for (int i = 0; i < waitSeconds; i++) //5..4..3..2..1.. GO.
+        {
+            photonView.RPC("RPCUpdateCounter", RpcTarget.All, i); //es All y no allbuffered porque el que se conecte tarde tiene que empezar sin el conteo.
+            yield return new WaitForSeconds(1f);
+        }
+        photonView.RPC("RPCStartGame", RpcTarget.AllBuffered); //con allbuffered empezar el juego aun si llegaste tarde a la partida
+    }
+
+    [PunRPC] private void RPCUpdateCounter(int i)
+    {
+        Debug.Log("<color=green>" + i + "</color>");
+    }
+
+    [PunRPC] private void RPCStartGame()
+    {
+        Debug.Log("<color=yellow> GO!!! </color>");
+        //poner los equipos
+        //
     }
 
     public void AddPlayer(Player newPhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, newPhotonPlayer, true);
