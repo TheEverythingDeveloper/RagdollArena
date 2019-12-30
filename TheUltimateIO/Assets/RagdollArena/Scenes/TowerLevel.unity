@@ -1337,7 +1337,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _counterPanel: {fileID: 991743537}
   _counterText: {fileID: 33148760}
-  _pressEnterToStartText: {fileID: 33148760}
+  _pressEnterToStartText: {fileID: 900318997}
 --- !u!223 &511404863459980766
 Canvas:
   m_ObjectHideFlags: 0

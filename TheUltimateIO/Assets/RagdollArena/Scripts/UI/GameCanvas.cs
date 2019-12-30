@@ -19,8 +19,13 @@ namespace GameUI
             SwitchCounterPanel(false);
             SwitchEnterToStartText(false);
         }
-        //TODO: Que ese numero tenga animacion y vaya cambiando de color mientras menos tiempo quede. Puede tambien haber una barra.
-        public void UpdateCounter(int time) => _counterText.text = time.ToString(); 
+        public void UpdateCounter(int time)
+        {
+            //TODO: Que ese numero tenga animacion y vaya cambiando de color mientras menos tiempo quede. Puede tambien haber una barra.
+            //TODO: Sonido cada "tick"
+            _counterText.text = time.ToString();
+            if (time < 1) _counterText.text = "GO!";
+        }
         public void SwitchCounterPanel(bool active) => _counterPanel.SetActive(active);
         public void SwitchEnterToStartText(bool active) => _pressEnterToStartText.gameObject.SetActive(active);
     }
