@@ -36,8 +36,8 @@ public class Controller : MonoBehaviourPun
             SceneManager.LoadScene(0);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-            _myModel.TryJump();
+        //if (Input.GetKeyDown(KeyCode.Space))
+            //_myModel.TryJump();
         /*if (Input.GetKeyDown(KeyCode.E))
             _myModel.TryGrenade();
         if (Input.GetKeyUp(KeyCode.E))
