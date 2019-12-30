@@ -51,7 +51,7 @@ public class Server : MonoBehaviourPun
         _lvlMng.SwitchEnterToStartText(false);
         for (int i = 0; i < waitSeconds; i++) //5..4..3..2..1.. GO.
         {
-            photonView.RPC("RPCUpdateCounter", RpcTarget.All, waitSeconds - i, waitSeconds); //es All y no allbuffered porque el que se conecte tarde tiene que empezar sin el conteo.
+            photonView.RPC("RPCUpdateCounter", RpcTarget.All, waitSeconds - i); //es All y no allbuffered porque el que se conecte tarde tiene que empezar sin el conteo.
             yield return new WaitForSeconds(1f);
         }
         photonView.RPC("RPCStartGame", RpcTarget.AllBuffered); //con allbuffered empezar el juego aun si llegaste tarde a la partida
