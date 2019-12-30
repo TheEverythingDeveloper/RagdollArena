@@ -75,7 +75,7 @@ public class Server : MonoBehaviourPun
         foreach (var player in _allPlayers) //cambiar de team y spawnear correctamente a los jugadores de cada team en su posicion correspondiente.
         {
             i++;
-            player.Value.StartGame((i % 2) + 1, player.Value.transform.position + (Vector3.up * 5));
+            player.Value.StartGame(((i-1) % 2) + 1, player.Value.transform.position + (Vector3.up * 5));
         }
     }
 

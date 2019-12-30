@@ -85,7 +85,6 @@ namespace Character
 
             anim = GetComponent<Animator>();
 
-            _allUpdatables.Add(new CharacterController(this));
             _movementController = new CharacterMovement(this, pelvisRb, pelvisRb.transform.localRotation, floorLayers);
             _allConstructables.Add(_movementController);
             _allUpdatables.Add(_movementController);
@@ -137,36 +136,6 @@ namespace Character
         public void UpdatePoints(int addedPoints) => OnPointsUpdate(addedPoints);
         public void Crowned(bool on) => OnCrowned(on);
         public void TryJump() { if (_movementController.inAir) return; OnJump(); }
-        public void TryGrenade()
-        {
-            if (_throwGrenadeCoroutine != null)
-                StopCoroutine(_throwGrenadeCoroutine);
-            _throwGrenadeCoroutine = StartCoroutine(ThrowGrenadeCoroutine());
-        }
-        private Coroutine _throwGrenadeCoroutine;
-        IEnumerator ThrowGrenadeCoroutine()
-        {
-            _grenadeThrowSpeed = 0;
-            while (true)
-            {
-                _grenadeThrowSpeed = 
-                    Mathf.Clamp(_grenadeThrowSpeed + Time.deltaTime * grenadeThrowSpeedThreshold ,0.1f,grenadeThrowSpeed);
-                yield return new WaitForEndOfFrame();
-            }
-        }
-        public void ThrowGrenade()
-        {
-            StopCoroutine(_throwGrenadeCoroutine);
-
-            GameObject grenade = PhotonNetwork.Instantiate("Grenade",
-                pelvisRb.transform.position + transform.forward * 2f, Quaternion.identity);
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            Physics.Raycast(ray, out hit, Mathf.Infinity, floorLayers);
-            grenade.GetComponent<Rigidbody>()
-                .AddForce((hit.point - pelvisRb.transform.position + Vector3.up * grenadeYThrowSpeed).normalized
-                * _grenadeThrowSpeed * Time.deltaTime, ForceMode.Impulse);
-        }
         private void Start() { if (!photonView.IsMine) return; ArtificialStart(); }
         private void Update() { if (!photonView.IsMine && pelvisRb != null) return; ArtificialUpdate(); }
         private void FixedUpdate() { if (!photonView.IsMine) return; ArtificialFixedUpdate(); }
@@ -200,21 +169,49 @@ namespace Character
             _lvlMng.UpdateUserPoints(PhotonNetwork.NickName, points);
             var cubeSpawner = FindObjectOfType<CubeSpawner>();
             if(cubeSpawner != null)
-            {
                 cubeSpawner.ConstructionPoints += points;
-            }
         }
 
         public bool OnClickPlayer()
         {
             foreach (var item in hands)
-            {
-                if (item.activeTaken) return true;
-            }
-
+                if (item.activeTaken) 
+                    return true;
             return false;
         }
+        #region Grenade
+        public void TryGrenade()
+        {
+            if (_throwGrenadeCoroutine != null)
+                StopCoroutine(_throwGrenadeCoroutine);
+            _throwGrenadeCoroutine = StartCoroutine(ThrowGrenadeCoroutine());
+        }
+        private Coroutine _throwGrenadeCoroutine;
+        IEnumerator ThrowGrenadeCoroutine()
+        {
+            _grenadeThrowSpeed = 0;
+            while (true)
+            {
+                _grenadeThrowSpeed = 
+                    Mathf.Clamp(_grenadeThrowSpeed + Time.deltaTime * grenadeThrowSpeedThreshold ,0.1f,grenadeThrowSpeed);
+                yield return new WaitForEndOfFrame();
+            }
+        }
+        public void ThrowGrenade()
+        {
+            StopCoroutine(_throwGrenadeCoroutine);
 
+            GameObject grenade = PhotonNetwork.Instantiate("Grenade",
+                pelvisRb.transform.position + transform.forward * 2f, Quaternion.identity);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            Physics.Raycast(ray, out hit, Mathf.Infinity, floorLayers);
+            grenade.GetComponent<Rigidbody>()
+                .AddForce((hit.point - pelvisRb.transform.position + Vector3.up * grenadeYThrowSpeed).normalized
+                * _grenadeThrowSpeed * Time.deltaTime, ForceMode.Impulse);
+        }
+        #endregion
+        #region Drunk
         public void DrunkEffectActive()
         {
             if (!photonView.IsMine) return;
@@ -271,6 +268,6 @@ namespace Character
                 .AddForce((hit.point - pelvisRb.transform.position).normalized
                 * 20, ForceMode.Impulse);
         }
+        #endregion
     }
-
 }

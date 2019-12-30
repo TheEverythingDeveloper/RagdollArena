@@ -35,5 +35,14 @@ public class Controller : MonoBehaviourPun
             PhotonNetwork.LeaveRoom();
             SceneManager.LoadScene(0);
         }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+            _myModel.TryJump();
+        /*if (Input.GetKeyDown(KeyCode.E))
+            _myModel.TryGrenade();
+        if (Input.GetKeyUp(KeyCode.E))
+            _myModel.ThrowGrenade();
+        if (Input.GetKeyDown(KeyCode.R))
+            _myModel.TryGrenadeDrunk();*/
     }
 }
