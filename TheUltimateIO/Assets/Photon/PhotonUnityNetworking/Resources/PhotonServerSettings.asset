@@ -58,5 +58,7 @@ MonoBehaviour:
   - RPCChangePlayers
   - RPCChangePlayer
   - SetInstance
+  - RPCStartGame
+  - RPCUpdateCounter
   DisableAutoOpenWizard: 1
   ShowSettings: 1

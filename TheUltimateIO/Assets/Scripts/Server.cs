@@ -7,11 +7,14 @@ using UnityEngine;
 
 public class Server : MonoBehaviourPun
 {
-    Dictionary<Player, CharacterModel> _allPlayers = new Dictionary<Player, CharacterModel>();
+    private Dictionary<Player, CharacterModel> _allPlayers = new Dictionary<Player, CharacterModel>();
+    private LevelManager _lvlMng;
     public int PackagesPerSecond { get; private set; }
 
     private void Awake()
     {
+        _lvlMng = FindObjectOfType<LevelManager>();
+
         if (!photonView.IsMine) return;
 
         PackagesPerSecond = 30;
@@ -21,6 +24,7 @@ public class Server : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
 
+        _lvlMng.SwitchEnterToStartText(true);
         AddPlayer(photonView.Controller);
     }
 
@@ -44,9 +48,10 @@ public class Server : MonoBehaviourPun
 
     IEnumerator StartGameCoroutine(int waitSeconds)
     {
+        _lvlMng.SwitchEnterToStartText(false);
         for (int i = 0; i < waitSeconds; i++) //5..4..3..2..1.. GO.
         {
-            photonView.RPC("RPCUpdateCounter", RpcTarget.All, i); //es All y no allbuffered porque el que se conecte tarde tiene que empezar sin el conteo.
+            photonView.RPC("RPCUpdateCounter", RpcTarget.All, waitSeconds - i, waitSeconds); //es All y no allbuffered porque el que se conecte tarde tiene que empezar sin el conteo.
             yield return new WaitForSeconds(1f);
         }
         photonView.RPC("RPCStartGame", RpcTarget.AllBuffered); //con allbuffered empezar el juego aun si llegaste tarde a la partida
@@ -55,13 +60,15 @@ public class Server : MonoBehaviourPun
     [PunRPC] private void RPCUpdateCounter(int i)
     {
         Debug.Log("<color=green>" + i + "</color>");
+        _lvlMng.SwitchCounterPanel(i != 0);
+        _lvlMng.CounterUpdate(i);
     }
 
     [PunRPC] private void RPCStartGame()
     {
         Debug.Log("<color=yellow> GO!!! </color>");
         //poner los equipos
-        //
+        //empezar la partida
     }
 
     public void AddPlayer(Player newPhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, newPhotonPlayer, true);

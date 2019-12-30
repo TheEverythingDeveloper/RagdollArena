@@ -1,11 +1,11 @@
 ﻿using Character;
-using Gamemodes;
 using Leaderboard;
 using Photon.Pun;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using TMPro;
+using GameUI;
 
 public class LevelManager : MonoBehaviour
 {
@@ -24,6 +24,12 @@ public class LevelManager : MonoBehaviour
     public float pointsToWin;
     public GameObject panelWin;
     public TextMeshProUGUI[] nameWinner;
+
+    private GameCanvas _gameCanvas;
+
+    public void SwitchCounterPanel(bool active) => _gameCanvas.SwitchCounterPanel(active); //activar o desactivar el panel de conteo
+    public void CounterUpdate(int time) => _gameCanvas.UpdateCounter(time); //actualizar el conteo en la UI.
+    public void SwitchEnterToStartText(bool active) => _gameCanvas.SwitchEnterToStartText(active);
 
     public void RespawnRandom(Transform player)
     {
@@ -107,6 +113,8 @@ public class LevelManager : MonoBehaviour
 
     private void Awake() //Al ser instanciado en realidad por el netmanager, no se va a llamar excepto q estemos testeando
     {
+        _gameCanvas = FindObjectOfType<GameCanvas>();
+
         Instance = this;
 
         _leaderboardMng = new LeaderboardManager(this);
