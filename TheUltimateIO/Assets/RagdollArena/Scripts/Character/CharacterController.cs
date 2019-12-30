@@ -15,25 +15,16 @@ namespace Character
         public void ArtificialUpdate()
         {
             if (Input.GetKeyDown(KeyCode.Space))
-            {
                 _myModel.TryJump();
-            }
             if(Input.GetKeyDown(KeyCode.E))
-            {
                 _myModel.TryGrenade();
-            }
             if (Input.GetKeyUp(KeyCode.E))
-            {
                 _myModel.ThrowGrenade();
-            }
             if (Input.GetKeyDown(KeyCode.R))
-            {
                 _myModel.TryGrenadeDrunk();
-            }
         }
 
         public void ArtificialFixedUpdate() { }
-
         public void ArtificialLateUpdate() { }
     }
 }

@@ -4,6 +4,7 @@ using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Server : MonoBehaviourPun
 {
@@ -70,8 +71,12 @@ public class Server : MonoBehaviourPun
     {
         _lvlMng.SwitchCounterPanel(false);
         Debug.Log("<color=yellow> GO!!! </color>");
-        //poner los equipos
-        //empezar la partida
+        int i = 0;
+        foreach (var player in _allPlayers) //cambiar de team y spawnear correctamente a los jugadores de cada team en su posicion correspondiente.
+        {
+            i++;
+            player.Value.StartGame((i % 2) + 1, player.Value.transform.position + (Vector3.up * 5));
+        }
     }
 
     public void AddPlayer(Player newPhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, newPhotonPlayer, true);

@@ -60,6 +60,9 @@ namespace Character
         public Func<int> GetActiveModeValue; //Va a conseguir el valor importante del modo de juego actual (amigos, puntos, etc)
 
         public List<CharacterHands> hands = new List<CharacterHands>();
+
+        [HideInInspector] public int team = 0; // { 0 } = sin equipo. { 1, 2, 3, 4 } = posibles equipos que pueden haber.
+
         private void Awake()
         {
             _lvlMng = FindObjectOfType<LevelManager>();
@@ -98,7 +101,31 @@ namespace Character
                 new float[] { colorB.r, colorB.g, colorB.b },
                 new float[] { colorC.r, colorC.g, colorC.b });
 
+            ChangeTeam(0);
+
             ArtificialAwakes();
+        }
+
+        private void ChangeTeam(int newTeamID) //cambiar el team equivale tambien a cambiar el color del jugador y color de efectos
+        {
+            Debug.Log("<color=green> Fuiste cambiado al equipo " + newTeamID.ToString() + "</color>");
+            team = newTeamID;
+
+            Color previousColorA = _allMyRenderers[1].material.GetColor("_ColorA");
+            Color previousColorC = _allMyRenderers[1].material.GetColor("_ColorC");
+            Color newCol = newTeamID == 0 ? Color.grey : newTeamID == 1 ? Color.blue : Color.red;
+
+            photonView.RPC("RPCUpdateColor", RpcTarget.AllBuffered,
+                new float[] { previousColorA.r, previousColorA.g, previousColorA.b },
+                new float[] { newCol.r, newCol.g, newCol.b },
+                new float[] { previousColorC.r, previousColorC.g, previousColorC.b });
+        }
+
+        public void StartGame(int teamID, Vector3 spawnPos)
+        {
+            //TODO: primero aca hacer efecto de teletransportarse o lo que sea, junto con sonidos, etc.
+            ChangeTeam(teamID);
+            transform.position = spawnPos;
         }
 
         private void OnDrawGizmos()
