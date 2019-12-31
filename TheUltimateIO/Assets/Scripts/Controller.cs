@@ -9,10 +9,12 @@ using UnityEngine.SceneManagement;
 
 public class Controller : MonoBehaviourPun
 {
+    Server server;
     private void Start()
     {
         if (!photonView.IsMine) return;
 
+        server = FindObjectOfType<Server>();
         StartCoroutine(DelayWaitForServer()); //esta corrutina se llama porque el controller se crea antes que el server. Esto es ya que el server esperaba a los demas jugadores.
     }
 
@@ -20,7 +22,7 @@ public class Controller : MonoBehaviourPun
     {
         yield return new WaitForSecondsRealtime(0.5f);
 
-        FindObjectOfType<Server>().AddPlayer(photonView.Controller);
+        server.AddPlayer(photonView.Controller);
     }
 
     private void Update()
@@ -45,4 +47,6 @@ public class Controller : MonoBehaviourPun
         if (Input.GetKeyDown(KeyCode.R))
             _myModel.TryGrenadeDrunk();*/
     }
+
+
 }

@@ -24,6 +24,8 @@ public class NetManager : MonoBehaviourPunCallbacks
     public GameObject canvasWaitingStart;
     public TextMeshProUGUI textNamesPlayers, textWaiting;
 
+    Server server;
+
     private void Start()
     {
         PhotonNetwork.GameVersion = gameVersion;
@@ -74,7 +76,7 @@ public class NetManager : MonoBehaviourPunCallbacks
         Debug.LogWarning("Disconnected because " + cause.ToString());
         //avisar que alguien se fue al server
 
-        //FindObjectOfType<Server>().RemovePlayer(PhotonNetwork.LocalPlayer);
+        server.RemovePlayer(PhotonNetwork.LocalPlayer);
     }
 
     IEnumerator WaitingStart()
@@ -101,5 +103,7 @@ public class NetManager : MonoBehaviourPunCallbacks
             PhotonNetwork.Instantiate("Server", Vector3.zero, Quaternion.identity);
         else
             PhotonNetwork.Instantiate("Controller", Vector3.zero, Quaternion.identity);
+
+        server = FindObjectOfType<Server>();
     }
 }
