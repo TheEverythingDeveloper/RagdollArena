@@ -48,7 +48,7 @@ namespace Character
         public void ArtificialUpdate() { }
         private void OnCollisionEnter(Collision collision)
         {
-            if (!myModel.owned) return;
+            if (myModel == null) return;
 
             if (collision.gameObject.layer == Layers.PLAYER || _taken || !activeTaken) return;
             sp = gameObject.AddComponent<SpringJoint>();
@@ -59,6 +59,8 @@ namespace Character
         }
         private void OnJointBreak(float breakForce)
         {
+            if (myModel == null) return;
+
             _taken = false;
         }
     }

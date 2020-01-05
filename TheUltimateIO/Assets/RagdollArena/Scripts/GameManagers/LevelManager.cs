@@ -105,8 +105,6 @@ public class LevelManager : MonoBehaviour
         pointsSpawn = GameObject.Find("AllSpawnPoint");
         _points = pointsSpawn.GetComponentsInChildren<Transform>();
         var user = PhotonNetwork.Instantiate("User", PositionRandom(), Quaternion.identity);
-        user.GetComponentInChildren<CharacterModel>().name = PhotonNetwork.NickName;
-        user.GetComponentInChildren<Character3DUI>().photonView.RPC("RPCUpdateNickname", RpcTarget.AllBuffered, PhotonNetwork.NickName);
 
         return user.GetComponentInChildren<CharacterModel>();
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +13,8 @@ namespace Character
         {
             _myModel = model;
             _3dUI = model.transform.parent.GetComponentInChildren<Character3DUI>();
+            _myModel.name = PhotonNetwork.NickName;
+            _3dUI.photonView.RPC("RPCUpdateNickname", RpcTarget.AllBuffered, PhotonNetwork.NickName);
             _myModel.OnCrowned += OnCrowned;
         }
 
