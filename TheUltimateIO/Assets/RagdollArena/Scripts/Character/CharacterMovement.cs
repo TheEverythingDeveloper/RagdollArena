@@ -102,7 +102,6 @@ namespace Character
         #endregion
         void DrunkUpdateControls()
         {
-           
             _inAir = !Physics.Raycast(_pelvisRb.transform.position, Vector3.down, _myModel.inAirDistance, _floorLayers);
 
             _sqrMagnitudeInTime = Mathf.Lerp(_sqrMagnitudeInTime, _pelvisRb.velocity.sqrMagnitude,

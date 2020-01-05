@@ -3,7 +3,7 @@ using Photon.Pun;
 using System.Collections.Generic;
 namespace Character
 {
-    public class CharacterHands : MonoBehaviourPun
+    public class CharacterHands : MonoBehaviourPun, IUpdatable, IConstructable
     {
         public CharacterModel myModel;
         public Rigidbody _hand;
@@ -12,18 +12,15 @@ namespace Character
         bool _taken;
         SpringJoint sp;
 
-        private void Awake()
+        public void ArtificialAwake()
         {
-            if (!photonView.IsMine) return;
             myModel = GetComponentInParent<CharacterModel>();
             _hand = GetComponent<Rigidbody>();
             myModel.hands.Add(this);
         }
 
-        private void FixedUpdate()
+        public void ArtificialFixedUpdate()
         {
-            if (!photonView.IsMine) return;
-
             if (Input.GetMouseButtonDown(buttonMouse))
             {
                 _hand.velocity = Vector3.zero;
@@ -36,7 +33,7 @@ namespace Character
                 activeTaken = false;
                 if (_taken)
                 {
-                    if(sp && sp.connectedBody)
+                    if (sp && sp.connectedBody)
                     {
                         sp.connectedBody.AddForce((sp.connectedBody.transform.position - myModel.pelvisRb.transform.position).normalized * myModel.pushForce, ForceMode.Impulse);
                     }
@@ -46,8 +43,13 @@ namespace Character
                 }
             }
         }
+        public void ArtificialLateUpdate() { }
+        public void ArtificialStart() { }
+        public void ArtificialUpdate() { }
         private void OnCollisionEnter(Collision collision)
         {
+            if (!myModel.owned) return;
+
             if (collision.gameObject.layer == Layers.PLAYER || _taken || !activeTaken) return;
             sp = gameObject.AddComponent<SpringJoint>();
             sp.connectedBody = collision.rigidbody;

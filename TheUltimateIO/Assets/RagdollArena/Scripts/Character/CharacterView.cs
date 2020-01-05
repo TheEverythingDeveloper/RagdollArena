@@ -21,13 +21,9 @@ namespace Character
         }
 
         public void ArtificialAwake() { }
-
         public void ArtificialStart() { }
-
         public void ArtificialUpdate() { }
-
         public void ArtificialFixedUpdate() { }
-
         public void ArtificialLateUpdate() { }
     }
 }

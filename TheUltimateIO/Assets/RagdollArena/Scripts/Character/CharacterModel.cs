@@ -91,6 +91,8 @@ namespace Character
 
             _movementController = new CharacterMovement(this, pelvisRb, pelvisRb.transform.localRotation, floorLayers);
             _allConstructables.Add(_movementController);
+            _allConstructables.Add(GetComponentInChildren<CharacterHands>());
+            _allUpdatables.Add(GetComponentInChildren<CharacterHands>());
             _allUpdatables.Add(_movementController);
             _allUpdatables.Add(new CharacterCamera(this, pelvisRb));
             _allUpdatables.Add(new CharacterPointsManager(this, _lvlMng, PhotonNetwork.NickName));
