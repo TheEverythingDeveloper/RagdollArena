@@ -72,11 +72,12 @@ namespace Character
 
             _allMyRenderers = GetComponentsInChildren<Renderer>();
 
+            if (!owned) return;
+
             var characterView = new CharacterView(this);
             _allUpdatables.Add(characterView);
             _allConstructables.Add(characterView);
 
-            if (!owned) return;
             Debug.Log("<color=green> Paso por aca awake </color>");
 
             var allChilds = GetComponentsInChildren<Transform>();
