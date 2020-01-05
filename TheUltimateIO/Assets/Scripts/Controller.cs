@@ -47,6 +47,4 @@ public class Controller : MonoBehaviourPun
         if (Input.GetKeyDown(KeyCode.R))
             _myModel.TryGrenadeDrunk();*/
     }
-
-
 }

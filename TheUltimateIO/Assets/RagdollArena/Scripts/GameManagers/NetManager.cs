@@ -100,7 +100,10 @@ public class NetManager : MonoBehaviourPunCallbacks
     private void StartGameTransition(Scene scene, LoadSceneMode mode)
     {
         if (_host)
+        {
             PhotonNetwork.Instantiate("Server", Vector3.zero, Quaternion.identity);
+            PhotonNetwork.Instantiate("Controller", Vector3.zero, Quaternion.identity);
+        }
         else
             PhotonNetwork.Instantiate("Controller", Vector3.zero, Quaternion.identity);
 

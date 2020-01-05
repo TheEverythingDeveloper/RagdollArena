@@ -62,8 +62,12 @@ namespace Character
         public List<CharacterHands> hands = new List<CharacterHands>();
 
         [HideInInspector] public int team = 0; // { 0 } = sin equipo. { 1, 2, 3, 4 } = posibles equipos que pueden haber.
+        [Tooltip("Este owned es parecido al photonView.isMine, solo que es para FullAutho, ya que el server es el photonView.isMine")] public bool owned;
 
-        private void Awake()
+        [PunRPC] public void RPCSetModelOwner(bool own) => owned = own;
+
+        [PunRPC]
+        public void RPCArtificialAwake()
         {
             _lvlMng = FindObjectOfType<LevelManager>();
 

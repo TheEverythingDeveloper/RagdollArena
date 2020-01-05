@@ -60,5 +60,8 @@ MonoBehaviour:
   - SetInstance
   - RPCStartGame
   - RPCUpdateCounter
+  - RPCArtificialAwake
+  - SetModelOwner
+  - RPCSetModelOwner
   DisableAutoOpenWizard: 1
   ShowSettings: 1
