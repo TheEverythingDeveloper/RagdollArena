@@ -99,8 +99,8 @@ public class Server : MonoBehaviourPun
             CharacterModel model = LevelManager.Instance.SpawnUser();
             Debug.Log("<color=green>Se unio a la partida un usuario! Se llama </color>"+photonPlayer.NickName);
             _allPlayers.Add(photonPlayer, model);
-            _allPlayers[photonPlayer].photonView.RPC("RPCArtificialAwake", photonPlayer);
             _allPlayers[photonPlayer].photonView.RPC("RPCSetModelOwner", photonPlayer, true);
+            _allPlayers[photonPlayer].photonView.RPC("RPCArtificialAwake", photonPlayer);
         }
     }
 }

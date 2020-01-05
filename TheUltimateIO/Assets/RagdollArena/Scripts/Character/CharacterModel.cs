@@ -66,8 +66,7 @@ namespace Character
 
         [PunRPC] public void RPCSetModelOwner(bool own) => owned = own;
 
-        [PunRPC]
-        public void RPCArtificialAwake()
+        [PunRPC] public void RPCArtificialAwake()
         {
             _lvlMng = FindObjectOfType<LevelManager>();
 
@@ -77,7 +76,8 @@ namespace Character
             _allUpdatables.Add(characterView);
             _allConstructables.Add(characterView);
 
-            if (!photonView.IsMine) return;
+            if (!owned) return;
+            Debug.Log("<color=green> Paso por aca awake </color>");
 
             var allChilds = GetComponentsInChildren<Transform>();
             allChilds.Select(x =>
@@ -140,11 +140,11 @@ namespace Character
         public void UpdatePoints(int addedPoints) => OnPointsUpdate(addedPoints);
         public void Crowned(bool on) => OnCrowned(on);
         public void TryJump() { if (_movementController.inAir) return; OnJump(); }
-        private void Start() { if (!photonView.IsMine) return; ArtificialStart(); }
-        private void Update() { if (!photonView.IsMine && pelvisRb != null) return; ArtificialUpdate(); }
-        private void FixedUpdate() { if (!photonView.IsMine) return; ArtificialFixedUpdate(); }
-        private void LateUpdate() { if (!photonView.IsMine) return; ArtificialLateUpdate(); }
-
+        private void Start() { if (!owned) return; ArtificialStart(); }
+        private void Update() { if (!owned && pelvisRb != null) return; ArtificialUpdate(); }
+        private void FixedUpdate() { if (!owned) return; ArtificialFixedUpdate(); }
+        private void LateUpdate() { if (!owned) return; ArtificialLateUpdate(); }
+            
         [PunRPC]
         public void RPCUpdateColor(float[] colorA, float[] colorB, float[] colorC)
         {
