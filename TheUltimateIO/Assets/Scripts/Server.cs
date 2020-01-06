@@ -103,4 +103,17 @@ public class Server : MonoBehaviourPun
             _allPlayers[photonPlayer].photonView.RPC("RPCArtificialAwake", RpcTarget.AllBuffered);
         }
     }
+    public void MovePlayer(Player photonPlayer, float horAxis, float verAxis)
+    {
+        if (!_allPlayers.ContainsKey(photonPlayer)) return;
+
+        photonView.RPC("RPCMovePlayer", RpcTarget.MasterClient, photonPlayer, horAxis, verAxis);
+    }
+    [PunRPC]
+    private void RPCMovePlayer(Player photonPlayer, float horAxis, float verAxis)
+    {
+        _allPlayers[photonPlayer].pelvisRb.velocity = new Vector3(horAxis, _allPlayers[photonPlayer].pelvisRb.velocity.y, verAxis);
+
+        //_allPlayers[photonPlayer].anim.SetTrigger("Move");
+    }
 }

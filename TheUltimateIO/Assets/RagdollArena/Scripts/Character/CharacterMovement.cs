@@ -90,14 +90,14 @@ namespace Character
         }
 
         void NormalFixedUpdateControls()
-        {
+        {/*
             var horAxis = Input.GetAxis("Horizontal") * _myModel.speed * Time.deltaTime;
             var verAxis = Input.GetAxis("Vertical") * _myModel.speed * Time.deltaTime;
 
             var animMove = horAxis != 0 || verAxis != 0;
             if (animMove != _myModel.anim.GetBool("Move")) _myModel.anim.SetBool("Move", animMove);
 
-            _pelvisRb.velocity = new Vector3(horAxis, _pelvisRb.velocity.y, verAxis);
+            _pelvisRb.velocity = new Vector3(horAxis, _pelvisRb.velocity.y, verAxis);*/
         }
         #endregion
         void DrunkUpdateControls()

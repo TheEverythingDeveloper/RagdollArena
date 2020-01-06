@@ -47,4 +47,18 @@ public class Controller : MonoBehaviourPun
         if (Input.GetKeyDown(KeyCode.R))
             _myModel.TryGrenadeDrunk();*/
     }
+
+    private void FixedUpdate()
+    {
+        Move();
+    }
+
+    private void Move()
+    {
+        var horAxis = Input.GetAxis("Horizontal");
+        var verAxis = Input.GetAxis("Vertical");
+
+        if (horAxis != 0 || verAxis != 0)
+            server.MovePlayer(photonView.Controller, horAxis, verAxis);       
+    }
 }
