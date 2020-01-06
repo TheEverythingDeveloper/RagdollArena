@@ -15,6 +15,12 @@ public class SpawnPoint : MonoBehaviourPun
 
     private void Start()
     {
+        StartCoroutine(DelayForServer());
+    }
+
+    private IEnumerator DelayForServer()
+    {
+        yield return new WaitForSeconds(0.5f);
         _server = FindObjectOfType<Server>();
         _server.OnRespawnFeedback += CanvasVisibility;
     }
