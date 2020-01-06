@@ -13,14 +13,23 @@ namespace Character
         {
             _myModel = model;
             _3dUI = model.transform.parent.GetComponentInChildren<Character3DUI>();
+            _myModel.OnCrowned += OnCrowned;
+            _myModel.OnChangeRespawnMode += OnChangeRespawnMode;
+
+            if (!_myModel.owned) return; //que los que no son el owner no actualicen el nombre para que no se pisen
+
             _myModel.name = PhotonNetwork.NickName;
             _3dUI.photonView.RPC("RPCUpdateNickname", RpcTarget.AllBuffered, PhotonNetwork.NickName);
-            _myModel.OnCrowned += OnCrowned;
         }
 
         public void OnCrowned(bool active)
         {
-            _3dUI.photonView.RPC("RPCUpdateCrown", Photon.Pun.RpcTarget.AllBuffered, active);
+            _3dUI.photonView.RPC("RPCUpdateCrown", RpcTarget.AllBuffered, active);
+        }
+
+        public void OnChangeRespawnMode(bool active)
+        {
+            _3dUI.gameObject.SetActive(active);
         }
 
         public void ArtificialAwake() { }

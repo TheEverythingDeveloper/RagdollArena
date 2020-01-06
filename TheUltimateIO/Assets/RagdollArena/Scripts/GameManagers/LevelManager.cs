@@ -18,18 +18,14 @@ public class LevelManager : MonoBehaviour
     public LayerMask playerFriendsLayermask;
     [Tooltip("Posiciones random de spawneo")]
     public GameObject pointsSpawn;
-    Transform[] _points;
+    SpawnPoint[] _points;
 
     public bool finishLevel;
     public float pointsToWin;
     public GameObject panelWin;
     public TextMeshProUGUI[] nameWinner;
 
-    private GameCanvas _gameCanvas;
-
-    public void SwitchCounterPanel(bool active) => _gameCanvas.SwitchCounterPanel(active); //activar o desactivar el panel de conteo
-    public void CounterUpdate(int time) => _gameCanvas.UpdateCounter(time); //actualizar el conteo en la UI.
-    public void SwitchEnterToStartText(bool active) => _gameCanvas.SwitchEnterToStartText(active);
+    [HideInInspector] public GameCanvas gameCanvas;
 
     public void RespawnRandom(Transform player)
     {
@@ -39,7 +35,7 @@ public class LevelManager : MonoBehaviour
     Vector3 PositionRandom()
     {
         var selectRandom = Random.Range(0, _points.Length);
-        return _points[selectRandom].position;
+        return _points[selectRandom].transform.position;
     }
     public void UpdateUserPoints(string nickName, int addedPoints)
     { /*photonView.RPC("RPCUpdateUserPoints", RpcTarget.MasterClient, nickName, addedPoints);*/ }
@@ -102,8 +98,7 @@ public class LevelManager : MonoBehaviour
 
     public CharacterModel SpawnUser()
     {
-        pointsSpawn = GameObject.Find("AllSpawnPoint");
-        _points = pointsSpawn.GetComponentsInChildren<Transform>();
+        _points = FindObjectsOfType<SpawnPoint>();
         var user = PhotonNetwork.Instantiate("User", PositionRandom(), Quaternion.identity);
 
         return user.GetComponentInChildren<CharacterModel>();
@@ -111,7 +106,7 @@ public class LevelManager : MonoBehaviour
 
     private void Awake() //Al ser instanciado en realidad por el netmanager, no se va a llamar excepto q estemos testeando
     {
-        _gameCanvas = FindObjectOfType<GameCanvas>();
+        gameCanvas = FindObjectOfType<GameCanvas>();
 
         Instance = this;
 

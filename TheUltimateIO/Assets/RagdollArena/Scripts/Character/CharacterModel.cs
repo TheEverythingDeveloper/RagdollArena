@@ -31,8 +31,10 @@ namespace Character
         public float inAirDistance = 0.6f;
         public float minFOV;
         public float maxFOV;
-        [Tooltip("Offset de la camara con respecto al character")]
-        public Vector3 cameraOffset = new Vector3(-0.01f, 5.9f, -4f);
+        [Tooltip("Offset de la camara con respecto a la pelvis en third person")]
+        public Vector3 thirdPersonCameraOffset = new Vector3(-0.01f, 5.9f, -4f);
+        [Tooltip("Offset de posicion y rotacion de la camara con respecto al character en god mode")]
+        public Transform godModeCameraOffset;
         [Tooltip("Mientras mas bajo, mas va a quedar en el MinFoV. Caso contrario, del MaxFoV.")]
         public float ratioMultiplierFoV;
         public float sqrMagnitudeInTimeSpeed;
@@ -72,11 +74,11 @@ namespace Character
 
             _allMyRenderers = GetComponentsInChildren<Renderer>();
 
-            if (!owned) return;
-
             var characterView = new CharacterView(this);
             _allUpdatables.Add(characterView);
             _allConstructables.Add(characterView);
+
+            if (!owned) return;
 
             Debug.Log("<color=green> Paso por aca awake </color>");
 
@@ -164,6 +166,18 @@ namespace Character
         public void ArtificialUpdate() { _allUpdatables.Select(x => { x.ArtificialUpdate(); return x; }).ToList(); CheckHeight(); }
         public void ArtificialFixedUpdate() { _allUpdatables.Select(x => { x.ArtificialFixedUpdate(); return x; }).ToList(); }
         public void ArtificialLateUpdate() { _allUpdatables.Select(x => { x.ArtificialLateUpdate(); return x; }).ToList(); }
+
+        public event Action<bool> OnChangeRespawnMode = delegate { };
+        [PunRPC] public void RPCChangeRespawnMode(bool dead)
+        {
+            pelvisRb.transform.parent.gameObject.SetActive(!dead);
+            OnChangeRespawnMode(!dead);
+
+            if (!owned) return;
+
+            _lvlMng.gameCanvas.SwitchRespawnHUD(dead);
+            Debug.Log(dead ? "<color=red>Muerto</color>" : "<color=green>Respawneado</color>");
+        }
 
         void CheckHeight()
         {

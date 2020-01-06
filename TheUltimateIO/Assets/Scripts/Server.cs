@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public class Server : MonoBehaviourPun
 {
@@ -25,7 +26,7 @@ public class Server : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
 
-        _lvlMng.SwitchEnterToStartText(true);
+        _lvlMng.gameCanvas.SwitchEnterToStartText(true);
     }
 
     private void Update()
@@ -48,7 +49,7 @@ public class Server : MonoBehaviourPun
 
     IEnumerator StartGameCoroutine(int waitSeconds)
     {
-        _lvlMng.SwitchEnterToStartText(false);
+        _lvlMng.gameCanvas.SwitchEnterToStartText(false);
         for (int i = 0; i < waitSeconds; i++) //5..4..3..2..1.. GO.
         {
             photonView.RPC("RPCUpdateCounter", RpcTarget.All, waitSeconds - i); //es All y no allbuffered porque el que se conecte tarde tiene que empezar sin el conteo.
@@ -61,14 +62,14 @@ public class Server : MonoBehaviourPun
 
     [PunRPC] private void RPCUpdateCounter(int i)
     {
-        _lvlMng.SwitchCounterPanel(true);
+        _lvlMng.gameCanvas.SwitchCounterPanel(true);
         Debug.Log("<color=green>" + i + "</color>");
-        _lvlMng.CounterUpdate(i);
+        _lvlMng.gameCanvas.CounterUpdate(i);
     }
 
     [PunRPC] private void RPCStartGame()
     {
-        _lvlMng.SwitchCounterPanel(false);
+        _lvlMng.gameCanvas.SwitchCounterPanel(false);
         Debug.Log("<color=yellow> GO!!! </color>");
         int i = 0;
         foreach (var player in _allPlayers) //cambiar de team y spawnear correctamente a los jugadores de cada team en su posicion correspondiente.
@@ -79,12 +80,8 @@ public class Server : MonoBehaviourPun
     }
 
     public void AddPlayer(Player newPhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, newPhotonPlayer, true);
-    public void RemovePlayer(Player toRemovePhotonPlayer)
-    {
-        photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, toRemovePhotonPlayer, false);
-    }
-    [PunRPC]
-    private void RPCChangePlayer(Player photonPlayer, bool add)
+    public void RemovePlayer(Player toRemovePhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, toRemovePhotonPlayer, false);
+    [PunRPC] private void RPCChangePlayer(Player photonPlayer, bool add)
     {
         if (!add) //si estamos removiendo un jugador
         {
@@ -103,15 +100,34 @@ public class Server : MonoBehaviourPun
             _allPlayers[photonPlayer].photonView.RPC("RPCArtificialAwake", RpcTarget.AllBuffered);
         }
     }
+    [PunRPC] public void RPCPlayerDeath(Player photonPlayer) //Decirle al modelo que se apague y que ponga los paneles de respawn en el HUD
+    {
+        photonView.RPC("RPCChangeRespawnFeedback", photonPlayer, true);
+        _allPlayers[photonPlayer].photonView.RPC("RPCChangeRespawnMode", RpcTarget.AllBuffered, true);
+    }
     public void MovePlayer(Player photonPlayer, float horAxis, float verAxis)
     {
         photonView.RPC("RPCMovePlayer", RpcTarget.MasterClient, photonPlayer, horAxis, verAxis);
     }
-    [PunRPC]
-    private void RPCMovePlayer(Player photonPlayer, float horAxis, float verAxis)
+    [PunRPC] private void RPCMovePlayer(Player photonPlayer, float horAxis, float verAxis)
     {
         if (!_allPlayers.ContainsKey(photonPlayer)) return;
 
         _allPlayers[photonPlayer].MovePlayer(horAxis, verAxis);
+    }
+
+    [PunRPC] public void RPCRespawnPlayer(Player photonPlayer, Vector3 position)
+    {
+        Debug.Log("<color=green>Respawneado</color>");
+        
+        photonView.RPC("RPCChangeRespawnFeedback", photonPlayer, false);
+        _allPlayers[photonPlayer].photonView.RPC("RPCChangeRespawnMode", RpcTarget.AllBuffered, false);
+        _allPlayers[photonPlayer].pelvisRb.transform.position = position;
+    }
+
+    public event Action<bool> OnRespawnFeedback = delegate { };
+    [PunRPC] private void RPCChangeRespawnFeedback(bool dead)
+    {
+        OnRespawnFeedback(dead);
     }
 }
