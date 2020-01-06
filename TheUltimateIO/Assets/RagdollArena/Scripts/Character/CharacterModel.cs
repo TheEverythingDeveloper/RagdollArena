@@ -31,8 +31,10 @@ namespace Character
         public float inAirDistance = 0.6f;
         public float minFOV;
         public float maxFOV;
-        [Tooltip("Offset de la camara con respecto al character")]
-        public Vector3 cameraOffset = new Vector3(-0.01f, 5.9f, -4f);
+        [Tooltip("Offset de la camara con respecto a la pelvis en third person")]
+        public Vector3 thirdPersonCameraOffset = new Vector3(-0.01f, 5.9f, -4f);
+        [Tooltip("Offset de posicion y rotacion de la camara con respecto al character en god mode")]
+        public Transform godModeCameraOffset;
         [Tooltip("Mientras mas bajo, mas va a quedar en el MinFoV. Caso contrario, del MaxFoV.")]
         public float ratioMultiplierFoV;
         public float sqrMagnitudeInTimeSpeed;
