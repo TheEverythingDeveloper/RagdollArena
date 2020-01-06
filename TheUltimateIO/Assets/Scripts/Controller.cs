@@ -39,19 +39,17 @@ public class Controller : MonoBehaviourPun
         }
 
         //if (Input.GetKeyDown(KeyCode.Space))
-            //_myModel.TryJump();
+        //_myModel.TryJump();
         /*if (Input.GetKeyDown(KeyCode.E))
             _myModel.TryGrenade();
         if (Input.GetKeyUp(KeyCode.E))
             _myModel.ThrowGrenade();
         if (Input.GetKeyDown(KeyCode.R))
             _myModel.TryGrenadeDrunk();*/
-    }
 
-    private void FixedUpdate()
-    {
         Move();
     }
+
 
     private void Move()
     {

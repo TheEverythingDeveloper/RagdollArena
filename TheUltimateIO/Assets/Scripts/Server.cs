@@ -105,20 +105,13 @@ public class Server : MonoBehaviourPun
     }
     public void MovePlayer(Player photonPlayer, float horAxis, float verAxis)
     {
-        if (!_allPlayers.ContainsKey(photonPlayer)) return;
-
         photonView.RPC("RPCMovePlayer", RpcTarget.MasterClient, photonPlayer, horAxis, verAxis);
     }
     [PunRPC]
     private void RPCMovePlayer(Player photonPlayer, float horAxis, float verAxis)
     {
-        var player = _allPlayers[photonPlayer];
+        if (!_allPlayers.ContainsKey(photonPlayer)) return;
 
-        var horizontal = horAxis * player.speed * Time.deltaTime;
-        var vertical = verAxis * player.speed * Time.deltaTime;
-
-        player.pelvisRb.velocity = new Vector3(horizontal, player.pelvisRb.velocity.y, vertical);
-
-        //_allPlayers[photonPlayer].anim.SetTrigger("Move");
+        _allPlayers[photonPlayer].MovePlayer(horAxis, verAxis);
     }
 }

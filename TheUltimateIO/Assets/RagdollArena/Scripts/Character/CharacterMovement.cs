@@ -14,7 +14,8 @@ namespace Character
         Vector3 _direction;
         float _sqrMagnitudeInTime;
         private LayerMask _floorLayers;
-        Action updateControls, fixedUpdateControls;
+        Action updateControls;
+        Action<float, float> fixedUpdateControls;
 
         public CharacterMovement(CharacterModel model, Rigidbody pelvis, Quaternion initialRot, LayerMask floorLayers)
         {
@@ -45,7 +46,7 @@ namespace Character
 
         public void ArtificialFixedUpdate()
         {
-            fixedUpdateControls();
+            //fixedUpdateControls();
         }
 
         public void ChangeControls(bool normal)
@@ -89,15 +90,20 @@ namespace Character
             }
         }
 
-        void NormalFixedUpdateControls()
-        {/*
-            var horAxis = Input.GetAxis("Horizontal") * _myModel.speed * Time.deltaTime;
-            var verAxis = Input.GetAxis("Vertical") * _myModel.speed * Time.deltaTime;
+        public void Move(float horizontal, float vertical)
+        {
+            fixedUpdateControls(horizontal, vertical);
+        }
 
-            var animMove = horAxis != 0 || verAxis != 0;
-            if (animMove != _myModel.anim.GetBool("Move")) _myModel.anim.SetBool("Move", animMove);
+        void NormalFixedUpdateControls(float horizontal, float vertical)
+        {
+            var horAxis = horizontal * _myModel.speed * Time.deltaTime;
+            var verAxis = vertical * _myModel.speed * Time.deltaTime;
 
-            _pelvisRb.velocity = new Vector3(horAxis, _pelvisRb.velocity.y, verAxis);*/
+            /*var animMove = horAxis != 0 || verAxis != 0;
+            if (animMove != _myModel.anim.GetBool("Move")) _myModel.anim.SetBool("Move", animMove);*/
+
+            _pelvisRb.velocity = new Vector3(horAxis, _pelvisRb.velocity.y, verAxis);
         }
         #endregion
         void DrunkUpdateControls()
@@ -124,13 +130,13 @@ namespace Character
             }
         }
 
-        void DrunkFixedUpdateControls()
+        void DrunkFixedUpdateControls(float horizontal, float vertical)
         {
-            var horAxis = Input.GetAxis("Vertical") * _myModel.speed * Time.deltaTime;
-            var verAxis = Input.GetAxis("Horizontal") * _myModel.speed * Time.deltaTime;
+            var horAxis = vertical * _myModel.speed * Time.deltaTime;
+            var verAxis = horizontal * _myModel.speed * Time.deltaTime;
 
-            var animMove = horAxis != 0 || verAxis != 0;
-            if (animMove != _myModel.anim.GetBool("Move")) _myModel.anim.SetBool("Move", animMove);
+            /*var animMove = horAxis != 0 || verAxis != 0;
+            if (animMove != _myModel.anim.GetBool("Move")) _myModel.anim.SetBool("Move", animMove);*/
 
             _pelvisRb.velocity = new Vector3(horAxis, _pelvisRb.velocity.y, verAxis);
         }

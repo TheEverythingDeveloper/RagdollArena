@@ -186,6 +186,10 @@ namespace Character
                     return true;
             return false;
         }
+        public void MovePlayer(float horizontal, float vertical)
+        {
+            _movementController.Move(horizontal, vertical);
+        }
         #region Grenade
         public void TryGrenade()
         {
