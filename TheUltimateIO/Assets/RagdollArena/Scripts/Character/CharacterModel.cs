@@ -165,6 +165,18 @@ namespace Character
         public void ArtificialFixedUpdate() { _allUpdatables.Select(x => { x.ArtificialFixedUpdate(); return x; }).ToList(); }
         public void ArtificialLateUpdate() { _allUpdatables.Select(x => { x.ArtificialLateUpdate(); return x; }).ToList(); }
 
+        public event Action<bool> OnChangeRespawnMode = delegate { };
+        [PunRPC] public void RPCChangeRespawnMode(bool dead)
+        {
+            pelvisRb.transform.parent.gameObject.SetActive(!dead);
+            OnChangeRespawnMode(!dead);
+
+            if (!owned) return;
+
+            _lvlMng.gameCanvas.SwitchRespawnHUD(dead);
+            Debug.Log(dead ? "<color=red>Muerto</color>" : "<color=green>Respawneado</color>");
+        }
+
         void CheckHeight()
         {
             if (pelvisRb.transform.position.y < heightRespawn)

@@ -16,11 +16,17 @@ namespace Character
             _myModel.name = PhotonNetwork.NickName;
             _3dUI.photonView.RPC("RPCUpdateNickname", RpcTarget.AllBuffered, PhotonNetwork.NickName);
             _myModel.OnCrowned += OnCrowned;
+            _myModel.OnChangeRespawnMode += OnChangeRespawnMode;
         }
 
         public void OnCrowned(bool active)
         {
             _3dUI.photonView.RPC("RPCUpdateCrown", Photon.Pun.RpcTarget.AllBuffered, active);
+        }
+
+        public void OnChangeRespawnMode(bool active)
+        {
+            _3dUI.gameObject.SetActive(active);
         }
 
         public void ArtificialAwake() { }

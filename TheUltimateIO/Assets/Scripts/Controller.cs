@@ -32,25 +32,34 @@ public class Controller : MonoBehaviourPun
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Debug.Log("<color=red>Desconectado de la partida actual</color>");
-            FindObjectOfType<Server>().RemovePlayer(photonView.Controller);
+            server.RemovePlayer(photonView.Controller);
             PhotonNetwork.Disconnect();
             PhotonNetwork.LeaveRoom();
             SceneManager.LoadScene(0);
         }
 
+        if(Input.GetKeyDown(KeyCode.Backspace))
+        {
+            Debug.Log("<color=red>Fuiste asesinado</color>");
+            server.photonView.RPC("RPCPlayerDeath", RpcTarget.MasterClient, photonView.Controller);
+        }
+
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            Debug.Log("<color=yellow>Intentando Respawnear</color>");
+            FindObjectOfType<SpawnPoint>().UseSpawnPoint(photonView.Controller);
+        }
+
+        Move();
+
         //if (Input.GetKeyDown(KeyCode.Space))
-            //_myModel.TryJump();
+        //_myModel.TryJump();
         /*if (Input.GetKeyDown(KeyCode.E))
             _myModel.TryGrenade();
         if (Input.GetKeyUp(KeyCode.E))
             _myModel.ThrowGrenade();
         if (Input.GetKeyDown(KeyCode.R))
             _myModel.TryGrenadeDrunk();*/
-    }
-
-    private void FixedUpdate()
-    {
-        Move();
     }
 
     private void Move()

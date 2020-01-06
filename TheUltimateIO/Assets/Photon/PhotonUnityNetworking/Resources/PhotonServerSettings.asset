@@ -63,5 +63,12 @@ MonoBehaviour:
   - RPCArtificialAwake
   - SetModelOwner
   - RPCSetModelOwner
+  - RPCMovePlayer
+  - RPCRespawnPlayer
+  - RPCUseSpawnPoint
+  - RPCChangeRespawnMode
+  - RPCPlayerDeath
+  - ChangeRespawnFeedback
+  - RPCChangeRespawnFeedback
   DisableAutoOpenWizard: 1
   ShowSettings: 1
