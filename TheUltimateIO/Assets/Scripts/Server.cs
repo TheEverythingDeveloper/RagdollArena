@@ -116,6 +116,18 @@ public class Server : MonoBehaviourPun
         _allPlayers[photonPlayer].MovePlayer(horAxis, verAxis);
     }
 
+    public void JumpPlayer(Player photonPlayer)
+    {
+        photonView.RPC("RPCJumpPlayer", RpcTarget.MasterClient, photonPlayer);
+    }
+    [PunRPC]
+    private void RPCJumpPlayer(Player photonPlayer)
+    {
+        if (!_allPlayers.ContainsKey(photonPlayer)) return;
+
+        _allPlayers[photonPlayer].TryJump();
+    }
+
     [PunRPC] public void RPCRespawnPlayer(Player photonPlayer, Vector3 position)
     {
         Debug.Log("<color=green>Respawneado</color>");

@@ -23,12 +23,13 @@ public class Chat : MonoBehaviourPun
 
     public void OnConnected()
     {
-        SendMsg("joined");
+        photonView.RPC(_typesMsg[typeMsg.value], RpcTarget.All, "joined", PhotonNetwork.LocalPlayer.NickName);
     }
 
-    public void SendMsg(string msg)
+    public void SendMsg()
     {
-        photonView.RPC(_typesMsg[typeMsg.value], RpcTarget.All, msg, PhotonNetwork.LocalPlayer.NickName);
+        photonView.RPC(_typesMsg[typeMsg.value], RpcTarget.All, msgInput.text, PhotonNetwork.LocalPlayer.NickName);
+        msgInput.text = "";
     }
 
     [PunRPC]
@@ -40,13 +41,13 @@ public class Chat : MonoBehaviourPun
     [PunRPC]
     void RPCTeamSendMsg(string msg, string name)
     {
-        msgArea.text += "<color=red> |GLOBAL| </color>" + name + ": " + msg;
+        msgArea.text += "<color=red> |TEAM| </color>" + name + ": " + msg;
     }
 
     [PunRPC]
     void RPCPrivateSendMsg(string msg, string name)
     {
-        msgArea.text += "<color=blue> |GLOBAL| </color>" + name + ": " + msg;
+        msgArea.text += "<color=blue> |PRIVATE| </color>" + name + ": " + msg;
     }
 
 }

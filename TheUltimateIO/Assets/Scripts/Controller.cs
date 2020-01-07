@@ -51,7 +51,6 @@ public class Controller : MonoBehaviourPun
         }
 
         Move();
-
         //if (Input.GetKeyDown(KeyCode.Space))
         //_myModel.TryJump();
         /*if (Input.GetKeyDown(KeyCode.E))
@@ -67,6 +66,9 @@ public class Controller : MonoBehaviourPun
         var verAxis = Input.GetAxis("Vertical");
 
         if (horAxis != 0 || verAxis != 0)
-            server.MovePlayer(photonView.Controller, horAxis, verAxis);       
+            server.MovePlayer(photonView.Controller, horAxis, verAxis);
+
+        if (Input.GetKeyDown(KeyCode.Space))
+            server.JumpPlayer(photonView.Controller);
     }
 }
