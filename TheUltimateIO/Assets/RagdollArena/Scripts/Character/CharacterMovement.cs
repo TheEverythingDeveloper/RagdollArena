@@ -103,9 +103,7 @@ namespace Character
             /*var animMove = horAxis != 0 || verAxis != 0;
             if (animMove != _myModel.anim.GetBool("Move")) _myModel.anim.SetBool("Move", animMove);*/
 
-            _myModel.transform.position -= _myModel.pelvisRb.transform.forward * horAxis;
-            _myModel.transform.position += _myModel.pelvisRb.transform.up * verAxis;
-            //_pelvisRb.velocity = new Vector3(horAxis, _pelvisRb.velocity.y, verAxis);
+            _pelvisRb.velocity = new Vector3(horAxis, _pelvisRb.velocity.y, verAxis);
         }
         #endregion
         void DrunkUpdateControls()
@@ -140,8 +138,7 @@ namespace Character
             /*var animMove = horAxis != 0 || verAxis != 0;
             if (animMove != _myModel.anim.GetBool("Move")) _myModel.anim.SetBool("Move", animMove);*/
 
-            _myModel.transform.position -= _myModel.pelvisRb.transform.forward * horAxis;
-            _myModel.transform.position += _myModel.pelvisRb.transform.up * verAxis;
+            _pelvisRb.velocity = new Vector3(horAxis, _pelvisRb.velocity.y, verAxis);
         }
 
         public void ArtificialLateUpdate() { }
