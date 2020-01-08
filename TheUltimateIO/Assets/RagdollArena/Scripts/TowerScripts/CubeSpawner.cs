@@ -44,13 +44,12 @@ public class CubeSpawner : MonoBehaviour
     public Vector2 minMaxSize;
 
     #region UI
-    TextMeshProUGUI _constructionPointsText;
-    [SerializeField] Image _constructionCooldownImg;
+    [SerializeField] private TextMeshProUGUI _constructionPointsText;
+    [SerializeField] private Image _constructionCooldownImg;
     #endregion
 
     private void Awake()
     {
-        _constructionPointsText = GetComponentInChildren<TextMeshProUGUI>();
         ConstructionPoints = _constructionPointsAmount;
 
         CreatePreCube(1, 1f, 1f);
