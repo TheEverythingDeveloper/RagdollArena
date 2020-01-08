@@ -89,6 +89,7 @@ namespace GameUI
             foreach (var x in _allTeamPanels)
                 Destroy(x.gameObject);
             _allTeamPanels.Clear();
+            _teamCoresLife.Clear();
 
             if (PhotonNetwork.IsMasterClient)
             {
