@@ -22,8 +22,10 @@ namespace GameUI
         public void UpdatePanel()
         {
             _background = GetComponent<Image>();
-            for (int i = (4 - membersAmount); i > 0; i--) //recorrer el array y desactivar los que no estan
+            for (int i = 0; i < _allMembers.Length; i++) //recorrer el array y desactivar los que no estan
                 _allMembers[i].gameObject.SetActive(false);
+            for (int i = 0; i < membersAmount; i++) //recorrer el array y desactivar los que no estan
+                _allMembers[i].gameObject.SetActive(true);
 
             _background.color = _teamBackgroundColors[teamID];
         }

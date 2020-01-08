@@ -78,6 +78,10 @@ namespace Character
             _allUpdatables.Add(characterView);
             _allConstructables.Add(characterView);
 
+            _movementController = new CharacterMovement(this, pelvisRb, pelvisRb.transform.localRotation, floorLayers);
+            _allConstructables.Add(_movementController);
+            _allUpdatables.Add(_movementController);
+
             if (!owned) return;
 
             Debug.Log("<color=green> Paso por aca awake </color>");
@@ -92,11 +96,8 @@ namespace Character
 
             anim = GetComponent<Animator>();
 
-            _movementController = new CharacterMovement(this, pelvisRb, pelvisRb.transform.localRotation, floorLayers);
-            _allConstructables.Add(_movementController);
             _allConstructables.Add(GetComponentInChildren<CharacterHands>());
             _allUpdatables.Add(GetComponentInChildren<CharacterHands>());
-            _allUpdatables.Add(_movementController);
             _allUpdatables.Add(new CharacterCamera(this, pelvisRb));
             _allUpdatables.Add(new CharacterPointsManager(this, _lvlMng, PhotonNetwork.NickName));
             _allUpdatables.Add(new CharacterFriendsManager(this, _lvlMng.playerFriendsLayermask));

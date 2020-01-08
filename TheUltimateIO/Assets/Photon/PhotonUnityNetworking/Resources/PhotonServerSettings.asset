@@ -78,5 +78,6 @@ MonoBehaviour:
   - RPCUpdateMemberTeam
   - RPCChangePlayerTeam
   - RPCChangeTeam
+  - CreatePanelsWithStructure
   DisableAutoOpenWizard: 1
   ShowSettings: 1
