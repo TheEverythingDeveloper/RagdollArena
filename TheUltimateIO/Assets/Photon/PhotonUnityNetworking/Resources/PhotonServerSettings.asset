@@ -74,5 +74,9 @@ MonoBehaviour:
   - RPCJumpPlayer
   - RPCPrivateSendMsg
   - RPCTeamSendMsg
+  - RPCAddPlayer
+  - RPCUpdateMemberTeam
+  - RPCChangePlayerTeam
+  - RPCChangeTeam
   DisableAutoOpenWizard: 1
   ShowSettings: 1

@@ -114,14 +114,15 @@ namespace Character
             ArtificialAwakes();
         }
 
-        private void ChangeTeam(int newTeamID) //cambiar el team equivale tambien a cambiar el color del jugador y color de efectos
+        [PunRPC] public void RPCChangePlayerTeam(int teamID) => ChangeTeam(teamID);
+        private void ChangeTeam(int ID) //cambiar el team equivale tambien a cambiar el color del jugador y color de efectos
         {
-            Debug.Log("<color=green> Fuiste cambiado al equipo " + newTeamID.ToString() + "</color>");
-            team = newTeamID;
+            Debug.Log("<color=green> Fuiste cambiado al equipo " + ID.ToString() + "</color>");
+            team = ID;
 
             Color previousColorA = _allMyRenderers[1].material.GetColor("_ColorA");
             Color previousColorC = _allMyRenderers[1].material.GetColor("_ColorC");
-            Color newCol = newTeamID == 0 ? Color.grey : newTeamID == 1 ? Color.blue : Color.red;
+            Color newCol = ID == 0 ? Color.grey : ID == 1 ? Color.blue : ID == 2 ? Color.red : ID == 3 ? Color.yellow : Color.blue;
 
             photonView.RPC("RPCUpdateColor", RpcTarget.AllBuffered,
                 new float[] { previousColorA.r, previousColorA.g, previousColorA.b },

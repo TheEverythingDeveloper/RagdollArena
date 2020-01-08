@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
+using GameUI;
 
 public class Server : MonoBehaviourPun
 {
@@ -78,7 +79,7 @@ public class Server : MonoBehaviourPun
             player.Value.StartGame(((i-1) % 2) + 1, player.Value.transform.position + (Vector3.up * 5));
         }
     }
-
+    [PunRPC] public void RPCChangePlayerTeam(Player photonPlayer, int teamID) => _allPlayers[photonPlayer].photonView.RPC("RPCChangePlayerTeam", photonPlayer, teamID);
     public void AddPlayer(Player newPhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, newPhotonPlayer, true);
     public void RemovePlayer(Player toRemovePhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, toRemovePhotonPlayer, false);
     [PunRPC] private void RPCChangePlayer(Player photonPlayer, bool add)
@@ -92,6 +93,7 @@ public class Server : MonoBehaviourPun
         }
         else
         {
+            FindObjectOfType<TeamsTable>().photonView.RPC("RPCAddPlayer", RpcTarget.AllBufferedViaServer, PhotonNetwork.LocalPlayer);
             if (_allPlayers.ContainsKey(photonPlayer)) return; //en caso de que ya este en la lista, return
             CharacterModel model = LevelManager.Instance.SpawnUser();
             Debug.Log("<color=green>Se unio a la partida un usuario! Se llama </color>"+photonPlayer.NickName);
