@@ -70,5 +70,9 @@ MonoBehaviour:
   - RPCPlayerDeath
   - ChangeRespawnFeedback
   - RPCChangeRespawnFeedback
+  - RPCGlobalSendMsg
+  - RPCJumpPlayer
+  - RPCPrivateSendMsg
+  - RPCTeamSendMsg
   DisableAutoOpenWizard: 1
   ShowSettings: 1
