@@ -9,7 +9,7 @@ public class Chat : MonoBehaviourPun
 {
     public Text msgInput;
     public Text msgArea;
-    Dictionary<int, string> _typesMsg;
+    Dictionary<int, string> _typesMsg = new Dictionary<int, string>();
     public Dropdown typeMsg;
 
     void Start()
