@@ -12,6 +12,7 @@ namespace GameUI
         private List<TeamPanel> _allTeamPanels = new List<TeamPanel>();
         private List<Player> _allPlayers = new List<Player>();
         public Dictionary<int, int[]> _teamCombinations = new Dictionary<int, int[]>();
+        public Dictionary<int, float> _teamCoresLife = new Dictionary<int, float>();
         private int playersAmount;
         [SerializeField] private TeamPanel _teamPanelPrefab;
         private Server _server;
@@ -37,7 +38,32 @@ namespace GameUI
 
             if (Input.GetKeyDown(KeyCode.U))
                 AddPlayer(photonView.Controller);
+
+            if(Input.GetKeyDown(KeyCode.KeypadPlus) || Input.GetKeyDown(KeyCode.Plus))
+            {
+                int randomTeamID = Random.Range(0, _allTeamPanels.Count);
+                CoreLifeUpdate(randomTeamID, 0.2f);
+            }
+            else if(Input.GetKeyDown(KeyCode.KeypadMinus) || Input.GetKeyDown(KeyCode.Minus))
+            {
+                int randomTeamID = Random.Range(0, _allTeamPanels.Count);
+                CoreLifeUpdate(randomTeamID, -0.2f);
+            }
         }
+
+        private void CoreLifeUpdate(int teamCoreID, float amount)
+        {
+            float resultLife = _teamCoresLife[teamCoreID] + amount;
+            resultLife = Mathf.Clamp01(resultLife);
+            _teamCoresLife[teamCoreID] = resultLife;
+            photonView.RPC("RPCCoreLifeUpdate", RpcTarget.AllBuffered, teamCoreID, resultLife);
+
+            if(resultLife <= 0)
+            {
+                //TODO: Destruir nexo, avisar a los jugadores en el chat y en popup, y matar a los jugadores de ese nexo, junto con muchisimo feedback
+            }
+        }
+        [PunRPC] private void RPCCoreLifeUpdate(int teamCoreID, float newLife) => _allTeamPanels[teamCoreID].UpdateCoreLifebar(newLife);
 
         public void AddPlayer(Player newPlayer)
         {
@@ -86,6 +112,7 @@ namespace GameUI
                 }
 
                 _allTeamPanels.Add(panel);
+                _teamCoresLife.Add(i, 1f);
             }
         }
     }

@@ -13,12 +13,8 @@ namespace GameUI
         public int membersAmount;
         public int teamID;
         [SerializeField] private Color[] _teamBackgroundColors;
-
-        private void Awake()
-        {
-           // UpdatePanel();
-        }
-
+        [SerializeField] private Image _coreLifebar;
+        
         public void UpdatePanel()
         {
             _background = GetComponent<Image>();
@@ -30,9 +26,7 @@ namespace GameUI
             _background.color = _teamBackgroundColors[teamID];
         }
 
-        public void UpdateMemberData(int ID, string name)
-        {
-            _allMembers[ID].text = name;
-        }
+        public void UpdateMemberData(int ID, string name) => _allMembers[ID].text = name;
+        public void UpdateCoreLifebar(float amount01) => _coreLifebar.fillAmount = amount01;
     }
 }

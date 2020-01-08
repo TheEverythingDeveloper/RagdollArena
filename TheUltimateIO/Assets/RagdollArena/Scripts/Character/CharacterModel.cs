@@ -84,7 +84,7 @@ namespace Character
 
             if (!owned) return;
 
-            Debug.Log("<color=green> Paso por aca awake </color>");
+            Debug.Log("<color=green> Paso por aca porque es owner. ArtificialAwake </color>");
 
             var allChilds = GetComponentsInChildren<Transform>();
             allChilds.Select(x =>
