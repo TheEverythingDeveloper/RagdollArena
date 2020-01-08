@@ -50,7 +50,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 428936662238240230}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306bf96a628c80b4a94957cfc2be469e, type: 3}
+  m_Script: {fileID: 11500000, guid: fabf9bf163e78ba4a999059dc3fc5e9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _teamPanelPrefab: {fileID: 7199497018445373589, guid: 9cbf152990408f8438d5169f64239e5c,

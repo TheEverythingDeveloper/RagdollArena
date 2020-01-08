@@ -99,7 +99,7 @@ public class Server : MonoBehaviourPun
             _allPlayers.Add(photonPlayer, model);
             _allPlayers[photonPlayer].photonView.RPC("RPCSetModelOwner", photonPlayer, true);
             _allPlayers[photonPlayer].photonView.RPC("RPCArtificialAwake", RpcTarget.AllBuffered);
-            FindObjectOfType<TeamsTable>().AddPlayer(photonPlayer);
+            FindObjectOfType<TeamManager>().AddPlayer(photonPlayer);
         }
     }
     [PunRPC] public void RPCPlayerDeath(Player photonPlayer) //Decirle al modelo que se apague y que ponga los paneles de respawn en el HUD

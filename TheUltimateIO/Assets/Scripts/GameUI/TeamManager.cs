@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace GameUI
 {
-    public class TeamsTable : MonoBehaviourPun
+    public class TeamManager : MonoBehaviourPun
     {
         private List<TeamPanel> _allTeamPanels = new List<TeamPanel>();
         private List<Player> _allPlayers = new List<Player>();
@@ -21,15 +21,15 @@ namespace GameUI
         {
             if (!PhotonNetwork.IsMasterClient) return;
 
-            _teamCombinations.Add(1, new int[]{1,1}); //1 jugador, 1 panel de 1 persona
-            _teamCombinations.Add(2, new int[]{2,1}); //2 jugadores, 2 paneles de 1 persona
-            _teamCombinations.Add(3, new int[]{3,1}); //3 jugadores, 3 paneles de 1 persona
-            _teamCombinations.Add(4, new int[]{2,2}); //4 jugadores, 2 paneles de 2 personas
-            _teamCombinations.Add(6, new int[]{2,3}); //6 jugadores, 2 paneles de 3 personas
-            _teamCombinations.Add(8, new int[]{4,2}); //8 jugadores, 4 paneles de 2 personas
-            _teamCombinations.Add(9, new int[]{3,3}); //9 jugadores, 3 paneles de 3 personas
-            _teamCombinations.Add(12, new int[]{4,3}); //12 jugadores, 4 paneles de 3 personas
-            _teamCombinations.Add(16, new int[]{4,4}); //16 jugadores, 4 paneles de 4 personas
+            _teamCombinations.Add(1, new int[] { 1, 1 }); //1 jugador, 1 panel de 1 persona
+            _teamCombinations.Add(2, new int[] { 2, 1 }); //2 jugadores, 2 paneles de 1 persona
+            _teamCombinations.Add(3, new int[] { 3, 1 }); //3 jugadores, 3 paneles de 1 persona
+            _teamCombinations.Add(4, new int[] { 2, 2 }); //4 jugadores, 2 paneles de 2 personas
+            _teamCombinations.Add(6, new int[] { 2, 3 }); //6 jugadores, 2 paneles de 3 personas
+            _teamCombinations.Add(8, new int[] { 4, 2 }); //8 jugadores, 4 paneles de 2 personas
+            _teamCombinations.Add(9, new int[] { 3, 3 }); //9 jugadores, 3 paneles de 3 personas
+            _teamCombinations.Add(12, new int[] { 4, 3 }); //12 jugadores, 4 paneles de 3 personas
+            _teamCombinations.Add(16, new int[] { 4, 4 }); //16 jugadores, 4 paneles de 4 personas
         }
 
         private void Update()
@@ -39,12 +39,12 @@ namespace GameUI
             if (Input.GetKeyDown(KeyCode.U))
                 AddPlayer(photonView.Controller);
 
-            if(Input.GetKeyDown(KeyCode.KeypadPlus) || Input.GetKeyDown(KeyCode.Plus))
+            if (Input.GetKeyDown(KeyCode.KeypadPlus) || Input.GetKeyDown(KeyCode.Plus))
             {
                 int randomTeamID = Random.Range(0, _allTeamPanels.Count);
                 CoreLifeUpdate(randomTeamID, 0.2f);
             }
-            else if(Input.GetKeyDown(KeyCode.KeypadMinus) || Input.GetKeyDown(KeyCode.Minus))
+            else if (Input.GetKeyDown(KeyCode.KeypadMinus) || Input.GetKeyDown(KeyCode.Minus))
             {
                 int randomTeamID = Random.Range(0, _allTeamPanels.Count);
                 CoreLifeUpdate(randomTeamID, -0.2f);
@@ -58,7 +58,7 @@ namespace GameUI
             _teamCoresLife[teamCoreID] = resultLife;
             photonView.RPC("RPCCoreLifeUpdate", RpcTarget.AllBuffered, teamCoreID, resultLife);
 
-            if(resultLife <= 0)
+            if (resultLife <= 0)
             {
                 //TODO: Destruir nexo, avisar a los jugadores en el chat y en popup, y matar a los jugadores de ese nexo, junto con muchisimo feedback
             }
@@ -71,7 +71,7 @@ namespace GameUI
             playersAmount++;
 
             int resultPlayersAmount = AnalyzeTeamOrganization(playersAmount);
-            
+
             //crear paneles segun la estructura nueva
             photonView.RPC("CreatePanelsWithStructure", RpcTarget.All, _allPlayers.ToArray(), _teamCombinations[resultPlayersAmount][0], _teamCombinations[resultPlayersAmount][1]);
         }
@@ -83,7 +83,8 @@ namespace GameUI
             return AnalyzeTeamOrganization(actualPlayersAmount - 1);
         }
 
-        [PunRPC] public void CreatePanelsWithStructure(Player[] allPlayers, int panelsAmount, int playersPerPanelAmount)
+        [PunRPC]
+        public void CreatePanelsWithStructure(Player[] allPlayers, int panelsAmount, int playersPerPanelAmount)
         {
             //destruir todos los paneles
             foreach (var x in _allTeamPanels)
@@ -107,7 +108,7 @@ namespace GameUI
                 for (int j = 0; j < playersPerPanelAmount; j++)
                 {
                     actualNameID++;
-                    if(PhotonNetwork.IsMasterClient)
+                    if (PhotonNetwork.IsMasterClient)
                         _server.photonView.RPC("RPCChangePlayerTeam", RpcTarget.MasterClient, allPlayers[actualNameID - 1], i + 1);
                     panel.UpdateMemberData(j, allPlayers[actualNameID - 1].NickName);
                 }
@@ -115,6 +116,8 @@ namespace GameUI
                 _allTeamPanels.Add(panel);
                 _teamCoresLife.Add(i, 1f);
             }
+
+            FindObjectOfType<CoresMainPanel>().UpdateCorePanelStructure(panelsAmount);
         }
     }
 }

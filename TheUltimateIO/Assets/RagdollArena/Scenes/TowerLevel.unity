@@ -1204,10 +1204,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _allLifebars:
-  - {fileID: 1834155940}
-  - {fileID: 1983721365}
-  - {fileID: 1525495177}
-  - {fileID: 1214052437}
+  - {fileID: 1277196170}
+  - {fileID: 1445509209}
+  - {fileID: 1378390393}
+  - {fileID: 732128400}
 --- !u!1 &900318995
 GameObject:
   m_ObjectHideFlags: 0
