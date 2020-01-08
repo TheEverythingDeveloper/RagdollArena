@@ -47,41 +47,32 @@ public class Server : MonoBehaviourPun
         if (Input.GetKeyDown(KeyCode.Return))
             StartCoroutine(StartGameCoroutine(5));
     }
-
     IEnumerator StartGameCoroutine(int waitSeconds)
     {
         _lvlMng.gameCanvas.SwitchEnterToStartText(false);
         for (int i = 0; i < waitSeconds; i++) //5..4..3..2..1.. GO.
         {
-            photonView.RPC("RPCUpdateCounter", RpcTarget.All, waitSeconds - i); //es All y no allbuffered porque el que se conecte tarde tiene que empezar sin el conteo.
+            photonView.RPC("RPCUpdateCounter", RpcTarget.All, waitSeconds - i);
             yield return new WaitForSeconds(1f);
         }
         photonView.RPC("RPCUpdateCounter", RpcTarget.All, 0);
         yield return new WaitForSeconds(1f);
-        photonView.RPC("RPCStartGame", RpcTarget.AllBuffered); //con allbuffered empezar el juego aun si llegaste tarde a la partida
+        foreach (var player in _allPlayers)
+            player.Value.photonView.RPC("RPCStartGame", player.Key);
     }
-
     [PunRPC] private void RPCUpdateCounter(int i)
     {
         _lvlMng.gameCanvas.SwitchCounterPanel(true);
         Debug.Log("<color=green>" + i + "</color>");
         _lvlMng.gameCanvas.CounterUpdate(i);
     }
-
-    [PunRPC] private void RPCStartGame()
-    {
-        _lvlMng.gameCanvas.SwitchCounterPanel(false);
-        Debug.Log("<color=yellow> GO!!! </color>");
-        int i = 0;
-        foreach (var player in _allPlayers) //cambiar de team y spawnear correctamente a los jugadores de cada team en su posicion correspondiente.
-        {
-            i++;
-            player.Value.StartGame(((i-1) % 2) + 1, player.Value.transform.position + (Vector3.up * 5));
-        }
-    }
     [PunRPC] public void RPCChangePlayerTeam(Player photonPlayer, int teamID) => _allPlayers[photonPlayer].photonView.RPC("RPCChangePlayerTeam", photonPlayer, teamID);
     public void AddPlayer(Player newPhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, newPhotonPlayer, true);
-    public void RemovePlayer(Player toRemovePhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, toRemovePhotonPlayer, false);
+    public void RemovePlayer(Player toRemovePhotonPlayer) 
+    {
+        if (!PhotonNetwork.IsConnected) return;
+        photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, toRemovePhotonPlayer, false); 
+    }
     [PunRPC] private void RPCChangePlayer(Player photonPlayer, bool add)
     {
         if (!add) //si estamos removiendo un jugador
@@ -122,8 +113,7 @@ public class Server : MonoBehaviourPun
     {
         photonView.RPC("RPCJumpPlayer", RpcTarget.MasterClient, photonPlayer);
     }
-    [PunRPC]
-    private void RPCJumpPlayer(Player photonPlayer)
+    [PunRPC] private void RPCJumpPlayer(Player photonPlayer)
     {
         if (!_allPlayers.ContainsKey(photonPlayer)) return;
 

@@ -131,11 +131,12 @@ namespace Character
                 new float[] { previousColorC.r, previousColorC.g, previousColorC.b });
         }
 
-        public void StartGame(int teamID, Vector3 spawnPos)
+        [PunRPC] public void RPCStartGame()
         {
+            _lvlMng.gameCanvas.SwitchCounterPanel(false);
+            Debug.Log("<color=yellow> GO!!! </color>");
             //TODO: primero aca hacer efecto de teletransportarse o lo que sea, junto con sonidos, etc.
-            ChangeTeam(teamID);
-            transform.position = spawnPos;
+            //TODO: Abrir panel de mapa junto a todo lo que tenga
         }
 
         private void OnDrawGizmos()
