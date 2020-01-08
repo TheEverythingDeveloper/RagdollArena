@@ -24,6 +24,7 @@ namespace GameUI
                 _allMembers[i].gameObject.SetActive(true);
 
             _background.color = _teamBackgroundColors[teamID];
+            _coreLifebar.color = _teamBackgroundColors[teamID] * 1.5f;
         }
 
         public void UpdateMemberData(int ID, string name) => _allMembers[ID].text = name;
