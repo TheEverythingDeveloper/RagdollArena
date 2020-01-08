@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using TMPro;
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
 
 namespace GameUI
@@ -14,7 +12,13 @@ namespace GameUI
         public int teamID;
         [SerializeField] private Color[] _teamBackgroundColors;
         [SerializeField] private Image _coreLifebar;
-        
+        private CoresMainPanel _coreMainPanel;
+
+        private void Awake()
+        {
+            _coreMainPanel = FindObjectOfType<CoresMainPanel>();
+        }
+
         public void UpdatePanel()
         {
             _background = GetComponent<Image>();
@@ -28,6 +32,10 @@ namespace GameUI
         }
 
         public void UpdateMemberData(int ID, string name) => _allMembers[ID].text = name;
-        public void UpdateCoreLifebar(float amount01) => _coreLifebar.fillAmount = amount01;
+        public void UpdateCoreLifebar(float amount01)
+        {
+            _coreMainPanel.UpdateCoreLifebar(teamID, amount01);
+            _coreLifebar.fillAmount = amount01;
+        }
     }
 }
