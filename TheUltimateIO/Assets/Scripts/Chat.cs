@@ -5,6 +5,7 @@ using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Character;
 public class Chat : MonoBehaviourPun
 {
     public GameObject chatArea;
@@ -13,7 +14,8 @@ public class Chat : MonoBehaviourPun
     public Dropdown typeMsg;
     public GameObject content;
     public TextMeshProUGUI textMsg;
-
+    [HideInInspector] public CharacterModel characterModel;
+    public List<Color> colorsTeam;
     void Start()
     {
         _typesMsg.Add(0, "RPCGlobalSendMsg");
@@ -29,7 +31,11 @@ public class Chat : MonoBehaviourPun
 
     public void SendMsg()
     {
-        photonView.RPC(_typesMsg[typeMsg.value], RpcTarget.All, msgInput.text, PhotonNetwork.LocalPlayer.NickName);
+        if(typeMsg.value != 1)
+            photonView.RPC(_typesMsg[typeMsg.value], RpcTarget.All, msgInput.text, PhotonNetwork.LocalPlayer.NickName);
+        else
+            photonView.RPC(_typesMsg[typeMsg.value], RpcTarget.All, msgInput.text, PhotonNetwork.LocalPlayer.NickName, characterModel.team);
+
         msgInput.text = "";
     }
 
@@ -43,11 +49,16 @@ public class Chat : MonoBehaviourPun
     }
 
     [PunRPC]
-    void RPCTeamSendMsg(string msg, string name)
+    void RPCTeamSendMsg(string msg, string name, int team)
     {
+        if (team != characterModel.team) return;
+
+        string colorText = ColorUtility.ToHtmlStringRGB(colorsTeam[team]);
+
         var newText = Instantiate(textMsg);
+
         newText.gameObject.SetActive(true);
-        newText.text = "<color=red> |TEAM| </color>" + name + ": " + msg;
+        newText.text = "<color=#"+ colorText + "> |TEAM| " + name + ": </color>" + msg;
         newText.transform.parent = content.transform;
     }
 

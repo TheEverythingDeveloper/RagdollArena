@@ -86,6 +86,8 @@ namespace Character
 
             Debug.Log("<color=green> Paso por aca porque es owner. ArtificialAwake </color>");
 
+            FindObjectOfType<Chat>().characterModel = this; //Le aviso quien soy al chat
+
             var allChilds = GetComponentsInChildren<Transform>();
             allChilds.Select(x =>
             {

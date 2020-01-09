@@ -1628,6 +1628,11 @@ MonoBehaviour:
   typeMsg: {fileID: 8901227712717231769}
   content: {fileID: 1879313165555922219}
   textMsg: {fileID: 5295240151963026940}
+  characterModel: {fileID: 0}
+  colorsTeam:
+  - {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 1}
+  - {r: 0, g: 0, b: 1, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &381466252018430203
 MonoBehaviour:
   m_ObjectHideFlags: 0
