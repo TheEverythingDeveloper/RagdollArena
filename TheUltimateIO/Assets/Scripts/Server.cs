@@ -128,6 +128,12 @@ public class Server : MonoBehaviourPun
         _allPlayers[photonPlayer].photonView.RPC("RPCRespawn", RpcTarget.AllBuffered, position);
     }
 
+    [PunRPC] public void RPCInstantiateSpawnPoint(int teamID, Vector3 pos)
+    {
+        var go = PhotonNetwork.Instantiate("SpawnPoint", pos, Quaternion.identity);
+        go.GetComponentInChildren<SpawnPoint>().teamID = teamID;
+    }
+
     public event Action<bool> OnRespawnFeedback = delegate { };
     [PunRPC] private void RPCChangeRespawnFeedback(bool dead)
     {

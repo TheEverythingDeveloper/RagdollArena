@@ -86,5 +86,6 @@ MonoBehaviour:
   - RPCServerSpawnConfirmation
   - RPCSpawnAllTeam
   - RPCRespawn
+  - RPCInstantiateSpawnPoint
   DisableAutoOpenWizard: 1
   ShowSettings: 1

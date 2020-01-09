@@ -16,8 +16,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameObject _myCamera;
     private LeaderboardManager _leaderboardMng;
     public LayerMask playerFriendsLayermask;
-    [Tooltip("Posiciones random de spawneo")]
-    public GameObject pointsSpawn;
+    [Tooltip("Posiciones random de spawneo")] public GameObject pointsSpawn;
     SpawnPoint[] _points;
 
     public bool finishLevel;
@@ -27,10 +26,19 @@ public class LevelManager : MonoBehaviour
 
     [HideInInspector] public GameCanvas gameCanvas;
 
+    public void StartGame(Vector3 pos)
+    {
+        foreach (var x in _points)
+            Destroy(x.gameObject);
+        _points = new SpawnPoint[0];
+        RespawnPlayer(pos);
+    }
+
     public void RespawnPlayer(Vector3 pos)
     {
         _spawnedModel.RPCRespawn(pos); //como se respawnea directamente localmente, no hace falta llamar el RPC por RPC real.
     }
+
     public void RespawnRandom(Transform player)
     {
         player.position = PositionRandom();
