@@ -72,6 +72,7 @@ namespace GameUI
 
             int resultPlayersAmount = AnalyzeTeamOrganization(playersAmount);
 
+            FindObjectOfType<SpawnMap>().SetTeamAmountOfPlayers(_teamCombinations[resultPlayersAmount][0], _teamCombinations[resultPlayersAmount][1]);
             //crear paneles segun la estructura nueva
             photonView.RPC("CreatePanelsWithStructure", RpcTarget.All, _allPlayers.ToArray(), _teamCombinations[resultPlayersAmount][0], _teamCombinations[resultPlayersAmount][1]);
         }
@@ -83,8 +84,7 @@ namespace GameUI
             return AnalyzeTeamOrganization(actualPlayersAmount - 1);
         }
 
-        [PunRPC]
-        public void CreatePanelsWithStructure(Player[] allPlayers, int panelsAmount, int playersPerPanelAmount)
+        [PunRPC] public void CreatePanelsWithStructure(Player[] allPlayers, int panelsAmount, int playersPerPanelAmount)
         {
             //destruir todos los paneles
             foreach (var x in _allTeamPanels)
@@ -111,6 +111,7 @@ namespace GameUI
                     if (PhotonNetwork.IsMasterClient)
                         _server.photonView.RPC("RPCChangePlayerTeam", RpcTarget.MasterClient, allPlayers[actualNameID - 1], i + 1);
                     panel.UpdateMemberData(j, allPlayers[actualNameID - 1].NickName);
+                    FindObjectOfType<SpawnMap>().UpdatePlayerIDs(i, j);
                 }
 
                 _allTeamPanels.Add(panel);

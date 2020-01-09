@@ -12,6 +12,7 @@ namespace GameUI
     {
         [Tooltip("Panel de conteo antes de empezar la partida, es el gameobject padre de todos los relacionados al conteo")] [SerializeField] private GameObject _counterPanel;
         [Tooltip("Panel de respawn cuando el jugador esta muerto y tiene que elegir donde respawnear")] [SerializeField] private GameObject _respawnHUD;
+        [Tooltip("Panel de respawn desde mapa")] [SerializeField] private GameObject _mapPanel;
         [Tooltip("Texto del conteo. 5..4..3..2..1..GO!")] [SerializeField] private TextMeshProUGUI _counterText;
         [Tooltip("Texto que solo le va a aparecer al server para iniciar la partida")] [SerializeField] private TextMeshProUGUI _pressEnterToStartText;
 
@@ -26,6 +27,12 @@ namespace GameUI
             //TODO: Sonido cada "tick"
             _counterText.text = time.ToString();
             if (time < 1) _counterText.text = "GO!";
+        }
+        public void SwitchMapPanel(bool active)
+        {
+            _mapPanel.SetActive(active);
+            if(active)
+                FindObjectOfType<SpawnMap>().StartPanelTimer();
         }
         public void SwitchCounterPanel(bool active) => _counterPanel.SetActive(active);
         public void SwitchRespawnHUD(bool active) => _respawnHUD.SetActive(active);

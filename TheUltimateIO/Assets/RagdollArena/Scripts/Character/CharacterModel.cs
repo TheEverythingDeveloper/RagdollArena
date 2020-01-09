@@ -135,6 +135,7 @@ namespace Character
 
         [PunRPC] public void RPCStartGame()
         {
+            _lvlMng.gameCanvas.SwitchMapPanel(true);
             _lvlMng.gameCanvas.SwitchCounterPanel(false);
             Debug.Log("<color=yellow> GO!!! </color>");
             //TODO: primero aca hacer efecto de teletransportarse o lo que sea, junto con sonidos, etc.
@@ -173,6 +174,11 @@ namespace Character
         public void ArtificialLateUpdate() { _allUpdatables.Select(x => { x.ArtificialLateUpdate(); return x; }).ToList(); }
 
         public event Action<bool> OnChangeRespawnMode = delegate { };
+        [PunRPC] public void RPCRespawn(Vector3 positionToRespawn)
+        {
+            RPCChangeRespawnMode(false); //no hace falta llamarlo desde RPC aca porque ya estamos en la misma
+            RespawnAtPosition(positionToRespawn);
+        }
         [PunRPC] public void RPCChangeRespawnMode(bool dead)
         {
             pelvisRb.transform.parent.gameObject.SetActive(!dead);
@@ -183,6 +189,7 @@ namespace Character
             _lvlMng.gameCanvas.SwitchRespawnHUD(dead);
             Debug.Log(dead ? "<color=red>Muerto</color>" : "<color=green>Respawneado</color>");
         }
+        public void RespawnAtPosition(Vector3 positionToRespawn) => pelvisRb.transform.position = positionToRespawn;
 
         void CheckHeight()
         {

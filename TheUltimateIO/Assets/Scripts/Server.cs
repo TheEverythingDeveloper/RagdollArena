@@ -125,8 +125,7 @@ public class Server : MonoBehaviourPun
         Debug.Log("<color=green>Respawneado</color>");
         
         photonView.RPC("RPCChangeRespawnFeedback", photonPlayer, false);
-        _allPlayers[photonPlayer].photonView.RPC("RPCChangeRespawnMode", RpcTarget.AllBuffered, false);
-        _allPlayers[photonPlayer].pelvisRb.transform.position = position;
+        _allPlayers[photonPlayer].photonView.RPC("RPCRespawn", RpcTarget.AllBuffered, position);
     }
 
     public event Action<bool> OnRespawnFeedback = delegate { };

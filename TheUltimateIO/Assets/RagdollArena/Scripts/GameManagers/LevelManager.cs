@@ -27,6 +27,10 @@ public class LevelManager : MonoBehaviour
 
     [HideInInspector] public GameCanvas gameCanvas;
 
+    public void RespawnPlayer(Vector3 pos)
+    {
+        _spawnedModel.RPCRespawn(pos); //como se respawnea directamente localmente, no hace falta llamar el RPC por RPC real.
+    }
     public void RespawnRandom(Transform player)
     {
         player.position = PositionRandom();
@@ -96,11 +100,13 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    private CharacterModel _spawnedModel;
     public CharacterModel SpawnUser()
     {
         _points = FindObjectsOfType<SpawnPoint>();
         var user = PhotonNetwork.Instantiate("User", PositionRandom(), Quaternion.identity);
-
+        var model = user.GetComponentInChildren<CharacterModel>();
+        _spawnedModel = model;
         return user.GetComponentInChildren<CharacterModel>();
     }
 
