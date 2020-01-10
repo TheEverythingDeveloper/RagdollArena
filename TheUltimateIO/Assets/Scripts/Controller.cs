@@ -10,9 +10,12 @@ using UnityEngine.SceneManagement;
 public class Controller : MonoBehaviourPun
 {
     Server server;
+    public bool controlsActive = true;
     private void Start()
     {
         if (!photonView.IsMine) return;
+
+        FindObjectOfType<Chat>().controller = this;
 
         StartCoroutine(DelayWaitForServer()); //esta corrutina se llama porque el controller se crea antes que el server. Esto es ya que el server esperaba a los demas jugadores.
     }
@@ -27,7 +30,7 @@ public class Controller : MonoBehaviourPun
 
     private void Update()
     {
-        if (!photonView.IsMine) return;
+        if (!photonView.IsMine || !controlsActive) return;
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {

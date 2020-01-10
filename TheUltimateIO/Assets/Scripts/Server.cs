@@ -14,6 +14,7 @@ public class Server : MonoBehaviourPun
     private LevelManager _lvlMng;
     public int PackagesPerSecond { get; private set; }
 
+    public bool controlsActive = true;
     private void Awake()
     {
         _lvlMng = FindObjectOfType<LevelManager>();
@@ -27,12 +28,14 @@ public class Server : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
 
+        FindObjectOfType<Chat>().server = this;
+
         _lvlMng.gameCanvas.SwitchEnterToStartText(true);
     }
 
     private void Update()
     {
-        if (!photonView.IsMine) return;
+        if (!photonView.IsMine || !controlsActive) return;
 
         if (Input.GetKeyDown(KeyCode.Space))
         {

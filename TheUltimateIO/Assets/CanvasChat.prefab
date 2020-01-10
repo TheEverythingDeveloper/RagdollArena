@@ -1248,8 +1248,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.49999905}
-  m_SizeDelta: {x: -20, y: -13}
+  m_AnchoredPosition: {x: 1.8700027, y: 0.000002861023}
+  m_SizeDelta: {x: -3.74, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1781175662337887478
 CanvasRenderer:
@@ -1286,7 +1286,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 0
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -1624,15 +1624,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chatArea: {fileID: 413942313082388168}
-  msgInput: {fileID: 6443094988950108512}
+  msgInput: {fileID: 1337477709731228747}
   typeMsg: {fileID: 8901227712717231769}
   content: {fileID: 1879313165555922219}
   textMsg: {fileID: 5295240151963026940}
-  characterModel: {fileID: 0}
   colorsTeam:
   - {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 1}
   - {r: 0, g: 0, b: 1, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}
+  characterModel: {fileID: 0}
+  controller: {fileID: 0}
 --- !u!114 &381466252018430203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1691,7 +1692,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.3}
+  m_AnchoredPosition: {x: 0, y: -0.30000305}
   m_SizeDelta: {x: 20, y: -17}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &4406265097230023841
@@ -2541,6 +2542,7 @@ GameObject:
   - component: {fileID: 8521369043269562558}
   - component: {fileID: 3277555604124085365}
   - component: {fileID: 1337477709731228747}
+  - component: {fileID: 581145856848853335}
   m_Layer: 5
   m_Name: InputField
   m_TagString: Untagged
@@ -2670,6 +2672,37 @@ MonoBehaviour:
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
+--- !u!114 &581145856848853335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8803579371083689412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1862395651, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2253881025120510473}
+          m_MethodName: OnInputMsg
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  delegates: []
 --- !u!1 &8890598285773137973
 GameObject:
   m_ObjectHideFlags: 0
@@ -2898,12 +2931,12 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 15
+  m_fontSize: 20
   m_fontSizeBase: 15
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 10
-  m_fontSizeMax: 15
+  m_fontSizeMax: 20
   m_fontStyle: 0
   m_textAlignment: 513
   m_characterSpacing: 0

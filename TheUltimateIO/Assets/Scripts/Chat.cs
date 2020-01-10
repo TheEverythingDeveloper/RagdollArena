@@ -6,16 +6,29 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Character;
+using System;
+
 public class Chat : MonoBehaviourPun
 {
     public GameObject chatArea;
-    public Text msgInput;
+    public InputField msgInput;
     Dictionary<int, string> _typesMsg = new Dictionary<int, string>();
     public Dropdown typeMsg;
     public GameObject content;
     public TextMeshProUGUI textMsg;
-    [HideInInspector] public CharacterModel characterModel;
+
     public List<Color> colorsTeam;
+    Action _chatActive;
+
+    [HideInInspector] public CharacterModel characterModel;
+    [HideInInspector] public Controller controller;
+    [HideInInspector] public Server server;
+
+    private void Awake()
+    {
+        _chatActive = ChatControllerOff;
+    }
+
     void Start()
     {
         _typesMsg.Add(0, "RPCGlobalSendMsg");
@@ -24,18 +37,37 @@ public class Chat : MonoBehaviourPun
         OnConnected();
     }
 
+    private void Update()
+    {
+        _chatActive();
+    }
+
     public void OnConnected()
     {
         photonView.RPC(_typesMsg[typeMsg.value], RpcTarget.All, "joined", PhotonNetwork.LocalPlayer.NickName);
     }
 
+    public void OnInputMsg(bool enter)
+    {
+        if (enter) _chatActive = ChatControllerActive;
+        else _chatActive = ChatControllerOff;
+
+        controller.controlsActive = !enter;
+        server.controlsActive = !enter;
+    }
+
     public void SendMsg()
     {
-        if(typeMsg.value != 1)
-            photonView.RPC(_typesMsg[typeMsg.value], RpcTarget.All, msgInput.text, PhotonNetwork.LocalPlayer.NickName);
-        else
-            photonView.RPC(_typesMsg[typeMsg.value], RpcTarget.All, msgInput.text, PhotonNetwork.LocalPlayer.NickName, characterModel.team);
+        if(msgInput.text != default)
+        {
+            if (typeMsg.value != 1)
+                photonView.RPC(_typesMsg[typeMsg.value], RpcTarget.All, msgInput.text, PhotonNetwork.LocalPlayer.NickName);
+            else
+                photonView.RPC(_typesMsg[typeMsg.value], RpcTarget.All, msgInput.text, PhotonNetwork.LocalPlayer.NickName, characterModel.team);
+        }
 
+        OnInputMsg(false);
+        msgInput.MoveTextEnd(false);
         msgInput.text = "";
     }
 
@@ -46,6 +78,7 @@ public class Chat : MonoBehaviourPun
         newText.gameObject.SetActive(true);
         newText.text = "<color=green> |GLOBAL| </color>" + name + ": " + msg;
         newText.transform.parent = content.transform;
+        newText.rectTransform.localScale = Vector3.one;
     }
 
     [PunRPC]
@@ -60,6 +93,7 @@ public class Chat : MonoBehaviourPun
         newText.gameObject.SetActive(true);
         newText.text = "<color=#"+ colorText + "> |TEAM| " + name + ": </color>" + msg;
         newText.transform.parent = content.transform;
+        newText.rectTransform.localScale = Vector3.one;
     }
 
     [PunRPC]
@@ -69,10 +103,25 @@ public class Chat : MonoBehaviourPun
         newText.gameObject.SetActive(true);
         newText.text = "<color=blue> |PRIVATE| </color>" + name + ": " + msg;
         newText.transform.parent = content.transform;
+        newText.rectTransform.localScale = Vector3.one;
     }
 
     public void OpenOrCloseChat(bool open)
     {
         chatArea.SetActive(open);
+    }
+
+    void ChatControllerActive()
+    {
+        if (Input.GetKeyDown(KeyCode.Return))
+            SendMsg();
+    }
+
+    void ChatControllerOff()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            msgInput.Select();
+        }
     }
 }
