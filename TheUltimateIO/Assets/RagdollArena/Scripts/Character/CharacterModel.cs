@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Character
 {
@@ -13,6 +14,7 @@ namespace Character
         private List<IConstructable> _allConstructables = new List<IConstructable>();
         private CharacterMovement _movementController;
         public GameObject _ragdollCapsule;
+        public Image barLife;
 
         private LevelManager _lvlMng;
         public string nickname;
@@ -231,11 +233,12 @@ namespace Character
 
             _hp -= damage;
 
-            photonView.RPC("RPCDamage", RpcTarget.All);
+            photonView.RPC("RPCDamage", RpcTarget.All, barLife, _hp, maxHp);
         }
         [PunRPC]
-        public void RPCDamage()
+        public void RPCDamage(Image bar, float hp, float maxPlayerHp)
         {
+            bar.fillAmount = hp / maxPlayerHp;
             //Feedback vida;
         }
         public void Explosion(Vector3 origin, float force)
