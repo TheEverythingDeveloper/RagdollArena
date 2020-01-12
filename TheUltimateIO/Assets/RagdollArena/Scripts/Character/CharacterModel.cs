@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Character
 {
-    public class CharacterModel : MonoBehaviourPun, IDrunk
+    public class CharacterModel : MonoBehaviourPun, IDrunk, IDamageable
     {
         private List<IUpdatable> _allUpdatables = new List<IUpdatable>();
         private List<IConstructable> _allConstructables = new List<IConstructable>();
@@ -21,6 +21,9 @@ namespace Character
         public Animator anim;
         private Color _color;
         private Renderer[] _allMyRenderers;
+        [Tooltip("Salud maxima del player")]
+        public float maxHp = 100;
+        public float _hp;
         [Tooltip("Radio que va a tener el jugador para comprobar cosas como cuantos amigos tiene alrededor, etc")]
         public float contactRadius = 4f;
         public float speed = 60f;
@@ -63,6 +66,8 @@ namespace Character
 
         public List<CharacterHands> hands = new List<CharacterHands>();
 
+        Server _server;
+
         [HideInInspector] public int team = 0; // { 0 } = sin equipo. { 1, 2, 3, 4 } = posibles equipos que pueden haber.
         [Tooltip("Este owned es parecido al photonView.isMine, solo que es para FullAutho, ya que el server es el photonView.isMine")] public bool owned;
 
@@ -84,6 +89,7 @@ namespace Character
 
             if (!owned) return;
 
+            _hp = maxHp;
             Debug.Log("<color=green> Paso por aca porque es owner. ArtificialAwake </color>");
 
             FindObjectOfType<Chat>().characterModel = this; //Le aviso quien soy al chat
@@ -111,6 +117,8 @@ namespace Character
                 new float[] { colorA.r, colorA.g, colorA.b },
                 new float[] { colorB.r, colorB.g, colorB.b },
                 new float[] { colorC.r, colorC.g, colorC.b });
+
+            _server = FindObjectOfType<Server>();
 
             ChangeTeam(0);
 
@@ -215,6 +223,24 @@ namespace Character
         public void MovePlayer(float horizontal, float vertical)
         {
             _movementController.Move(horizontal, vertical);
+        }
+
+        public void Damage(float damage)
+        {
+            if (!_server.DamageActive()) return;
+
+            _hp -= damage;
+
+            photonView.RPC("RPCDamage", RpcTarget.All);
+        }
+        [PunRPC]
+        public void RPCDamage()
+        {
+            //Feedback vida;
+        }
+        public void Explosion(Vector3 origin, float force)
+        {
+            throw new NotImplementedException();
         }
         #region Grenade
         public void TryGrenade()

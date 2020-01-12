@@ -71,6 +71,8 @@ public class Chat : MonoBehaviourPun
         msgInput.text = "";
     }
 
+
+
     [PunRPC]
     void RPCGlobalSendMsg(string msg, string name)
     {
@@ -124,4 +126,21 @@ public class Chat : MonoBehaviourPun
             msgInput.Select();
         }
     }
+
+    #region serverChat
+    public void SendMsgServer(string msg)
+    {
+        photonView.RPC("RPCSendMsgServer", RpcTarget.All, msg);
+    }
+
+    [PunRPC]
+    void RPCSendMsgServer(string msg)
+    {
+        var newText = Instantiate(textMsg);
+        newText.gameObject.SetActive(true);
+        newText.text = "<color=black> |SERVER| </color> : " + msg;
+        newText.transform.parent = content.transform;
+        newText.rectTransform.localScale = Vector3.one;
+    }
+    #endregion
 }
