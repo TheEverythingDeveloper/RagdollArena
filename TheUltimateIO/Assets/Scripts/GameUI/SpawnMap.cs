@@ -51,10 +51,12 @@ namespace GameUI
         {
             if (team != teamID) return;
             _allPointers[playerID].gameObject.SetActive(true);
-            _allPointers[playerID].color =
-                team == 0 ? Color.blue : team == 1 ? Color.red : team == 2 ? Color.yellow : Color.green;
+            if(_allPointers[playerID].color != Color.white)
+            {
+                _allPointers[playerID].color = _corePointer.color = 
+                    team == 0 ? Color.blue : team == 1 ? Color.red : team == 2 ? Color.yellow : Color.green;
+            }
             _allPointers[playerID].rectTransform.anchoredPosition = pos;
-            
             Vector2 totalPos = _allPointers.Aggregate(Vector2.zero, (x, y) => x + y.rectTransform.anchoredPosition);
             _corePointer.rectTransform.anchoredPosition = totalPos / _playersAmount;
         }
@@ -85,7 +87,7 @@ namespace GameUI
         {
             if (selectedTeamID != teamID) return;
 
-            _allPointers[playerID].color = Color.cyan;
+            _allPointers[playerID].color = Color.white;
         }
 
         [PunRPC] public void RPCServerSpawnConfirmation(int playerID, int selectedTeamID) //el server va a decidir cuando spawnean todos
