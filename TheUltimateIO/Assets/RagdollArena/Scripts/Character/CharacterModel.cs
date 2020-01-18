@@ -157,7 +157,6 @@ namespace Character
             if (pelvisRb != null)
                 Gizmos.DrawWireSphere(pelvisRb.transform.position, contactRadius);
         }
-
         public void UpdatePoints(int addedPoints) => OnPointsUpdate(addedPoints);
         public void Crowned(bool on) => OnCrowned(on);
         public void TryJump() { if (_movementController.inAir) return; OnJump(); }
@@ -165,9 +164,7 @@ namespace Character
         private void Update() { if (!owned && pelvisRb != null) return; ArtificialUpdate(); }
         private void FixedUpdate() { if (!owned) return; ArtificialFixedUpdate(); }
         private void LateUpdate() { if (!owned) return; ArtificialLateUpdate(); }
-            
-        [PunRPC]
-        public void RPCUpdateColor(float[] colorA, float[] colorB, float[] colorC)
+        [PunRPC] public void RPCUpdateColor(float[] colorA, float[] colorB, float[] colorC)
         {
             _allMyRenderers.Select(x =>
             {
@@ -188,6 +185,7 @@ namespace Character
         {
             RPCChangeRespawnMode(false); //no hace falta llamarlo desde RPC aca porque ya estamos en la misma
             RespawnAtPosition(positionToRespawn);
+            _lvlMng.DestroyAllInitialSpawnPoints();
         }
         [PunRPC] public void RPCChangeRespawnMode(bool dead)
         {

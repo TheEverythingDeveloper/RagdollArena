@@ -77,8 +77,7 @@ public class Server : MonoBehaviourPun
         startGame = true;
         //TODO: Feedback de que comienza la guerra.
     }
-    [PunRPC]
-    private void RPCUpdateCounter(int i)
+    [PunRPC] private void RPCUpdateCounter(int i)
     {
         _lvlMng.gameCanvas.SwitchCounterPanel(true);
         Debug.Log("<color=green>" + i + "</color>");
@@ -91,8 +90,7 @@ public class Server : MonoBehaviourPun
         if (!PhotonNetwork.IsConnected) return;
         photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, toRemovePhotonPlayer, false);
     }
-    [PunRPC]
-    private void RPCChangePlayer(Player photonPlayer, bool add)
+    [PunRPC] private void RPCChangePlayer(Player photonPlayer, bool add)
     {
         if (!add) //si estamos removiendo un jugador
         {
@@ -112,8 +110,7 @@ public class Server : MonoBehaviourPun
             FindObjectOfType<TeamManager>().AddPlayer(photonPlayer);
         }
     }
-    [PunRPC]
-    public void RPCPlayerDeath(Player photonPlayer) //Decirle al modelo que se apague y que ponga los paneles de respawn en el HUD
+    [PunRPC] public void RPCPlayerDeath(Player photonPlayer) //Decirle al modelo que se apague y que ponga los paneles de respawn en el HUD
     {
         photonView.RPC("RPCChangeRespawnFeedback", photonPlayer, true);
         _allPlayers[photonPlayer].photonView.RPC("RPCChangeRespawnMode", RpcTarget.AllBuffered, true);
@@ -122,8 +119,7 @@ public class Server : MonoBehaviourPun
     {
         photonView.RPC("RPCMovePlayer", RpcTarget.MasterClient, photonPlayer, horAxis, verAxis);
     }
-    [PunRPC]
-    private void RPCMovePlayer(Player photonPlayer, float horAxis, float verAxis)
+    [PunRPC] private void RPCMovePlayer(Player photonPlayer, float horAxis, float verAxis)
     {
         if (!_allPlayers.ContainsKey(photonPlayer)) return;
 
@@ -134,33 +130,33 @@ public class Server : MonoBehaviourPun
     {
         photonView.RPC("RPCJumpPlayer", RpcTarget.MasterClient, photonPlayer);
     }
-    [PunRPC]
-    private void RPCJumpPlayer(Player photonPlayer)
+    [PunRPC] private void RPCJumpPlayer(Player photonPlayer)
     {
         if (!_allPlayers.ContainsKey(photonPlayer)) return;
 
         _allPlayers[photonPlayer].TryJump();
     }
-
-    [PunRPC]
-    public void RPCRespawnPlayer(Player photonPlayer, Vector3 position)
+    [PunRPC] public void RPCRespawnPlayer(Player photonPlayer, Vector3 position)
     {
         Debug.Log("<color=green>Respawneado</color>");
 
         photonView.RPC("RPCChangeRespawnFeedback", photonPlayer, false);
         _allPlayers[photonPlayer].photonView.RPC("RPCRespawn", RpcTarget.AllBuffered, position);
     }
-
-    [PunRPC]
-    public void RPCInstantiateSpawnPoint(int teamID, Vector3 pos)
+    [PunRPC] public void RPCInstantiateSpawnPoint(int teamID, Vector3 pos)
     {
         var go = PhotonNetwork.Instantiate("SpawnPoint", pos, Quaternion.identity);
-        go.GetComponentInChildren<SpawnPoint>().teamID = teamID;
+        go.GetComponentInChildren<SpawnPoint>().photonView.RPC("RPCSetTeam", RpcTarget.AllBuffered, teamID);
+    }
+
+    [PunRPC] public void RPCTeamSpawn(int teamID, Vector3 corePos)
+    {
+        var go = PhotonNetwork.Instantiate("Core", corePos + Vector3.up * 2, Quaternion.identity);
+        go.GetComponentInChildren<Core>().photonView.RPC("RPCSetTeam", RpcTarget.AllBuffered, teamID);
     }
 
     public event Action<bool> OnRespawnFeedback = delegate { };
-    [PunRPC]
-    private void RPCChangeRespawnFeedback(bool dead)
+    [PunRPC] private void RPCChangeRespawnFeedback(bool dead)
     {
         OnRespawnFeedback(dead);
     }
@@ -169,5 +165,4 @@ public class Server : MonoBehaviourPun
     {
         return startGame;
     }
-
 }

@@ -76,6 +76,8 @@ public class NetManager : MonoBehaviourPunCallbacks
         Debug.LogWarning("Disconnected because " + cause.ToString());
         //avisar que alguien se fue al server
 
+        if (!PhotonNetwork.IsConnected) return;
+
         server.RemovePlayer(PhotonNetwork.LocalPlayer);
     }
 

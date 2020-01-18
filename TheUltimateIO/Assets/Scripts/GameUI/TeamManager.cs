@@ -111,7 +111,7 @@ namespace GameUI
                     if (PhotonNetwork.IsMasterClient)
                         _server.photonView.RPC("RPCChangePlayerTeam", RpcTarget.MasterClient, allPlayers[actualNameID - 1], i + 1);
                     panel.UpdateMemberData(j, allPlayers[actualNameID - 1].NickName);
-                    FindObjectOfType<SpawnMap>().UpdatePlayerIDs(j, i);
+                    FindObjectOfType<SpawnMap>().photonView.RPC("RPCUpdatePlayerIDs", allPlayers[actualNameID - 1], j, i);
                 }
 
                 _allTeamPanels.Add(panel);

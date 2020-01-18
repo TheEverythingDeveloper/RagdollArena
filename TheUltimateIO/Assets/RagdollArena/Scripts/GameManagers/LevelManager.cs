@@ -26,19 +26,13 @@ public class LevelManager : MonoBehaviour
 
     [HideInInspector] public GameCanvas gameCanvas;
 
-    public void StartGame(Vector3 pos)
+    public void DestroyAllInitialSpawnPoints()
     {
-        foreach (var x in _points)
-            Destroy(x.gameObject);
+        //Eliminar todos los spawnpoints
+        for (int i = 0; i < _points.Length; i++)
+            Destroy(_points[i].gameObject);
         _points = new SpawnPoint[0];
-        RespawnPlayer(pos);
     }
-
-    public void RespawnPlayer(Vector3 pos)
-    {
-        _spawnedModel.RPCRespawn(pos); //como se respawnea directamente localmente, no hace falta llamar el RPC por RPC real.
-    }
-
     public void RespawnRandom(Transform player)
     {
         player.position = PositionRandom();
@@ -111,7 +105,6 @@ public class LevelManager : MonoBehaviour
     private CharacterModel _spawnedModel;
     public CharacterModel SpawnUser()
     {
-        _points = FindObjectsOfType<SpawnPoint>();
         var user = PhotonNetwork.Instantiate("User", PositionRandom(), Quaternion.identity);
         var model = user.GetComponentInChildren<CharacterModel>();
         _spawnedModel = model;
@@ -121,16 +114,11 @@ public class LevelManager : MonoBehaviour
     private void Awake() //Al ser instanciado en realidad por el netmanager, no se va a llamar excepto q estemos testeando
     {
         gameCanvas = FindObjectOfType<GameCanvas>();
-
         Instance = this;
 
         _leaderboardMng = new LeaderboardManager(this);
 
-        /*if (photonView.IsMine)
-        {
-            _leaderboardMng.table = FindObjectOfType<LeaderboardTable>();
-            StartCoroutine(_leaderboardMng.InactivePlayersCoroutine());
-        }*/
+        _points = FindObjectsOfType<SpawnPoint>();
 
         UpdateUserPoints(PhotonNetwork.NickName, 0);
     }

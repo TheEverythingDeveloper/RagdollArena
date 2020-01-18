@@ -16,6 +16,7 @@ public class SpawnPoint : MonoBehaviourPun
     private void Start()
     {
         StartCoroutine(DelayForServer());
+        UpdateMaterial(teamID);
     }
 
     private IEnumerator DelayForServer()
@@ -23,6 +24,20 @@ public class SpawnPoint : MonoBehaviourPun
         yield return new WaitForSeconds(0.5f);
         _server = FindObjectOfType<Server>();
         _server.OnRespawnFeedback += CanvasVisibility;
+    }
+
+    [PunRPC] public void RPCSetTeam(int newTeamID)
+    {
+        teamID = newTeamID + 1;
+    }
+
+    private void UpdateMaterial(int newTeamID)
+    {
+        GetComponentInChildren<MeshRenderer>().material.color =
+            newTeamID == 0 ? Color.grey :
+            newTeamID == 1 ? Color.blue :
+            newTeamID == 2 ? Color.red :
+            newTeamID == 3 ? Color.green : Color.yellow;
     }
 
     /// <summary>
@@ -33,7 +48,11 @@ public class SpawnPoint : MonoBehaviourPun
         UseSpawnPoint(PhotonNetwork.LocalPlayer);
     }
     public void UseSpawnPoint(Player player) => photonView.RPC("RPCUseSpawnPoint", RpcTarget.MasterClient, player);
-    public void CanvasVisibility(bool on) => _spawnPointCanvas.SetActive(on);
+    public void CanvasVisibility(bool on)
+    {
+        if (_spawnPointCanvas == null) return;
+        _spawnPointCanvas.SetActive(on);
+    }
 
     [PunRPC] public void RPCUseSpawnPoint(Player player)
     {

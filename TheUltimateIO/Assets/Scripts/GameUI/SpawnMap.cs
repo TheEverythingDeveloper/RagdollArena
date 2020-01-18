@@ -16,6 +16,7 @@ namespace GameUI
         [SerializeField] private TextMeshProUGUI _timeText;
         [SerializeField] private TextMeshProUGUI _coordText;
         public Image[] _allPointers = new Image[4];
+        [SerializeField] private Image _corePointer;
         private float _mapPointerPosScaler = 1.43f;
         [Tooltip("Literal es un multiplicador de cuanto va a ser el ancho y largo del mapa")] public float mapScale = 0.5f;
 
@@ -24,9 +25,11 @@ namespace GameUI
         private Vector3 _spawnPointPos;
 
         private Dictionary<int, bool[]> _pointerConfirmationList = new Dictionary<int, bool[]>();
+        private int _playersAmount;
 
         [SerializeField] private SpawnMapArea _spawnMapArea;
 
+        [PunRPC] public void RPCUpdatePlayerIDs(int newPlayerID, int newTeamID) => UpdatePlayerIDs(newPlayerID, newTeamID);
         public void UpdatePlayerIDs(int newPlayerID, int newTeamID) //esto se llama en cada jugador, actualizando estos valores de la clase
         {
             Debug.Log("SE ACTUALIZO EL TEAM A " + newTeamID + " Y EL NEWPLAYERTEAM A " + newPlayerID);
@@ -37,25 +40,40 @@ namespace GameUI
         public void SetTeamAmountOfPlayers(int teamsAmount, int playersAmount) //esto se tiene que reproducir solo en el servidor
         {
             _pointerConfirmationList.Clear();
-
+            _playersAmount = playersAmount;
             for (int i = 0; i < teamsAmount; i++)
                 _pointerConfirmationList.Add(i, new bool[playersAmount]); //se van a agregar la cantidad de confirmaciones en false como players
-        }
 
-        [PunRPC] public void RPCUpdatePointer(int playerID, int selectedTeamID, Vector3 pos)
+            photonView.RPC("RPCSetPlayersAmount", RpcTarget.OthersBuffered, playersAmount);   
+        }
+        [PunRPC] private void RPCSetPlayersAmount(int playersAmount) => _playersAmount = playersAmount;
+        [PunRPC] public void RPCUpdatePointer(int playerID, int team, Vector2 pos)
         {
-            if (selectedTeamID != teamID) return;
+            if (team != teamID) return;
             _allPointers[playerID].gameObject.SetActive(true);
-            _allPointers[playerID].rectTransform.localPosition = -pos * _mapPointerPosScaler;
+            _allPointers[playerID].color =
+                team == 0 ? Color.blue : team == 1 ? Color.red : team == 2 ? Color.yellow : Color.green;
+            _allPointers[playerID].rectTransform.anchoredPosition = pos;
+            
+            Vector2 totalPos = _allPointers.Aggregate(Vector2.zero, (x, y) => x + y.rectTransform.anchoredPosition);
+            _corePointer.rectTransform.anchoredPosition = totalPos / _playersAmount;
         }
 
-        public void PointerClick()
+        public void PointerClick() { }
+
+        public void PointerMove(float horAxis, float verAxis)
         {
-            Vector3 pos = _spawnMapArea.GetComponent<RectTransform>().position - Input.mousePosition;
-            Debug.Log("Relative Pos " + pos);
-            _spawnPointPos = pos;
-            photonView.RPC("RPCUpdatePointer", RpcTarget.All, playerID, teamID, pos);
-        }   
+            RectTransform rect = _allPointers[playerID].rectTransform;
+            rect.anchoredPosition =
+                new Vector2(rect.anchoredPosition.x + horAxis * 5, rect.anchoredPosition.y + verAxis * 5);
+
+            rect.anchoredPosition = 
+                new Vector2(Mathf.Clamp(rect.anchoredPosition.x, -150, 150), Mathf.Clamp(rect.anchoredPosition.y, -150, 150));
+
+            _spawnPointPos = rect.anchoredPosition;
+
+            photonView.RPC("RPCUpdatePointer", RpcTarget.All, playerID, teamID, rect.anchoredPosition);
+        }
 
         public void SpawnButton()
         {
@@ -92,10 +110,14 @@ namespace GameUI
         {
             yield return new WaitForSeconds(1.5f);
             _panelOpened = false;
-            Vector3 spawnPos = new Vector3(_spawnPointPos.x, 2.3f, _spawnPointPos.y) * mapScale;
+            Vector3 spawnPos = new Vector3(_spawnPointPos.x, 4f, _spawnPointPos.y) * mapScale;
             FindObjectOfType<GameCanvas>().SwitchMapPanel(false);
             FindObjectOfType<Server>().photonView.RPC("RPCInstantiateSpawnPoint", RpcTarget.MasterClient, teamID, spawnPos);
-            FindObjectOfType<LevelManager>().StartGame(spawnPos + Vector3.up * 3);
+            FindObjectOfType<Server>().photonView.RPC("RPCRespawnPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer, spawnPos);
+
+            Vector3 corePos = new Vector3(_corePointer.rectTransform.anchoredPosition.x, 4f, _corePointer.rectTransform.anchoredPosition.y) * mapScale;
+            if(playerID == 0) //si es el primero en spawnear, entonces que spawnee tambien el core
+                FindObjectOfType<Server>().photonView.RPC("RPCTeamSpawn", RpcTarget.MasterClient, teamID, corePos);
         }
 
         public void StartPanelTimer() => StartCoroutine(SecondsCoroutine());
@@ -104,12 +126,11 @@ namespace GameUI
         {
             if (!_panelOpened) return;
 
-            Vector3 pos = _spawnMapArea.GetComponent<RectTransform>().position - Input.mousePosition * _mapPointerPosScaler;
-            if (_spawnPointPos != Vector3.zero)
-                pos = _spawnPointPos;
-
+            Vector3 pos = _allPointers[playerID].rectTransform.anchoredPosition;
             pos = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y));
             _coordText.text = "Coord: {" + -pos.x + "," + pos.y + "}";
+
+            PointerMove(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         }
 
         private bool _panelOpened;

@@ -79,7 +79,7 @@ public class Chat : MonoBehaviourPun
         var newText = Instantiate(textMsg);
         newText.gameObject.SetActive(true);
         newText.text = "<color=green> |GLOBAL| </color>" + name + ": " + msg;
-        newText.transform.parent = content.transform;
+        newText.transform.SetParent(content.transform);
         newText.rectTransform.localScale = Vector3.one;
     }
 
@@ -139,7 +139,7 @@ public class Chat : MonoBehaviourPun
         var newText = Instantiate(textMsg);
         newText.gameObject.SetActive(true);
         newText.text = "<color=black> |SERVER| </color> : " + msg;
-        newText.transform.parent = content.transform;
+        newText.transform.SetParent(content.transform);
         newText.rectTransform.localScale = Vector3.one;
     }
     #endregion
