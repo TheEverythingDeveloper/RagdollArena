@@ -22,13 +22,9 @@ namespace Leaderboard
         public void UpdateUserPoints(string newUserNickname, int addedPoints)
         {
             if (allUserData.ContainsKey(newUserNickname))
-            {
                 allUserData[newUserNickname].points += addedPoints;
-            }
             else
-            {
                 allUserData.Add(newUserNickname, new UserData(newUserNickname, addedPoints));
-            }
 
             Debug.Log(allUserData[newUserNickname].nickname + " :::: " + allUserData[newUserNickname].points);
 
@@ -69,9 +65,9 @@ namespace Leaderboard
             //de aca llamar a rpc del levelmanager que le avise a los leaderboardmanagers que actualicen las tablas.
             string[] allNicknames = allUserData.Select(x => x.Value.nickname).ToArray();
             int[] allPoints = allUserData.Select(x => x.Value.points).ToArray();
-            _lvlMng.UpdateLeaderboardTables(allNicknames, allPoints);
+            //_lvlMng.UpdateLeaderboardTables(allNicknames, allPoints);
 
-            if (allPoints[0] >= _lvlMng.pointsToWin) _lvlMng.Winner(allNicknames.Take(3).ToArray());
+            //if (allPoints[0] >= _lvlMng.pointsToWin) _lvlMng.Winner(allNicknames.Take(3).ToArray());
         }
 
         public void UpdateTableInfo(string[] nicknames, int[] points)

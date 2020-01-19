@@ -90,9 +90,9 @@ namespace GameUI
             //TODO: Avisar a los jugadores en el chat y en popup, junto con muchisimo feedback
             yield return new WaitForSeconds(2f);
             Core[] lastCores = FindObjectsOfType<Core>();
-            if (lastCores.Length == 1)
+            if (lastCores.Length <= 1)
             {
-                int coreTeam = lastCores[0].teamID-1;
+                int coreTeam = lastCores.Length > 0 ? lastCores[0].teamID-1 : 0;
                 server.photonView.RPC("RPCEndGame", RpcTarget.MasterClient, coreTeam, _allPlayers.
                     Aggregate(new List<Player>(), (list, elem) => 
                     { 
@@ -120,6 +120,15 @@ namespace GameUI
 
             FindObjectOfType<SpawnMap>().SetTeamAmountOfPlayers(_teamCombinations[playersPerTeam][0], _teamCombinations[playersPerTeam][1]);
             //crear paneles segun la estructura nueva
+            photonView.RPC("CreatePanelsWithStructure", RpcTarget.All, _allPlayers.ToArray(), _teamCombinations[playersPerTeam][0], _teamCombinations[playersPerTeam][1]);
+        }
+        
+        public void RematchReorganization(List<Player> allPlayers)
+        {
+            _allPlayers = allPlayers;
+            playersAmount = allPlayers.Count;
+            playersPerTeam = AnalyzeTeamOrganization(playersAmount);
+            FindObjectOfType<SpawnMap>().SetTeamAmountOfPlayers(_teamCombinations[playersPerTeam][0], _teamCombinations[playersPerTeam][1]);
             photonView.RPC("CreatePanelsWithStructure", RpcTarget.All, _allPlayers.ToArray(), _teamCombinations[playersPerTeam][0], _teamCombinations[playersPerTeam][1]);
         }
 

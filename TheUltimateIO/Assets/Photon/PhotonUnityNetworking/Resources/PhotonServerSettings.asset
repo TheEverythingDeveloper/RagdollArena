@@ -102,5 +102,10 @@ MonoBehaviour:
   - RPCTeamDeath
   - RPCEndGame
   - RPCUpdateEndPanel
+  - RPCPlayAgainPlayer
+  - RPCRematch
+  - UpdateRematchPlayersNumber
+  - RPCUpdateRematchPlayersNumber
+  - RPCStartRematch
   DisableAutoOpenWizard: 1
   ShowSettings: 1

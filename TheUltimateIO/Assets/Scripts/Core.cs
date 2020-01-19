@@ -35,8 +35,11 @@ public class Core : MonoBehaviourPun
 
     public void OnCoreDestroy(int teamDestroyed)
     {
-        if (teamID != teamDestroyed + 1 || this.gameObject == null) return;
+        if (this.gameObject == null) return;
+        if (teamID != teamDestroyed + 1) return;
 
+        FindObjectOfType<TeamManager>().OnCoreUpdate -= OnCoreLifeUpdate;
+        FindObjectOfType<TeamManager>().OnCoreDestroy -= OnCoreDestroy;
         PhotonNetwork.Destroy(gameObject);
     }
 

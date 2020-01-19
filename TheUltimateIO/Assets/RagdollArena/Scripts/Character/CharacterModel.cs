@@ -185,7 +185,6 @@ namespace Character
         {
             RPCChangeRespawnMode(false); //no hace falta llamarlo desde RPC aca porque ya estamos en la misma
             RespawnAtPosition(positionToRespawn);
-            _lvlMng.DestroyAllInitialSpawnPoints();
         }
         [PunRPC] public void RPCChangeRespawnMode(bool dead)
         {
@@ -207,7 +206,6 @@ namespace Character
 
         public void AddPoint(int points)
         {
-            _lvlMng.UpdateUserPoints(PhotonNetwork.NickName, points);
             var cubeSpawner = FindObjectOfType<CubeSpawner>();
             if(cubeSpawner != null)
                 cubeSpawner.ConstructionPoints += points;

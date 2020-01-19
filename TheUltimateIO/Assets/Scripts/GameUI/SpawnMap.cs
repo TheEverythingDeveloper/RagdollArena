@@ -83,6 +83,16 @@ namespace GameUI
             photonView.RPC("RPCServerSpawnConfirmation", RpcTarget.MasterClient, playerID, teamID);
         }
 
+        [PunRPC] public void RPCResetAllPointers()
+        {
+            foreach (var x in _allPointers)
+            {
+                x.rectTransform.anchoredPosition = Vector2.zero;
+                x.color = Color.black;
+            }
+            _corePointer.rectTransform.anchoredPosition = Vector2.zero;
+        }
+
         [PunRPC] public void RPCPlayerSpawnConfirmed(int playerID, int selectedTeamID) //esto se llama cuando se apreta el boton de spawn
         {
             if (selectedTeamID != teamID) return;
@@ -116,7 +126,7 @@ namespace GameUI
             FindObjectOfType<GameCanvas>().SwitchMapPanel(false);
             FindObjectOfType<Server>().photonView.RPC("RPCInstantiateSpawnPoint", RpcTarget.MasterClient, teamID, spawnPos);
             FindObjectOfType<Server>().photonView.RPC("RPCRespawnPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer, spawnPos);
-
+            FindObjectOfType<LevelManager>().DestroyAllInitialSpawnPoints();
             Vector3 corePos = new Vector3(_corePointer.rectTransform.anchoredPosition.x, 4f, _corePointer.rectTransform.anchoredPosition.y) * mapScale;
             if(playerID == 0) //si es el primero en spawnear, entonces que spawnee tambien el core
                 FindObjectOfType<Server>().photonView.RPC("RPCTeamSpawn", RpcTarget.MasterClient, teamID, corePos);

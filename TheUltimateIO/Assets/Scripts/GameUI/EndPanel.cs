@@ -14,6 +14,7 @@ public class EndPanel : MonoBehaviourPun
 {
     [SerializeField] private TextMeshProUGUI[] _winnersTexts = new TextMeshProUGUI[4];
     [SerializeField] private TextMeshProUGUI _resultText;
+    [SerializeField] private TextMeshProUGUI _rematchButtonText;
     [SerializeField] private Image _generalBackground;
     [SerializeField] private Image _winnersBackground;
     [Tooltip("0 = BGwin, 1 = BGLose, 2 = BGBlue, 3 = BGRed, 4 = BGYellow, 5 = BGGreen")] public Color[] winLoseColors = new Color[3];
@@ -39,15 +40,32 @@ public class EndPanel : MonoBehaviourPun
             _winnersTexts[i].gameObject.SetActive(true);
             _winnersTexts[i].text = winners[i].NickName;
         }
+
+        if (PhotonNetwork.IsMasterClient)
+            _rematchButtonText.text = "Rematch";
     }
+
+    private List<Player> _allRematchPlayers = new List<Player>();
+    [SerializeField] private TextMeshProUGUI _rematchText;
 
     public void PlayAgainButton()
     {
-        SceneManager.LoadSceneAsync(0); //TODO: No tiene que volver, sino quedarse y reiniciar bien
+        if (PhotonNetwork.IsMasterClient)
+            StartRematchButton();
+        else
+            photonView.RPC("RPCRematch", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer);
+
+        //Que se bloquee tanto este boton como el de back to menu cuando pusimos playagain.
     }
 
-    public void BackToMenuButton()
+    [PunRPC] private void RPCRematch(Player addedPlayer)
     {
-        SceneManager.LoadSceneAsync(0);
+        if (_allRematchPlayers.Contains(addedPlayer)) return;
+
+        _allRematchPlayers.Add(addedPlayer);
+        photonView.RPC("RPCUpdateRematchPlayersNumber", RpcTarget.All, _allRematchPlayers.Count);
     }
+    [PunRPC] private void RPCUpdateRematchPlayersNumber(int actualNum) => _rematchText.text = actualNum.ToString();
+    public void BackToMenuButton() { SceneManager.LoadSceneAsync(0); }
+    public void StartRematchButton() { FindObjectOfType<Server>().StartRematch(_allRematchPlayers); }
 }

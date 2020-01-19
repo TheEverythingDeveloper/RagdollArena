@@ -19,7 +19,7 @@ namespace Character
 
         public void OnUpdateUserPoints(int newPoints)
         {
-            _lvlMng.UpdateUserPoints(_nickName, newPoints);
+
         }
 
         public void ArtificialUpdate()

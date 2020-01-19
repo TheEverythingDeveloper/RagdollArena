@@ -157,7 +157,7 @@ public class Server : MonoBehaviourPun
     {
         winnerPlayers.Select(x =>
         {
-            Debug.LogWarning("WINNER = " + x.NickName);
+            Debug.Log("<color=yellow>WINNER = " + x.NickName + "</color>");
             return x;
         }).ToList();
 
@@ -167,4 +167,43 @@ public class Server : MonoBehaviourPun
 
     [PunRPC] public void RPCUpdateEndPanel(int winnerTeam, Player[] winners)
     { FindObjectOfType<EndPanel>().UpdateWinnersData(winnerTeam, winners); }
+
+    public void StartRematch(List<Player> allRematchedPlayers)
+    {
+        var allSpawnPoints = FindObjectsOfType<SpawnPoint>();
+        foreach (var x in allSpawnPoints)
+            PhotonNetwork.Destroy(x.gameObject);
+        photonView.RPC("RPCStartRematch", RpcTarget.All);
+        foreach (var x in _allPlayers)
+            RPCRespawnPlayer(x.Key, _lvlMng.PositionRandom());
+
+        PhotonNetwork.Destroy(FindObjectOfType<EndPanel>().gameObject);
+        Core lastCore = FindObjectOfType<Core>();
+        if (lastCore != null)
+            lastCore.OnCoreDestroy(lastCore.teamID);
+
+        //TODO: Destruir todo tipo de construccion y particulas que se hayan generado antes, destruir todo tipo de objeto de sonido
+
+        _lvlMng.gameCanvas.SwitchEnterToStartText(true);
+
+        if(_allPlayers.Count > 1)
+        {
+            Dictionary<Player, CharacterModel> temp = new Dictionary<Player, CharacterModel>(_allPlayers);
+            foreach (var x in allRematchedPlayers)
+                temp.Remove(x);
+            foreach (var x in temp)
+                _allPlayers.Remove(x.Key);
+        }
+
+        FindObjectOfType<TeamManager>().RematchReorganization(_allPlayers.Select(x => x.Key).ToList());
+        FindObjectOfType<SpawnMap>().photonView.RPC("RPCResetAllPointers", RpcTarget.All);
+
+        //TODO: Hacer algo con los que no se rematchearon. Sacarlos de aca (que son los que quedan en la variable temp)
+    }
+
+    [PunRPC] private void RPCStartRematch()
+    {
+        Instantiate(Resources.Load("InitialStateOfGame"));
+        _lvlMng.SetInitialSpawnPoints();
+    }
 }
