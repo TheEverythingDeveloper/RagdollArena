@@ -13,7 +13,7 @@ namespace GameUI
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            _spawnMap.PointerClick();
+            //_spawnMap.PointerClick();
         }
     }
 }

@@ -1873,6 +1873,7 @@ MonoBehaviour:
   - {fileID: 1432769936}
   - {fileID: 430152689}
   _corePointer: {fileID: 1265018523}
+  _spawnButton: {fileID: 397467117}
   mapScale: 0.5
   playerID: 0
   teamID: 0

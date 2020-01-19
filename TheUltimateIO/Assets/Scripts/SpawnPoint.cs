@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon;
+using GameUI;
 
 public class SpawnPoint : MonoBehaviourPun
 {
@@ -46,6 +47,7 @@ public class SpawnPoint : MonoBehaviourPun
     public void ClickedOnSpawnPoint()
     {
         UseSpawnPoint(PhotonNetwork.LocalPlayer);
+        FindObjectOfType<GameCanvas>().SwitchMapPanel(false);
     }
     public void UseSpawnPoint(Player player) => photonView.RPC("RPCUseSpawnPoint", RpcTarget.MasterClient, player);
     public void CanvasVisibility(bool on)

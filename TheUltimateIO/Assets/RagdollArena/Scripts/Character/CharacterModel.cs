@@ -1,4 +1,5 @@
-﻿using Photon.Pun;
+﻿using GameUI;
+using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -202,6 +203,8 @@ namespace Character
 
             _lvlMng.gameCanvas.SwitchRespawnHUD(dead);
             _lvlMng.gameCanvas.SwitchMapPanel(dead);
+            if(dead)
+                FindObjectOfType<SpawnMap>().SetSpawnPointer();
             Debug.Log(dead ? "<color=red>Muerto</color>" : "<color=green>Respawneado</color>");
         }
         public void RespawnAtPosition(Vector3 positionToRespawn) => pelvisRb.transform.position = positionToRespawn;

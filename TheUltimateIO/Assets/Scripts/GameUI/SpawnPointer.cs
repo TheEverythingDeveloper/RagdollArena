@@ -14,14 +14,17 @@ namespace GameUI
     {
         public SpawnPoint modelSpawnPoint;
 
-        public void UpdatePosition(Vector3 modelPos, float mapScale)
+        public void UpdatePosition(SpawnPoint model, float mapScale)
         {
-            Vector2 finalAnchoredPos = new Vector2(modelPos.x / mapScale / 150f, modelPos.z / mapScale / 150f);
+            modelSpawnPoint = model;
+            Vector3 modelPos = model.transform.position;
+            Vector2 finalAnchoredPos = new Vector2(modelPos.x / mapScale, modelPos.z / mapScale);
             GetComponent<RectTransform>().anchoredPosition = finalAnchoredPos;
         }
 
         public void SelectedButton()
         {
+            Debug.LogError("se toco boton para respawnear");
             modelSpawnPoint.ClickedOnSpawnPoint();
         }
     }

@@ -17,6 +17,7 @@ namespace GameUI
         [SerializeField] private TextMeshProUGUI _coordText;
         public Image[] _allPointers = new Image[4];
         [SerializeField] private Image _corePointer;
+        [SerializeField] private Button _spawnButton;
         private float _mapPointerPosScaler = 1.43f;
         [Tooltip("Literal es un multiplicador de cuanto va a ser el ancho y largo del mapa")] public float mapScale = 0.5f;
 
@@ -61,8 +62,6 @@ namespace GameUI
             _corePointer.rectTransform.anchoredPosition = totalPos / _playersAmount;
         }
 
-        public void PointerClick() { }
-
         public void PointerMove(float horAxis, float verAxis)
         {
             RectTransform rect = _allPointers[playerID].rectTransform;
@@ -93,13 +92,19 @@ namespace GameUI
             _corePointer.rectTransform.anchoredPosition = Vector2.zero;
         }
 
-        [PunRPC] public void RPCSetSpawnPointer() //TODO: LLamar esto utilmente cuando se activa el mapa
+        public void SetSpawnPointer()
         {
-            //Agarrar todos los spawnpoints que hayan
-            //filtrar solo los de cierto team
-            //instanciar la cantidad de pointers igual que los filtrados
-            //posicionar a cada uno en la posicion que deberia.
-            //hacer que cuando el jugador selecciona un punto, se cierre el panel
+            _spawnButton.enabled = false;
+            _isRespawnMode = true;
+            var allSpawnPoints = FindObjectsOfType<SpawnPoint>().Where(x => x.teamID - 1 == teamID).ToList();
+            var teamCore = FindObjectsOfType<Core>().FirstOrDefault(x => x.teamID - 1 == teamID);
+            if(teamCore != null)
+                _corePointer.rectTransform.anchoredPosition = new Vector2(teamCore.transform.position.x / mapScale, teamCore.transform.position.z / mapScale);
+            for (int i = 0; i < allSpawnPoints.Count; i++)
+            {
+                var o = (GameObject)Instantiate(Resources.Load("SpawnPointer"), _spawnMapArea.transform);
+                o.GetComponent<SpawnPointer>().UpdatePosition(allSpawnPoints[i], mapScale);
+            }
         }
 
         [PunRPC] public void RPCPlayerSpawnConfirmed(int playerID, int selectedTeamID) //esto se llama cuando se apreta el boton de spawn
@@ -145,7 +150,7 @@ namespace GameUI
 
         private void Update()
         {
-            if (!_panelOpened) return;
+            if (!_panelOpened || _isRespawnMode) return;
 
             Vector3 pos = _allPointers[playerID].rectTransform.anchoredPosition;
             pos = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y));
@@ -154,6 +159,7 @@ namespace GameUI
             PointerMove(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         }
 
+        private bool _isRespawnMode;
         private bool _panelOpened;
         private IEnumerator SecondsCoroutine()
         {
