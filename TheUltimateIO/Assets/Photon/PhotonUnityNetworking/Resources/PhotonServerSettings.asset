@@ -108,5 +108,6 @@ MonoBehaviour:
   - RPCUpdateRematchPlayersNumber
   - RPCStartRematch
   - RPCResetAllPointers
+  - RPCSetSpawnPointer
   DisableAutoOpenWizard: 1
   ShowSettings: 1

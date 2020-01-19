@@ -93,6 +93,15 @@ namespace GameUI
             _corePointer.rectTransform.anchoredPosition = Vector2.zero;
         }
 
+        [PunRPC] public void RPCSetSpawnPointer() //TODO: LLamar esto utilmente cuando se activa el mapa
+        {
+            //Agarrar todos los spawnpoints que hayan
+            //filtrar solo los de cierto team
+            //instanciar la cantidad de pointers igual que los filtrados
+            //posicionar a cada uno en la posicion que deberia.
+            //hacer que cuando el jugador selecciona un punto, se cierre el panel
+        }
+
         [PunRPC] public void RPCPlayerSpawnConfirmed(int playerID, int selectedTeamID) //esto se llama cuando se apreta el boton de spawn
         {
             if (selectedTeamID != teamID) return;
