@@ -116,9 +116,7 @@ public class Server : MonoBehaviourPun
         _allPlayers[photonPlayer].photonView.RPC("RPCChangeRespawnMode", RpcTarget.AllBuffered, true);
     }
     public void MovePlayer(Player photonPlayer, float horAxis, float verAxis)
-    {
-        photonView.RPC("RPCMovePlayer", RpcTarget.MasterClient, photonPlayer, horAxis, verAxis);
-    }
+    { photonView.RPC("RPCMovePlayer", RpcTarget.MasterClient, photonPlayer, horAxis, verAxis); }
     [PunRPC] private void RPCMovePlayer(Player photonPlayer, float horAxis, float verAxis)
     {
         if (!_allPlayers.ContainsKey(photonPlayer)) return;
@@ -126,10 +124,7 @@ public class Server : MonoBehaviourPun
         _allPlayers[photonPlayer].MovePlayer(horAxis, verAxis);
     }
 
-    public void JumpPlayer(Player photonPlayer)
-    {
-        photonView.RPC("RPCJumpPlayer", RpcTarget.MasterClient, photonPlayer);
-    }
+    public void JumpPlayer(Player photonPlayer) { photonView.RPC("RPCJumpPlayer", RpcTarget.MasterClient, photonPlayer); }
     [PunRPC] private void RPCJumpPlayer(Player photonPlayer)
     {
         if (!_allPlayers.ContainsKey(photonPlayer)) return;
@@ -156,13 +151,20 @@ public class Server : MonoBehaviourPun
     }
 
     public event Action<bool> OnRespawnFeedback = delegate { };
-    [PunRPC] private void RPCChangeRespawnFeedback(bool dead)
+    [PunRPC] private void RPCChangeRespawnFeedback(bool dead) { OnRespawnFeedback(dead); }
+    public bool DamageActive() { return startGame; }
+    [PunRPC] public void RPCEndGame(int teamID, Player[] winnerPlayers)
     {
-        OnRespawnFeedback(dead);
+        winnerPlayers.Select(x =>
+        {
+            Debug.LogWarning("WINNER = " + x.NickName);
+            return x;
+        }).ToList();
+
+        PhotonNetwork.Instantiate("EndPanel", Vector3.zero, Quaternion.identity);
+        photonView.RPC("RPCUpdateEndPanel", RpcTarget.All, teamID, winnerPlayers);
     }
 
-    public bool DamageActive()
-    {
-        return startGame;
-    }
+    [PunRPC] public void RPCUpdateEndPanel(int winnerTeam, Player[] winners)
+    { FindObjectOfType<EndPanel>().UpdateWinnersData(winnerTeam, winners); }
 }

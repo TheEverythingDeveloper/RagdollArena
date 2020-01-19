@@ -14,11 +14,12 @@ namespace GameUI
     {
         private List<TeamPanel> _allTeamPanels = new List<TeamPanel>();
         private List<Player> _allPlayers = new List<Player>();
+        private List<Player> _winners = new List<Player>();
+        private Server _server;
         public Dictionary<int, int[]> _teamCombinations = new Dictionary<int, int[]>();
         public List<float> _teamCoresLife = new List<float>();
         private int playersAmount;
         [SerializeField] private TeamPanel _teamPanelPrefab;
-        private Server _server;
         public event Action<int, float> OnCoreUpdate = delegate { };
         public event Action<int> OnCoreDestroy = delegate { };
 
@@ -64,30 +65,49 @@ namespace GameUI
             photonView.RPC("RPCCoreLifeUpdate", RpcTarget.AllBuffered, teamCoreID, resultLife);
             OnCoreUpdate(teamCoreID, _teamCoresLife[teamCoreID]);
             if (resultLife <= 0)
-            {
                 StartCoroutine(CoreDestroyCoroutine(teamCoreID));
-            }
         }
 
         private IEnumerator CoreDestroyCoroutine(int destroyedTeamID)
         {
             yield return new WaitForSeconds(1f);
 
-            //TODO: Avisar a los jugadores en el chat y en popup, y matar a los jugadores de ese nexo, junto con muchisimo feedback
             OnCoreDestroy(destroyedTeamID);
             photonView.RPC("RPCTeamDeath", RpcTarget.All, destroyedTeamID);
 
             int combinationsPlayersAmount = _teamCombinations[playersPerTeam][1];
 
+            Server server = FindObjectOfType<Server>();
+
+            _winners = new List<Player>(_allPlayers);
+
             for (int i = destroyedTeamID * combinationsPlayersAmount; i < destroyedTeamID * combinationsPlayersAmount + combinationsPlayersAmount; i++)
-                FindObjectOfType<Server>().photonView.RPC("RPCPlayerDeath", RpcTarget.MasterClient, _allPlayers[i]);
+            {
+                server.photonView.RPC("RPCPlayerDeath", RpcTarget.MasterClient, _allPlayers[i]);
+                _winners.Remove(_allPlayers[i]);
+            }
+
+            //TODO: Avisar a los jugadores en el chat y en popup, junto con muchisimo feedback
+            yield return new WaitForSeconds(2f);
+            Core[] lastCores = FindObjectsOfType<Core>();
+            if (lastCores.Length == 1)
+            {
+                int coreTeam = lastCores[0].teamID-1;
+                server.photonView.RPC("RPCEndGame", RpcTarget.MasterClient, coreTeam, _allPlayers.
+                    Aggregate(new List<Player>(), (list, elem) => 
+                    { 
+                        int playerIndex = _allPlayers.FindIndex(x => x == elem);
+                        if (playerIndex >= coreTeam * combinationsPlayersAmount && playerIndex < coreTeam * combinationsPlayersAmount + combinationsPlayersAmount)
+                        { list.Add(elem); Debug.LogWarning(elem.NickName); }
+                        return list; 
+                    })
+                    .ToArray());
+            }
+            else
+                Debug.LogWarning("Perdio un team, pero todavia quedan 2 o mas teams");
         }
 
-        [PunRPC] private void RPCTeamDeath(int deadTeamID)
-        {
-            _allTeamPanels[deadTeamID].TeamDeath();
-        }
-
+        [PunRPC] private void RPCTeamDeath(int deadTeamID) { _allTeamPanels[deadTeamID].TeamDeath(); }
         [PunRPC] private void RPCCoreLifeUpdate(int teamCoreID, float newLife) => _allTeamPanels[teamCoreID].UpdateCoreLifebar(newLife);
 
         private int playersPerTeam;

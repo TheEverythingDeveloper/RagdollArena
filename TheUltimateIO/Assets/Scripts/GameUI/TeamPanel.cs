@@ -14,10 +14,7 @@ namespace GameUI
         [SerializeField] private Image _coreLifebar;
         private CoresMainPanel _coreMainPanel;
 
-        private void Awake()
-        {
-            _coreMainPanel = FindObjectOfType<CoresMainPanel>();
-        }
+        private void Awake() { _coreMainPanel = FindObjectOfType<CoresMainPanel>(); }
 
         public void TeamDeath()
         {
