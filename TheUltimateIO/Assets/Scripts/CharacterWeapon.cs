@@ -14,14 +14,14 @@ namespace Character {
 
         Coroutine _swordAttack;
 
-        GameObject _myModel;
+        Rigidbody _myModel;
     private void Awake()
         {
             weaponActive = Construct;
             _characterStats = GetComponent<CharacterStats>();
             _characterModel = GetComponent<CharacterModel>();
 
-            _myModel = _characterModel._ragdollCapsule;
+            _myModel = _characterModel.pelvisRb;
         }
 
         private void FixedUpdate()
@@ -46,7 +46,7 @@ namespace Character {
 
         IEnumerator SwordAttack()
         {
-            Collider[] col = Physics.OverlapBox(transform.position + (_myModel.transform.forward * _characterStats.initialDistAttack),
+            Collider[] col = Physics.OverlapBox(_myModel.transform.position + (_myModel.transform.forward * _characterStats.initialDistAttack),
                                                 (_myModel.transform.forward * _characterStats.verticalDistAttack) + 
                                                 (_myModel.transform.right * _characterStats.horizontalDistAttack));
 
@@ -79,7 +79,7 @@ namespace Character {
 
         private void OnDrawGizmos()
         {
-            Gizmos.DrawCube(transform.position + (_myModel.transform.forward * _characterStats.initialDistAttack),
+            Gizmos.DrawCube(_myModel.transform.position + (_myModel.transform.forward * _characterStats.initialDistAttack),
                                                 (_myModel.transform.forward * _characterStats.verticalDistAttack) + 
                                                 (_myModel.transform.right * _characterStats.horizontalDistAttack));
         }
