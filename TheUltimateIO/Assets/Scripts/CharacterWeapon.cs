@@ -48,9 +48,9 @@ namespace Character {
         {
             Collider[] col = Physics.OverlapBox(_myModel.transform.position + (_myModel.transform.forward * _characterStats.initialDistAttack),
                                                 (_myModel.transform.forward * _characterStats.verticalDistAttack) + 
-                                                (_myModel.transform.right * _characterStats.horizontalDistAttack));
+                                                (_myModel.transform.right * _characterStats.horizontalDistAttack), _myModel.rotation, Layers.DAMAGEABLE);
 
-            var objDamageables = col.Select(x => x.GetComponent<IDamageable>());
+            var objDamageables = col.Select(x => x.GetComponent<Damageable>());
 
             foreach (var item in objDamageables)
             {
