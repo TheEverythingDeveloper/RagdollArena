@@ -4,25 +4,54 @@ using UnityEngine;
 using Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using GameUI;
+using TMPro;
+using UnityEngine.UI;
 
 public class Core : MonoBehaviourPun
 {
     public int teamID;
+    [SerializeField] private Image _lifeBar;
+    [SerializeField] private List<Color> _lifeColors;
+    [SerializeField] private List<Color> _backgroundLifeColors;
 
     private void Start()
     {
         UpdateMaterial(teamID);
+        _lifeBar.fillAmount = 100;
+
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        FindObjectOfType<TeamManager>().OnCoreUpdate += OnCoreLifeUpdate;
+        FindObjectOfType<TeamManager>().OnCoreDestroy += OnCoreDestroy;
     }
 
-    [PunRPC] public void RPCSetTeam(int newTeamID)
+    public void OnCoreLifeUpdate(int teamUpdate, float life)
     {
-        teamID = newTeamID + 1;
+        if (teamID != teamUpdate + 1 || this.gameObject == null) return;
+
+        photonView.RPC("RPCCoreLifeUpdate", RpcTarget.All, life);
     }
 
+    public void OnCoreDestroy(int teamDestroyed)
+    {
+        if (teamID != teamDestroyed + 1 || this.gameObject == null) return;
+
+        PhotonNetwork.Destroy(gameObject);
+    }
+
+    [PunRPC] private void RPCCoreLifeUpdate(float life)
+    {
+        _lifeBar.fillAmount = life;
+    }
+    [PunRPC] public void RPCSetTeam(int newTeamID) => teamID = newTeamID + 1;
     private void UpdateMaterial(int newTeamID)
     {
         GetComponentInChildren<MeshRenderer>().material.color =
             teamID == 1 ? Color.blue : teamID == 2 ? Color.red : teamID == 3 ? Color.yellow : Color.green;
+
+        _lifeBar.transform.parent.GetComponent<Image>().color = _backgroundLifeColors[teamID - 1];
+        _lifeBar.color = _lifeColors[teamID - 1];
     }
 
     private void LateUpdate()

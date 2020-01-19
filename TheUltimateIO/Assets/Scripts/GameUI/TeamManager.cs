@@ -4,6 +4,9 @@ using Photon;
 using Photon.Realtime;
 using Photon.Pun;
 using System.Linq;
+using System;
+using Random = UnityEngine.Random;
+using System.Collections;
 
 namespace GameUI
 {
@@ -12,10 +15,12 @@ namespace GameUI
         private List<TeamPanel> _allTeamPanels = new List<TeamPanel>();
         private List<Player> _allPlayers = new List<Player>();
         public Dictionary<int, int[]> _teamCombinations = new Dictionary<int, int[]>();
-        public Dictionary<int, float> _teamCoresLife = new Dictionary<int, float>();
+        public List<float> _teamCoresLife = new List<float>();
         private int playersAmount;
         [SerializeField] private TeamPanel _teamPanelPrefab;
         private Server _server;
+        public event Action<int, float> OnCoreUpdate = delegate { };
+        public event Action<int> OnCoreDestroy = delegate { };
 
         private void Awake()
         {
@@ -42,12 +47,12 @@ namespace GameUI
             if (Input.GetKeyDown(KeyCode.KeypadPlus) || Input.GetKeyDown(KeyCode.Plus))
             {
                 int randomTeamID = Random.Range(0, _allTeamPanels.Count);
-                CoreLifeUpdate(randomTeamID, 0.2f);
+                CoreLifeUpdate(randomTeamID, 0.201f);
             }
             else if (Input.GetKeyDown(KeyCode.KeypadMinus) || Input.GetKeyDown(KeyCode.Minus))
             {
                 int randomTeamID = Random.Range(0, _allTeamPanels.Count);
-                CoreLifeUpdate(randomTeamID, -0.2f);
+                CoreLifeUpdate(randomTeamID, -0.201f);
             }
         }
 
@@ -57,24 +62,45 @@ namespace GameUI
             resultLife = Mathf.Clamp01(resultLife);
             _teamCoresLife[teamCoreID] = resultLife;
             photonView.RPC("RPCCoreLifeUpdate", RpcTarget.AllBuffered, teamCoreID, resultLife);
-
+            OnCoreUpdate(teamCoreID, _teamCoresLife[teamCoreID]);
             if (resultLife <= 0)
             {
-                //TODO: Destruir nexo, avisar a los jugadores en el chat y en popup, y matar a los jugadores de ese nexo, junto con muchisimo feedback
+                StartCoroutine(CoreDestroyCoroutine(teamCoreID));
             }
         }
+
+        private IEnumerator CoreDestroyCoroutine(int destroyedTeamID)
+        {
+            yield return new WaitForSeconds(1f);
+
+            //TODO: Avisar a los jugadores en el chat y en popup, y matar a los jugadores de ese nexo, junto con muchisimo feedback
+            OnCoreDestroy(destroyedTeamID);
+            photonView.RPC("RPCTeamDeath", RpcTarget.All, destroyedTeamID);
+
+            int combinationsPlayersAmount = _teamCombinations[playersPerTeam][1];
+
+            for (int i = destroyedTeamID * combinationsPlayersAmount; i < destroyedTeamID * combinationsPlayersAmount + combinationsPlayersAmount; i++)
+                FindObjectOfType<Server>().photonView.RPC("RPCPlayerDeath", RpcTarget.MasterClient, _allPlayers[i]);
+        }
+
+        [PunRPC] private void RPCTeamDeath(int deadTeamID)
+        {
+            _allTeamPanels[deadTeamID].TeamDeath();
+        }
+
         [PunRPC] private void RPCCoreLifeUpdate(int teamCoreID, float newLife) => _allTeamPanels[teamCoreID].UpdateCoreLifebar(newLife);
 
+        private int playersPerTeam;
         public void AddPlayer(Player newPlayer)
         {
             _allPlayers.Add(newPlayer);
             playersAmount++;
 
-            int resultPlayersAmount = AnalyzeTeamOrganization(playersAmount);
+            playersPerTeam = AnalyzeTeamOrganization(playersAmount);
 
-            FindObjectOfType<SpawnMap>().SetTeamAmountOfPlayers(_teamCombinations[resultPlayersAmount][0], _teamCombinations[resultPlayersAmount][1]);
+            FindObjectOfType<SpawnMap>().SetTeamAmountOfPlayers(_teamCombinations[playersPerTeam][0], _teamCombinations[playersPerTeam][1]);
             //crear paneles segun la estructura nueva
-            photonView.RPC("CreatePanelsWithStructure", RpcTarget.All, _allPlayers.ToArray(), _teamCombinations[resultPlayersAmount][0], _teamCombinations[resultPlayersAmount][1]);
+            photonView.RPC("CreatePanelsWithStructure", RpcTarget.All, _allPlayers.ToArray(), _teamCombinations[playersPerTeam][0], _teamCombinations[playersPerTeam][1]);
         }
 
         public int AnalyzeTeamOrganization(int actualPlayersAmount)
@@ -115,7 +141,7 @@ namespace GameUI
                 }
 
                 _allTeamPanels.Add(panel);
-                _teamCoresLife.Add(i, 1f);
+                _teamCoresLife.Add(1f);
             }
 
             FindObjectOfType<CoresMainPanel>().UpdateCorePanelStructure(panelsAmount);

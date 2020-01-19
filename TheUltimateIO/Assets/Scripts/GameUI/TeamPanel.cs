@@ -19,6 +19,14 @@ namespace GameUI
             _coreMainPanel = FindObjectOfType<CoresMainPanel>();
         }
 
+        public void TeamDeath()
+        {
+            _background.color *= 0.33f;
+            _coreLifebar.color *= 0.33f;
+            foreach (var x in _allMembers)
+                x.color *= 0.65f;
+        }
+
         public void UpdatePanel()
         {
             _background = GetComponent<Image>();

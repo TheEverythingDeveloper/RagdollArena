@@ -46,19 +46,16 @@ public class LevelManager : MonoBehaviour
     public void UpdateUserPoints(string nickName, int addedPoints)
     { /*photonView.RPC("RPCUpdateUserPoints", RpcTarget.MasterClient, nickName, addedPoints);*/ }
 
-    [PunRPC]
-    private void RPCUpdateUserPoints(string newNickname, int addedPoints)
+    [PunRPC] private void RPCUpdateUserPoints(string newNickname, int addedPoints)
     { _leaderboardMng.UpdateUserPoints(newNickname, addedPoints); }
 
     public void UpdateLeaderboardTables(string[] names, int[] points)
     { /*photonView.RPC("RPCUpdateLeaderboardTables", RpcTarget.AllBuffered, names, points);*/ }
 
-    [PunRPC]
-    private void RPCUpdateLeaderboardTables(string[] names, int[] points)
+    [PunRPC] private void RPCUpdateLeaderboardTables(string[] names, int[] points)
     { _leaderboardMng.UpdateTableInfo(names, points); }
     
-    [PunRPC]
-    void FinishLevel(string top1, string top2, string top3)
+    [PunRPC] private void FinishLevel(string top1, string top2, string top3)
     {
         /*finishLevel = true;
         panelWin.SetActive(true);
