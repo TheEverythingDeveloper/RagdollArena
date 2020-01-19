@@ -203,6 +203,7 @@ namespace Character
             if (!owned) return;
 
             _lvlMng.gameCanvas.SwitchRespawnHUD(dead);
+            _lvlMng.gameCanvas.SwitchMapPanel(dead);
             Debug.Log(dead ? "<color=red>Muerto</color>" : "<color=green>Respawneado</color>");
         }
         public void RespawnAtPosition(Vector3 positionToRespawn) => pelvisRb.transform.position = positionToRespawn;
