@@ -186,14 +186,14 @@ public class Server : MonoBehaviourPun
 
         _lvlMng.gameCanvas.SwitchEnterToStartText(true);
 
-        if(_allPlayers.Count > 1)
+        /*if(_allPlayers.Count > 1)
         {
             Dictionary<Player, CharacterModel> temp = new Dictionary<Player, CharacterModel>(_allPlayers);
             foreach (var x in allRematchedPlayers)
                 temp.Remove(x);
             foreach (var x in temp)
                 _allPlayers.Remove(x.Key);
-        }
+        }*/
 
         FindObjectOfType<TeamManager>().RematchReorganization(_allPlayers.Select(x => x.Key).ToList());
         FindObjectOfType<SpawnMap>().photonView.RPC("RPCResetAllPointers", RpcTarget.All);
