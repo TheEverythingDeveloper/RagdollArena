@@ -87,11 +87,10 @@ namespace Character
         {
             if (_nearestCore == null) return;
 
-            //Camera offset
-            Vector3 camFwd = Camera.main.transform.forward;
-            Camera.main.transform.position += camFwd * _myModel.coreDistancingSpeed * Time.deltaTime;
-            Camera.main.transform.forward = Vector3.Lerp(camFwd,
-                (_nearestCore.transform.position - Camera.main.transform.position).normalized, _myModel.coreDistancingSpeed * Time.deltaTime);
+            Vector3 offsetPosition = _nearestCore.transform.position + _myModel.thirdPersonCameraOffset * 2 - Vector3.forward * 4;
+            Vector3 resultVector = Vector3.Lerp(Camera.main.transform.position,
+                offsetPosition, _myModel.coreDistancingSpeed * Time.deltaTime);
+            Camera.main.transform.position = resultVector;
         }
 
         private Core _nearestCore;
@@ -99,10 +98,10 @@ namespace Character
         {
             if (UnityEngine.Object.FindObjectsOfType<Core>().Count() < 1) return;
 
-            var _nearestCore = UnityEngine.Object.FindObjectsOfType<Core>()
-                .OrderBy(x => Vector3.Distance(_myModel.transform.position, x.transform.position)).First();
+            _nearestCore = UnityEngine.Object.FindObjectsOfType<Core>()
+                .OrderBy(x => Vector3.Distance(_myModel.pelvisRb.transform.position, x.transform.position)).First();
             if (_nearestCore == null) return;
-            if (Vector3.Distance(_nearestCore.transform.position, _myModel.transform.position) > _myModel.coreDistancingCloseness)
+            if (Vector3.Distance(_nearestCore.transform.position, _myModel.pelvisRb.transform.position) > _myModel.coreDistancingCloseness)
             {
                 if (_previousCameraMode == CameraMode.ThirdPersonMode)
                     ChangeRespawnMode(CameraMode.ThirdPersonMode);
