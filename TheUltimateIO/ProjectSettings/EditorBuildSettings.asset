@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/RagdollArena/Scenes/TowerLevel.unity
     guid: bc14c2cf07f1467498e5190dbb85c640
+  - enabled: 1
+    path: Assets/RagdollArena/Scenes/MainMenu.unity
+    guid: b7f1f1cecfa6c084ebea61b6dbac606d
   m_configObjects: {}

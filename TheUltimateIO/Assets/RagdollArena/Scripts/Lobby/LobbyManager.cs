@@ -6,6 +6,7 @@ using Photon.Chat;
 using Photon.Realtime;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 namespace Lobby
 {
@@ -37,6 +38,11 @@ namespace Lobby
         public void StartGame() //intentar conectarse a una sala existente o crear una
         {
             NetManager.Instance.Connect(sceneID);
+        }
+
+        public void BackToMenuButton()
+        {
+            SceneManager.LoadScene("MainMenu");
         }
     }
 }
