@@ -23,14 +23,10 @@ namespace Character
         public Animator anim;
         private Color _color;
         private Renderer[] _allMyRenderers;
-        [Tooltip("Salud maxima del player")]
-        public float maxHp = 100;
         public float _hp;
         [Tooltip("Radio que va a tener el jugador para comprobar cosas como cuantos amigos tiene alrededor, etc")]
         public float contactRadius = 4f;
-        public float speed = 60f;
-        public float jumpSpeed = 200f;
-        public float rotationSpeed = 2f;
+        [HideInInspector] public CharacterStats characterStats;
 
         //Camara
         public float cameraSpeed = 0.6f;
@@ -90,6 +86,8 @@ namespace Character
 
             _allMyRenderers = GetComponentsInChildren<Renderer>();
 
+            characterStats = GetComponent<CharacterStats>();
+
             var characterView = new CharacterView(this);
             _allUpdatables.Add(characterView);
             _allConstructables.Add(characterView);
@@ -100,7 +98,7 @@ namespace Character
 
             if (!owned) return;
 
-            _hp = maxHp;
+            _hp = characterStats.life;
             Debug.Log("<color=green> Paso por aca porque es owner. ArtificialAwake </color>");
 
             FindObjectOfType<Chat>().characterModel = this; //Le aviso quien soy al chat
@@ -238,7 +236,7 @@ namespace Character
 
             _hp -= damage;
 
-            photonView.RPC("RPCDamage", RpcTarget.All, barLife, _hp, maxHp);
+            photonView.RPC("RPCDamage", RpcTarget.All, barLife, _hp, characterStats.life);
         }
         [PunRPC]
         public void RPCDamage(Image bar, float hp, float maxPlayerHp)

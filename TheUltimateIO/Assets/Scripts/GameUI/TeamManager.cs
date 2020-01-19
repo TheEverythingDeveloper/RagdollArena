@@ -57,7 +57,7 @@ namespace GameUI
             }
         }
 
-        private void CoreLifeUpdate(int teamCoreID, float amount)
+        public void CoreLifeUpdate(int teamCoreID, float amount)
         {
             float resultLife = _teamCoresLife[teamCoreID] + amount;
             resultLife = Mathf.Clamp01(resultLife);

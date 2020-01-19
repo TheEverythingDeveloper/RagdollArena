@@ -20,7 +20,7 @@ public class Monster : MonoBehaviour, IDamageable
     protected List<SpawnedCube> cubes = new List<SpawnedCube>();
     protected FSM<MonsterStates> _myFsm;
     protected ParticleSystem _particles;
-    protected Queries _queries;
+ //   protected Queries _queries;
 
     [Tooltip("Mientras mas de esto tenga, mas alcance a escuchar a su alrededor")] public float hearCapabilityRadius;
 
@@ -34,7 +34,7 @@ public class Monster : MonoBehaviour, IDamageable
 
     protected void Awake()
     {
-        _queries = GetComponent<Queries>();
+       // _queries = GetComponent<Queries>();
         _life = maxLife;
         _rb = gameObject.GetComponent<Rigidbody>();
         _particles = GetComponent<ParticleSystem>();
@@ -132,8 +132,8 @@ public class Monster : MonoBehaviour, IDamageable
     #region Conditions
     protected virtual void ConditionList()
     {
-        var targets = _queries.ObjectsInGrid().Select(x => x.gameObject.GetComponent<SpawnedCube>()).Where(x => x.Life > 0 && !x.preCube).ToList();
-        cubes = targets;
+        /*var targets = _queries.ObjectsInGrid().Select(x => x.gameObject.GetComponent<SpawnedCube>()).Where(x => x.Life > 0 && !x.preCube).ToList();
+        cubes = targets;*/
     }
 
     protected virtual void ConditionTarget()

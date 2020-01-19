@@ -36,7 +36,7 @@ namespace Character
         public void Jump()
         {
             _inAir = true;
-            _pelvisRb.AddForce(Vector3.up * _myModel.jumpSpeed * Time.deltaTime, ForceMode.Impulse);
+            _pelvisRb.AddForce(Vector3.up * _myModel.characterStats.jumpSpeed * Time.deltaTime, ForceMode.Impulse);
         }
 
         public void ArtificialUpdate()
@@ -84,7 +84,7 @@ namespace Character
                 _lookRotation *= _initialRot;
 
                 _pelvisRb.transform.localRotation = Quaternion.Slerp(
-                    _pelvisRb.transform.localRotation, _lookRotation, Time.deltaTime * _myModel.rotationSpeed);
+                    _pelvisRb.transform.localRotation, _lookRotation, Time.deltaTime * _myModel.characterStats.rotationSpeed);
 
                 _pelvisRb.transform.localRotation = Quaternion.Euler(_initialRot.eulerAngles.x, _lookRotation.eulerAngles.y, _initialRot.eulerAngles.z);
             }
@@ -97,8 +97,8 @@ namespace Character
 
         void NormalFixedUpdateControls(float horizontal, float vertical)
         {
-            var horAxis = horizontal * _myModel.speed * Time.deltaTime;
-            var verAxis = vertical * _myModel.speed * Time.deltaTime;
+            var horAxis = horizontal * _myModel.characterStats.speed * Time.deltaTime;
+            var verAxis = vertical * _myModel.characterStats.speed * Time.deltaTime;
 
             /*var animMove = horAxis != 0 || verAxis != 0;
             if (animMove != _myModel.anim.GetBool("Move")) _myModel.anim.SetBool("Move", animMove);*/
@@ -125,7 +125,7 @@ namespace Character
                 _lookRotation *= _initialRot;
 
                 _pelvisRb.transform.localRotation = Quaternion.Slerp(
-                    _pelvisRb.transform.localRotation, _lookRotation, Time.deltaTime * _myModel.rotationSpeed);
+                    _pelvisRb.transform.localRotation, _lookRotation, Time.deltaTime * _myModel.characterStats.rotationSpeed);
 
                 _pelvisRb.transform.localRotation = Quaternion.Euler(_initialRot.eulerAngles.x, -_lookRotation.eulerAngles.y, _initialRot.eulerAngles.z);
             }
@@ -133,8 +133,8 @@ namespace Character
 
         void DrunkFixedUpdateControls(float horizontal, float vertical)
         {
-            var horAxis = vertical * _myModel.speed * Time.deltaTime;
-            var verAxis = horizontal * _myModel.speed * Time.deltaTime;
+            var horAxis = vertical * _myModel.characterStats.speed * Time.deltaTime;
+            var verAxis = horizontal * _myModel.characterStats.speed * Time.deltaTime;
 
             /*var animMove = horAxis != 0 || verAxis != 0;
             if (animMove != _myModel.anim.GetBool("Move")) _myModel.anim.SetBool("Move", animMove);*/

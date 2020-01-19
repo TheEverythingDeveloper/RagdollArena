@@ -8,7 +8,7 @@ using GameUI;
 using TMPro;
 using UnityEngine.UI;
 
-public class Core : MonoBehaviourPun
+public class Core : MonoBehaviourPun, IDamageable
 {
     public int teamID;
     [SerializeField] private Image _lifeBar;
@@ -66,5 +66,15 @@ public class Core : MonoBehaviourPun
     {
         Gizmos.color = teamID == 1 ? Color.blue : teamID == 2 ? Color.red : teamID == 3 ? Color.yellow : Color.green;
         Gizmos.DrawSphere(transform.position, 2f);
+    }
+
+    public void Damage(float damage)
+    {
+        FindObjectOfType<TeamManager>().CoreLifeUpdate(teamID, damage);
+    }
+
+    public void Explosion(Vector3 origin, float force)
+    {
+        throw new System.NotImplementedException();
     }
 }
