@@ -31,6 +31,8 @@ namespace Character
         public float speed = 60f;
         public float jumpSpeed = 200f;
         public float rotationSpeed = 2f;
+
+        //Camara
         public float cameraSpeed = 0.6f;
         [Tooltip("Distancia que vamos a necesitar estar del piso para poder saltar.")]
         public float inAirDistance = 0.6f;
@@ -42,6 +44,13 @@ namespace Character
         public Transform godModeCameraOffset;
         [Tooltip("Mientras mas bajo, mas va a quedar en el MinFoV. Caso contrario, del MaxFoV.")]
         public float ratioMultiplierFoV;
+        [Tooltip("Cercania a la que vamos a estar para que la camara se empiece a alejar de los nexos")]
+        public float coreDistancingCloseness;
+        [Tooltip("Velocidad en la que se va a alejar la camara cerca de un nexo")]
+        public float coreDistancingSpeed;
+        [Tooltip("Distancia a la que se va a alejar la camara cerca de un nexo")]
+        public float coreDistancingAmount;
+
         public float sqrMagnitudeInTimeSpeed;
         [Tooltip("Altura minima en la que el player debe volver")]
         public float heightRespawn = -3f;
@@ -180,7 +189,7 @@ namespace Character
         public void ArtificialFixedUpdate() { _allUpdatables.Select(x => { x.ArtificialFixedUpdate(); return x; }).ToList(); }
         public void ArtificialLateUpdate() { _allUpdatables.Select(x => { x.ArtificialLateUpdate(); return x; }).ToList(); }
 
-        public event Action<bool> OnChangeRespawnMode = delegate { };
+        public event Action<CharacterCamera.CameraMode> OnChangeRespawnMode = delegate { };
         [PunRPC] public void RPCRespawn(Vector3 positionToRespawn)
         {
             RPCChangeRespawnMode(false); //no hace falta llamarlo desde RPC aca porque ya estamos en la misma
@@ -189,7 +198,7 @@ namespace Character
         [PunRPC] public void RPCChangeRespawnMode(bool dead)
         {
             pelvisRb.transform.parent.gameObject.SetActive(!dead);
-            OnChangeRespawnMode(!dead);
+            OnChangeRespawnMode(dead ? CharacterCamera.CameraMode.GodMode : CharacterCamera.CameraMode.ThirdPersonMode);
 
             if (!owned) return;
 

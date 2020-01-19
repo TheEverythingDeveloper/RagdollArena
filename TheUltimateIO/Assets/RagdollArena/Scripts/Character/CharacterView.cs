@@ -27,9 +27,9 @@ namespace Character
             _3dUI.photonView.RPC("RPCUpdateCrown", RpcTarget.AllBuffered, active);
         }
 
-        public void OnChangeRespawnMode(bool active)
+        public void OnChangeRespawnMode(CharacterCamera.CameraMode camMode)
         {
-            _3dUI.gameObject.SetActive(active);
+            _3dUI.gameObject.SetActive(camMode == CharacterCamera.CameraMode.ThirdPersonMode);
         }
 
         public void ArtificialAwake() { }

@@ -186,6 +186,7 @@ public class Server : MonoBehaviourPun
 
         _lvlMng.gameCanvas.SwitchEnterToStartText(true);
 
+        //TODO: Hacer algo con los que no se rematchearon. Sacarlos de aca (que son los que quedan en la variable temp)
         /*if(_allPlayers.Count > 1)
         {
             Dictionary<Player, CharacterModel> temp = new Dictionary<Player, CharacterModel>(_allPlayers);
@@ -198,7 +199,6 @@ public class Server : MonoBehaviourPun
         FindObjectOfType<TeamManager>().RematchReorganization(_allPlayers.Select(x => x.Key).ToList());
         FindObjectOfType<SpawnMap>().photonView.RPC("RPCResetAllPointers", RpcTarget.All);
 
-        //TODO: Hacer algo con los que no se rematchearon. Sacarlos de aca (que son los que quedan en la variable temp)
     }
 
     [PunRPC] private void RPCStartRematch()
