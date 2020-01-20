@@ -128,8 +128,6 @@ namespace Character
                 new float[] { colorB.r, colorB.g, colorB.b },
                 new float[] { colorC.r, colorC.g, colorC.b });
 
-            _server = FindObjectOfType<Server>();
-
             ChangeTeam(0);
 
             ArtificialAwakes();
@@ -236,7 +234,7 @@ namespace Character
 
         public void Damage(float damage)
         {
-            if (!_server.DamageActive()) return;
+            if (!FindObjectOfType<Server>().DamageActive()) return;
 
             _hp -= damage;
 

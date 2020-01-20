@@ -14,7 +14,7 @@ namespace Character {
 
         Coroutine _swordAttack;
 
-        Rigidbody _myModel;
+        GameObject _capsule;
 
         public LayerMask layerMask;
     private void Awake()
@@ -23,7 +23,7 @@ namespace Character {
             _characterStats = GetComponent<CharacterStats>();
             _characterModel = GetComponent<CharacterModel>();
 
-            _myModel = _characterModel.pelvisRb;
+            _capsule = _characterModel._ragdollCapsule;
         }
 
         private void FixedUpdate()
@@ -53,9 +53,10 @@ namespace Character {
                                                 (_myModel.transform.right * _characterStats.horizontalDistAttack), _myModel.rotation, Layers.DAMAGEABLE);*/
 
             RaycastHit hit;
-            if(Physics.Raycast(_myModel.transform.position, _myModel.transform.forward, out hit, _characterStats.verticalDistAttack, layerMask))
+            if(Physics.Raycast(_capsule.transform.position, _capsule.transform.up, out hit, _characterStats.verticalDistAttack, layerMask))
             {
-                hit.collider.GetComponent<Damageable>().Damage(_characterStats.damageAttack);
+                Debug.LogError("Toque con: " + hit.collider.name);
+                hit.collider.gameObject.GetComponent<Damageable>().Damage(_characterStats.damageAttack);
             }
             /*
             var objDamageables = col.Select(x => x.GetComponent<Damageable>());
@@ -91,6 +92,6 @@ namespace Character {
                                                 (_myModel.transform.forward * _characterStats.verticalDistAttack) + 
                                                 (_myModel.transform.right * _characterStats.horizontalDistAttack));
                                                 */
-            Gizmos.DrawLine(_myModel.transform.position, _myModel.transform.forward * _characterStats.verticalDistAttack);
+            Gizmos.DrawLine(_capsule.transform.position, _capsule.transform.up * _characterStats.verticalDistAttack); 
         }
     } }

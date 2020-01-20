@@ -11,6 +11,7 @@ public class Damageable : MonoBehaviour
 
     public void Damage(float d)
     {
+        Debug.LogError("ENTRE EN DAMAGE");
         _iDamageable.Damage(d);
     }
 }

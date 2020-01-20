@@ -36,7 +36,7 @@ namespace Character
         public void Jump()
         {
             _inAir = true;
-            _pelvisRb.AddForce(Vector3.up * _myModel.characterStats.jumpSpeed * Time.deltaTime, ForceMode.Impulse);
+            _pelvisRb.AddForce(Vector3.up * _myModel.characterStats.jumpSpeed, ForceMode.Impulse);
         }
 
         public void ArtificialUpdate()
