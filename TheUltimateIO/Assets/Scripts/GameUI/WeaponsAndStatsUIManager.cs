@@ -6,7 +6,7 @@ using TMPro;
 
 namespace GameUI
 {
-    public class WeaponsAndStatsManager : MonoBehaviour
+    public class WeaponsAndStatsUIManager : MonoBehaviour
     {
         [SerializeField] private Image[] allImages = new Image[3];
         private Sprite[] allSprites = new Sprite[3];

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Linq;
-using Character;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon;
 using GameUI;
+using Weapons;
 
 namespace Character 
 {
@@ -16,17 +16,17 @@ namespace Character
         Func<int> weaponActive;
         CharacterStats _characterStats;
         [HideInInspector] public CharacterModel characterModel;
-        WeaponsAndStatsManager _weaponMng;
+        WeaponsAndStatsUIManager _weaponUIMng;
+        private WeaponsManager _weaponsMng;
         private bool[] _allAttacksCd = new bool[3];
 
-        Coroutine _attack;
-
         GameObject _capsule;
-
         public LayerMask layerMask;
+
         private void Awake()
         {
-            _weaponMng = FindObjectOfType<WeaponsAndStatsManager>();
+            _weaponUIMng = FindObjectOfType<WeaponsAndStatsUIManager>();
+            _weaponsMng = GetComponentInChildren<WeaponsManager>();
             weaponActive = Sword;
             _characterStats = GetComponent<CharacterStats>();
             characterModel = GetComponent<CharacterModel>();
@@ -112,13 +112,27 @@ namespace Character
                 else
                     weaponActive = Sword;
             }
-
+            int selectedWeaponID = 0;
             if (weaponActive == Shield)
-                _weaponMng.UpdateWeapon(0);
+                selectedWeaponID = 0;
             else if (weaponActive == Sword)
-                _weaponMng.UpdateWeapon(1);
+                selectedWeaponID = 1;
             else if (weaponActive == Bow)
-                _weaponMng.UpdateWeapon(2);
+                selectedWeaponID = 2;
+
+            _weaponUIMng.UpdateWeapon(selectedWeaponID);
+            //TODO: Si ya empezo la partida que sea RpcTarget.All, y si no empezo, entonces que sea RpcTarget.AllBuffered
+            photonView.RPC("RPCChangeWeapon", RpcTarget.All, selectedWeaponID); 
+        }
+
+        [PunRPC] public void RPCChangeWeapon(int selectedWeaponID)
+        {
+            _weaponsMng.ChangeWeapon(selectedWeaponID);
+        }
+
+        public void UpdateWeaponColors(float r, float g, float b)
+        {
+            _weaponsMng.UpdateWeaponColors(r, g, b);
         }
 
         private void OnDrawGizmos()

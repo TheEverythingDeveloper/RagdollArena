@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using Weapons;
 
 namespace Character
 {
@@ -85,7 +86,11 @@ namespace Character
         {
             _lvlMng = FindObjectOfType<LevelManager>();
 
+
+            WeaponsManager _tempWeaponMng = GetComponentInChildren<WeaponsManager>();
+            _tempWeaponMng.transform.parent = null;
             _allMyRenderers = GetComponentsInChildren<Renderer>();
+            _tempWeaponMng.transform.parent = pelvisRb.transform;
 
             characterStats = GetComponent<CharacterStats>();
 
@@ -172,7 +177,7 @@ namespace Character
         private void Update() { if (!owned && pelvisRb != null) return; ArtificialUpdate(); }
         private void FixedUpdate() { if (!owned) return; ArtificialFixedUpdate(); }
         private void LateUpdate() { if (!owned) return; ArtificialLateUpdate(); }
-        [PunRPC] public void RPCUpdateColor(float[] colorA, float[] colorB, float[] colorC)
+        [PunRPC] public void RPCUpdateColor(float[] colorA, float[] colorB, float[] colorC) //colorB es el color del equipo
         {
             _allMyRenderers.Select(x =>
             {
@@ -181,6 +186,8 @@ namespace Character
                 x.material.SetColor("_ColorC", new Color(colorC[0], colorC[1], colorC[2]));
                 return x;
             }).ToList();
+
+            GetComponent<CharacterWeapon>().UpdateWeaponColors(colorB[0], colorB[1], colorB[2]);
         }
         public void ArtificialAwakes() { _allConstructables.Select(x => { x.ArtificialAwake(); return x; }).ToList(); }
         public void ArtificialStart() { _allConstructables.Select(x => { x.ArtificialStart(); return x; }).ToList(); }
