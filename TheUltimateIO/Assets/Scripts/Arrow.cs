@@ -33,7 +33,6 @@ public class Arrow : MonoBehaviourPun
         if (!ownerWeapon.characterModel.owned) return;
         if (other.gameObject.layer != 17) return;
 
-        Debug.LogWarning("FLECHA CHOCO CONTRA " + other.gameObject.name);
         other.GetComponent<Damageable>().Damage(damage);
         DestroyArrow();
     }

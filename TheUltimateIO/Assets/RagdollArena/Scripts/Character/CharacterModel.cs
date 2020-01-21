@@ -203,8 +203,10 @@ namespace Character
 
             _lvlMng.gameCanvas.SwitchRespawnHUD(dead);
             _lvlMng.gameCanvas.SwitchMapPanel(dead);
-            if(dead)
+            if (dead)
                 FindObjectOfType<SpawnMap>().SetSpawnPointer();
+            else
+                Damage(-1f);
             Debug.Log(dead ? "<color=red>Muerto</color>" : "<color=green>Respawneado</color>");
         }
         public void RespawnAtPosition(Vector3 positionToRespawn) => pelvisRb.transform.position = positionToRespawn;
@@ -245,6 +247,10 @@ namespace Character
         [PunRPC] public void RPCDamage(float hp)
         {
             barLife.fillAmount = hp;
+            if (!owned) return;
+
+            if(hp <= 0)
+                FindObjectOfType<Server>().photonView.RPC("RPCPlayerDeath", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer);
         }
 
         public void Explosion(Vector3 origin, float force) { throw new NotImplementedException(); }

@@ -54,7 +54,7 @@ namespace qtools.qhierarchy.pcomponent
                 return QLayoutStatus.Success;
             }
         }
-        
+
         public override void draw(GameObject gameObject, QObjectList objectList, Rect selectionRect)
         {  
             PrefabType prefabType = PrefabUtility.GetPrefabType(gameObject);
