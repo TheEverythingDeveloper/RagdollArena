@@ -6,7 +6,7 @@ namespace Character
 {
     public class CharacterStats : MonoBehaviour
     {
-        public float life = 100;
+        public float life = 1;
         public float damageAttack = 60;
         public float speed = 60;
         public float jumpSpeed = 200;

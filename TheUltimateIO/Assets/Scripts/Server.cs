@@ -74,7 +74,7 @@ public class Server : MonoBehaviourPun
         _chat.SendMsgServer("In " + timeConstructInSeconds + " seconds the war will begin, build to protect the nexus.");
         yield return new WaitForSeconds(timeConstructInSeconds);
         _chat.SendMsgServer("Construction time is over, go to the war!!");
-        startGame = true;
+
         //TODO: Feedback de que comienza la guerra.
     }
     [PunRPC] private void RPCUpdateCounter(int i)
@@ -82,6 +82,7 @@ public class Server : MonoBehaviourPun
         _lvlMng.gameCanvas.SwitchCounterPanel(true);
         Debug.Log("<color=green>" + i + "</color>");
         _lvlMng.gameCanvas.CounterUpdate(i);
+        if(i == 0) startGame = true;
     }
     [PunRPC] public void RPCChangePlayerTeam(Player photonPlayer, int teamID) => _allPlayers[photonPlayer].photonView.RPC("RPCChangePlayerTeam", photonPlayer, teamID);
     public void AddPlayer(Player newPhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, newPhotonPlayer, true);
@@ -203,6 +204,7 @@ public class Server : MonoBehaviourPun
 
     [PunRPC] private void RPCStartRematch()
     {
+        startGame = true;
         Instantiate(Resources.Load("InitialStateOfGame"));
         _lvlMng.SetInitialSpawnPoints();
     }

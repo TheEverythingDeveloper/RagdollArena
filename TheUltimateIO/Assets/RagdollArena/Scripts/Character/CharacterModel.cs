@@ -97,18 +97,20 @@ namespace Character
             _allConstructables.Add(_movementController);
             _allUpdatables.Add(_movementController);
 
-            if (!owned) return;
-
             _hp = characterStats.life;
+
+            if (!owned) return;
             Debug.Log("<color=green> Paso por aca porque es owner. ArtificialAwake </color>");
 
             FindObjectOfType<Chat>().characterModel = this; //Le aviso quien soy al chat
 
             var allChilds = GetComponentsInChildren<Transform>();
+            //var damageable = GetComponentInChildren<Damageable>();
             allChilds.Select(x =>
             {
                 x.gameObject.layer = Layers.PLAYER;
                 _ragdollCapsule.layer = Layers.RAGDOLL;
+                //damageable.gameObject.layer = Layers.DAMAGEABLE;
                 return x;
             }).ToList();
 
@@ -238,18 +240,14 @@ namespace Character
 
             _hp -= damage;
 
-            photonView.RPC("RPCDamage", RpcTarget.All, barLife, _hp, characterStats.life);
+            photonView.RPC("RPCDamage", RpcTarget.All, _hp / characterStats.life);
         }
-        [PunRPC]
-        public void RPCDamage(Image bar, float hp, float maxPlayerHp)
+        [PunRPC] public void RPCDamage(float hp)
         {
-            bar.fillAmount = hp / maxPlayerHp;
-            //Feedback vida;
+            barLife.fillAmount = hp;
         }
-        public void Explosion(Vector3 origin, float force)
-        {
-            throw new NotImplementedException();
-        }
+
+        public void Explosion(Vector3 origin, float force) { throw new NotImplementedException(); }
         #region Grenade
         public void TryGrenade()
         {

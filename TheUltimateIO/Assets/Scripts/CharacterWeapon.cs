@@ -4,14 +4,17 @@ using UnityEngine;
 using System;
 using System.Linq;
 using Character;
+using Photon.Pun;
+using Photon.Realtime;
+using Photon;
 
 namespace Character 
 {
-    public class CharacterWeapon : MonoBehaviour
+    public class CharacterWeapon : MonoBehaviourPun
     {
         Action weaponActive;
         CharacterStats _characterStats;
-        CharacterModel _characterModel;
+        [HideInInspector] public CharacterModel characterModel;
 
         Coroutine _swordAttack;
 
@@ -22,14 +25,14 @@ namespace Character
         {
             weaponActive = Sword;
             _characterStats = GetComponent<CharacterStats>();
-            _characterModel = GetComponent<CharacterModel>();
+            characterModel = GetComponent<CharacterModel>();
 
-            _capsule = _characterModel._ragdollCapsule;
+            _capsule = characterModel._ragdollCapsule;
         }
 
         private void Update()
         {
-            if (!_characterModel.owned) return;
+            if (!characterModel.owned) return;
 
             if (Input.GetKeyDown(KeyCode.Q))
                 SelectWeapon(false);
@@ -79,6 +82,10 @@ namespace Character
         void Bow()
         {
             Debug.Log("<color=blue> Se ataco con el arco. </color>");
+
+            var arr = PhotonNetwork.Instantiate("Arrow", characterModel.pelvisRb.position, characterModel.pelvisRb.transform.rotation);
+            arr.transform.Rotate(Vector3.right, -90);
+            arr.GetComponent<Arrow>().ownerWeapon = this;
         }
 
         private void SelectWeapon(bool right) //cadena de ifs porque no hay necesidad de hacerlo mas complejo al ser solo 3, yay!
@@ -86,25 +93,26 @@ namespace Character
             if (right)
             {
                 if (weaponActive == Shield)
-                    weaponActive = Bow;
-                else if (weaponActive == Bow)
                     weaponActive = Sword;
-                else
+                else if (weaponActive == Bow)
                     weaponActive = Shield;
+                else
+                    weaponActive = Bow;
             }
             else
             {
                 if (weaponActive == Shield)
-                    weaponActive = Sword;
-                else if (weaponActive == Sword)
                     weaponActive = Bow;
-                else
+                else if (weaponActive == Sword)
                     weaponActive = Shield;
+                else
+                    weaponActive = Sword;
             }
         }
 
         private void OnDrawGizmos()
         {
+            if (_capsule == null) return;
             Gizmos.DrawLine(_capsule.transform.position, _capsule.transform.up * _characterStats.verticalDistAttack); 
         }
     } 
