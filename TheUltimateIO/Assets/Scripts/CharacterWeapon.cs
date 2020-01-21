@@ -5,7 +5,8 @@ using System;
 using System.Linq;
 using Character;
 
-namespace Character {
+namespace Character 
+{
     public class CharacterWeapon : MonoBehaviour
     {
         Action weaponActive;
@@ -17,28 +18,36 @@ namespace Character {
         GameObject _capsule;
 
         public LayerMask layerMask;
-    private void Awake()
+        private void Awake()
         {
-            weaponActive = Construct;
+            weaponActive = Sword;
             _characterStats = GetComponent<CharacterStats>();
             _characterModel = GetComponent<CharacterModel>();
 
             _capsule = _characterModel._ragdollCapsule;
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
-            weaponActive();
-            ChangeWeapon();
+            if (!_characterModel.owned) return;
+
+            if (Input.GetKeyDown(KeyCode.Q))
+                SelectWeapon(false);
+            else if (Input.GetKeyDown(KeyCode.E))
+                SelectWeapon(true);
+
+            if (Input.GetMouseButtonDown(0))
+                weaponActive();
         }
 
-        void Construct()
+        void Shield()
         {
-
+            Debug.Log("<color=blue> Se posiciono en modo defensivo con el escudo. </color>");
         }
 
         void Sword()
         {
+            Debug.Log("<color=blue> Se ataco con la espada. </color>");
             if (Input.GetMouseButtonDown(0))
             {
                 if (_swordAttack == null)
@@ -47,11 +56,7 @@ namespace Character {
         }
 
         IEnumerator SwordAttack()
-        {/*
-            Collider[] col = Physics.OverlapBox(_myModel.transform.position + (_myModel.transform.forward * _characterStats.initialDistAttack),
-                                                (_myModel.transform.forward * _characterStats.verticalDistAttack) + 
-                                                (_myModel.transform.right * _characterStats.horizontalDistAttack), _myModel.rotation, Layers.DAMAGEABLE);*/
-
+        {
             RaycastHit hit;
             if(Physics.Raycast(_capsule.transform.position, _capsule.transform.up, out hit, _characterStats.verticalDistAttack, layerMask))
             {
@@ -73,25 +78,34 @@ namespace Character {
 
         void Bow()
         {
-
+            Debug.Log("<color=blue> Se ataco con el arco. </color>");
         }
 
-        void ChangeWeapon()
+        private void SelectWeapon(bool right) //cadena de ifs porque no hay necesidad de hacerlo mas complejo al ser solo 3, yay!
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-                weaponActive = Construct;
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-                weaponActive = Sword;
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-                weaponActive = Bow;
+            if (right)
+            {
+                if (weaponActive == Shield)
+                    weaponActive = Bow;
+                else if (weaponActive == Bow)
+                    weaponActive = Sword;
+                else
+                    weaponActive = Shield;
+            }
+            else
+            {
+                if (weaponActive == Shield)
+                    weaponActive = Sword;
+                else if (weaponActive == Sword)
+                    weaponActive = Bow;
+                else
+                    weaponActive = Shield;
+            }
         }
 
         private void OnDrawGizmos()
-        {/*
-            Gizmos.DrawCube(_myModel.transform.position + (_myModel.transform.forward * _characterStats.initialDistAttack),
-                                                (_myModel.transform.forward * _characterStats.verticalDistAttack) + 
-                                                (_myModel.transform.right * _characterStats.horizontalDistAttack));
-                                                */
+        {
             Gizmos.DrawLine(_capsule.transform.position, _capsule.transform.up * _characterStats.verticalDistAttack); 
         }
-    } }
+    } 
+}

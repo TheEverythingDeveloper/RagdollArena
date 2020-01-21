@@ -56,7 +56,7 @@ namespace GameUI
                 CoreLifeUpdate(randomTeamID, -0.201f);
             }
         }
-
+        [PunRPC] public void RPCCoreLifeUpdateCall(int teamCoreID, float amount) => CoreLifeUpdate(teamCoreID, amount);
         public void CoreLifeUpdate(int teamCoreID, float amount)
         {
             Debug.LogError("UPDATE CORE: " + _teamCoresLife[teamCoreID] +" + "+ amount);

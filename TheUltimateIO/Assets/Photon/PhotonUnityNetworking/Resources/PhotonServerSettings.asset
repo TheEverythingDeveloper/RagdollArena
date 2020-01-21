@@ -109,5 +109,6 @@ MonoBehaviour:
   - RPCStartRematch
   - RPCResetAllPointers
   - RPCSetSpawnPointer
+  - RPCCoreLifeUpdateCall
   DisableAutoOpenWizard: 1
   ShowSettings: 1

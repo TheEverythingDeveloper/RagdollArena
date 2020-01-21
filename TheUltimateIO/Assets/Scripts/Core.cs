@@ -70,9 +70,7 @@ public class Core : MonoBehaviourPun, IDamageable
 
     public void Damage(float damage)
     {
-        if (!PhotonNetwork.IsMasterClient) return;
-
-        FindObjectOfType<TeamManager>().CoreLifeUpdate(teamID, -damage);
+        FindObjectOfType<TeamManager>().photonView.RPC("RPCCoreLifeUpdateCall", RpcTarget.MasterClient , teamID-1, -damage);
     }
 
     public void Explosion(Vector3 origin, float force)
