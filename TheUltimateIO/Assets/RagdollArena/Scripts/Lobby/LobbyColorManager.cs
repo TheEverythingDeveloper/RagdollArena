@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 using System.Linq;
 using Sirenix.OdinInspector;
+using Character;
 
 namespace Lobby
 {
@@ -32,6 +33,7 @@ namespace Lobby
             selectedColor = _colorImages[ID].color;
             _colorImages[_colorImages.Length - 1].color = selectedColor;
             _skinController.UpdateColor(selectedColor);
+            FindObjectOfType<CharacterBody>().UpdateAllSkinColors(selectedColor);
         }
     }
 }

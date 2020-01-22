@@ -114,5 +114,6 @@ MonoBehaviour:
   - UpdateWeaponColors
   - RPCUpdateWeaponColors
   - RPCAnimSword
+  - RPCAnimBow
   DisableAutoOpenWizard: 1
   ShowSettings: 1

@@ -21,6 +21,7 @@ namespace Lobby
 
         public void UpdateColor(Color updateColor)
         {
+            return;
             switch(_bodyPartManager.selectedBodyPart)
             {
                 case 0:
