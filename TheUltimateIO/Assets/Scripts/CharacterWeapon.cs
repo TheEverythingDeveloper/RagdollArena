@@ -78,11 +78,27 @@ namespace Character
             _allAttacksCd[2] = true;
             Debug.Log("<color=blue> Se ataco con el arco. </color>");
 
-            var arr = PhotonNetwork.Instantiate("Arrow", characterModel.pelvisRb.position, characterModel.pelvisRb.transform.rotation);
-            arr.transform.Rotate(Vector3.right, -90);
-            arr.GetComponent<Arrow>().ownerWeapon = this;
+            StartCoroutine(BowCoroutine());
 
             return 2;
+        }
+
+        private Arrow _lastArrow;
+        IEnumerator BowCoroutine()
+        {
+            if (_lastArrow == null)
+                SpawnArrow();
+            _lastArrow.ThrowArrow();
+            yield return new WaitForSeconds(_characterStats.delayMeleeAttackInSeconds - 0.4f);
+            SpawnArrow();
+        }
+
+        private void SpawnArrow()
+        {
+            _lastArrow = PhotonNetwork.Instantiate("Arrow", _weaponsMng.arrowSpawnTransform.position, _weaponsMng.arrowSpawnTransform.rotation).GetComponent<Arrow>();
+            _lastArrow.photonView.RPC("RPCUpdateWeaponColors", RpcTarget.All, _teamColor.r, _teamColor.g, _teamColor.b);
+            _lastArrow.ownerWeapon = this;
+            _lastArrow.transform.parent = _weaponsMng.arrowSpawnTransform;
         }
 
         IEnumerator AttackCoroutine()
@@ -130,9 +146,11 @@ namespace Character
             _weaponsMng.ChangeWeapon(selectedWeaponID);
         }
 
+        private Color _teamColor;
         public void UpdateWeaponColors(float r, float g, float b)
         {
             _weaponsMng.UpdateWeaponColors(r, g, b);
+            _teamColor = new Color(r, g, b, 1f);
         }
 
         private void OnDrawGizmos()

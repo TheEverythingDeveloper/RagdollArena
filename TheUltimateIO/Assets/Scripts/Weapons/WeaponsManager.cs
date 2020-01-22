@@ -10,6 +10,7 @@ namespace Weapons
         [SerializeField] private Weapon[] _allBackWeapons = new Weapon[3];
         private Weapon _actualFrontWeapon;
         private Weapon _actualBackWeapon;
+        public Transform arrowSpawnTransform;
 
         public void ChangeWeapon(int weaponID)
         {

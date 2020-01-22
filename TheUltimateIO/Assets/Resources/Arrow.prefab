@@ -53,6 +53,7 @@ MonoBehaviour:
   lifeTime: 10
   teamID: 0
   ownerWeapon: {fileID: 0}
+  thrownArrow: 0
 --- !u!65 &4124507584645135791
 BoxCollider:
   m_ObjectHideFlags: 0

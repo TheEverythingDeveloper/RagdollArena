@@ -111,5 +111,7 @@ MonoBehaviour:
   - RPCSetSpawnPointer
   - RPCCoreLifeUpdateCall
   - RPCChangeWeapon
+  - UpdateWeaponColors
+  - RPCUpdateWeaponColors
   DisableAutoOpenWizard: 1
   ShowSettings: 1
