@@ -22,7 +22,7 @@ namespace Character
 
         GameObject _capsule;
         public LayerMask layerMask;
-
+        public Animator animSword;
         private void Awake()
         {
             _weaponUIMng = FindObjectOfType<WeaponsAndStatsUIManager>();
@@ -65,12 +65,16 @@ namespace Character
             _allAttacksCd[1] = true;
             Debug.Log("<color=blue> Se ataco con la espada. </color>");
 
+            photonView.RPC("RPCAnimSword", RpcTarget.All);
+
             RaycastHit hit;
             if (Physics.Raycast(_capsule.transform.position, _capsule.transform.up, out hit, _characterStats.verticalDistAttack, layerMask))
                 hit.collider.gameObject.GetComponent<Damageable>().Damage(transform.position, _characterStats.damageAttack);
 
             return 1;
         }
+
+        [PunRPC] void RPCAnimSword() { animSword.SetTrigger("Attack"); }
 
         int Bow()
         {
