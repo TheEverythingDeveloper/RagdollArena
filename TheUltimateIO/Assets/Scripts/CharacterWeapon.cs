@@ -22,7 +22,7 @@ namespace Character
 
         GameObject _capsule;
         public LayerMask layerMask;
-        public Animator animSword;
+        public Animator animArms;
         private void Awake()
         {
             _weaponUIMng = FindObjectOfType<WeaponsAndStatsUIManager>();
@@ -74,7 +74,7 @@ namespace Character
             return 1;
         }
 
-        [PunRPC] void RPCAnimSword() { animSword.SetTrigger("Attack"); }
+        [PunRPC] void RPCAnimSword() { animArms.SetTrigger("SwordAttack"); }
 
         int Bow()
         {
@@ -87,18 +87,21 @@ namespace Character
             return 2;
         }
 
+        [PunRPC] void RPCAnimBow() { animArms.SetTrigger("BowAttack"); }
+
         private Arrow _lastArrow;
         IEnumerator BowCoroutine()
         {
             if (_lastArrow == null)
                 SpawnArrow();
             _lastArrow.ThrowArrow();
-            yield return new WaitForSeconds(_characterStats.delayMeleeAttackInSeconds - 0.4f);
+            yield return new WaitForSeconds(_characterStats.delayBowAttackInSeconds);
             SpawnArrow();
         }
 
         private void SpawnArrow()
         {
+            photonView.RPC("RPCAnimBow", RpcTarget.All);
             _lastArrow = PhotonNetwork.Instantiate("Arrow", _weaponsMng.arrowSpawnTransform.position, _weaponsMng.arrowSpawnTransform.rotation).GetComponent<Arrow>();
             _lastArrow.photonView.RPC("RPCUpdateWeaponColors", RpcTarget.All, _teamColor.r, _teamColor.g, _teamColor.b);
             _lastArrow.ownerWeapon = this;

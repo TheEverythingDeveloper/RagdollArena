@@ -129,7 +129,7 @@ namespace Character
             _allUpdatables.Add(new CharacterCamera(this, pelvisRb));
             _allUpdatables.Add(new CharacterPointsManager(this, _lvlMng, PhotonNetwork.NickName));
             _allUpdatables.Add(new CharacterFriendsManager(this, _lvlMng.playerFriendsLayermask));
-
+            
             var colorA = _allMyRenderers[1].material.GetColor("_ColorA");
             var colorB = _allMyRenderers[1].material.GetColor("_ColorB");
             var colorC = _allMyRenderers[1].material.GetColor("_ColorC");
