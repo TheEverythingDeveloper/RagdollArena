@@ -18,6 +18,7 @@ namespace Character
         public GameObject _ragdollCapsule;
         public Image barLife;
 
+        public float forceImpulseDamage;
         public ParticleSystem particlesDamage;
 
         private LevelManager _lvlMng;
@@ -249,7 +250,7 @@ namespace Character
         {
             if (!FindObjectOfType<Server>().DamageActive()) return;
 
-            pelvisRb.AddForce((pelvisRb.transform.position - origin) * damage, ForceMode.Impulse);
+            pelvisRb.AddForce((pelvisRb.transform.position - origin) * forceImpulseDamage, ForceMode.Impulse);
             _hp -= damage;
 
             photonView.RPC("RPCDamage", RpcTarget.All, _hp / characterStats.life);
