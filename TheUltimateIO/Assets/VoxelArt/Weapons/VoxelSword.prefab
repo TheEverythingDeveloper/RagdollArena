@@ -87,7 +87,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7190657866155394598}
   m_Layer: 0
-  m_Name: VoxelBow 1
+  m_Name: VoxelSword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
