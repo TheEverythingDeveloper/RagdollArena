@@ -34,6 +34,9 @@ namespace Lobby
             _colorImages[_colorImages.Length - 1].color = selectedColor;
             _skinController.UpdateColor(selectedColor);
             FindObjectOfType<CharacterBody>().UpdateAllSkinColors(selectedColor);
+            PlayerPrefs.SetFloat("SkinColorR", selectedColor.r);
+            PlayerPrefs.SetFloat("SkinColorG", selectedColor.g);
+            PlayerPrefs.SetFloat("SkinColorB", selectedColor.b);
         }
     }
 }

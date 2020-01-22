@@ -17,6 +17,21 @@ namespace Character
                 x.SetActive(false);
             actualHead += right ? 1 : -1;
             _allHeadParts[actualHead % _allHeadParts.Length].SetActive(true);
+            PlayerPrefs.SetInt("HeadTypeID", actualHead % _allHeadParts.Length);
+        }
+
+        public void SelectHead(int id)
+        {
+            foreach (var x in _allHeadParts)
+                x.SetActive(false);
+            _allHeadParts[id % _allHeadParts.Length].SetActive(true);
+        }
+
+        public void SelectBody(int id)
+        {
+            foreach (var x in _allBodyParts)
+                x.SetActive(false);
+            _allBodyParts[id % _allBodyParts.Length].SetActive(true);
         }
 
         public void UpdateAllSkinColors(Color newColor)

@@ -27,7 +27,7 @@ namespace Character
 
         public Animator anim;
         private Color _color;
-        private Renderer[] _allMyRenderers;
+        private Renderer[] _allMyHeads;
         public float _hp;
         [Tooltip("Radio que va a tener el jugador para comprobar cosas como cuantos amigos tiene alrededor, etc")]
         public float contactRadius = 4f;
@@ -77,6 +77,7 @@ namespace Character
         public Func<int> GetActiveModeValue; //Va a conseguir el valor importante del modo de juego actual (amigos, puntos, etc)
 
         public List<CharacterHands> hands = new List<CharacterHands>();
+        private CharacterBody _characterBody;
 
         Server _server;
 
@@ -89,10 +90,11 @@ namespace Character
         {
             _lvlMng = FindObjectOfType<LevelManager>();
 
+            _characterBody = FindObjectOfType<CharacterBody>();
 
             WeaponsManager _tempWeaponMng = GetComponentInChildren<WeaponsManager>();
             _tempWeaponMng.transform.parent = null;
-            _allMyRenderers = GetComponentsInChildren<Renderer>();
+            _allMyHeads = _characterBody._allHeadParts.Select(x => x.GetComponentInChildren<Renderer>()).ToArray();
             _tempWeaponMng.transform.parent = pelvisRb.transform;
 
             characterStats = GetComponent<CharacterStats>();
@@ -124,19 +126,16 @@ namespace Character
 
             anim = GetComponent<Animator>();
 
-            _allConstructables.Add(GetComponentInChildren<CharacterHands>());
-            _allUpdatables.Add(GetComponentInChildren<CharacterHands>());
+            //_allConstructables.Add(GetComponentInChildren<CharacterHands>());
+            //_allUpdatables.Add(GetComponentInChildren<CharacterHands>());
             _allUpdatables.Add(new CharacterCamera(this, pelvisRb));
             _allUpdatables.Add(new CharacterPointsManager(this, _lvlMng, PhotonNetwork.NickName));
             _allUpdatables.Add(new CharacterFriendsManager(this, _lvlMng.playerFriendsLayermask));
-            
-            var colorA = _allMyRenderers[1].material.GetColor("_ColorA");
-            var colorB = _allMyRenderers[1].material.GetColor("_ColorB");
-            var colorC = _allMyRenderers[1].material.GetColor("_ColorC");
-            photonView.RPC("RPCUpdateColor", RpcTarget.AllBuffered,
-                new float[] { colorA.r, colorA.g, colorA.b },
-                new float[] { colorB.r, colorB.g, colorB.b },
-                new float[] { colorC.r, colorC.g, colorC.b });
+
+            photonView.RPC("RPCUpdateColorTeamAndHead", RpcTarget.AllBuffered,
+                new float[] { PlayerPrefs.GetFloat("SkinColorR"), PlayerPrefs.GetFloat("SkinColorG"), PlayerPrefs.GetFloat("SkinColorB") },
+                new float[] { Color.grey.r, Color.grey.g, Color.grey.b },
+                PlayerPrefs.GetInt("HeadTypeID"), 0);
 
             ChangeTeam(0);
 
@@ -149,14 +148,12 @@ namespace Character
             Debug.Log("<color=green> Fuiste cambiado al equipo " + ID.ToString() + "</color>");
             team = ID;
 
-            Color previousColorA = _allMyRenderers[1].material.GetColor("_ColorA");
-            Color previousColorC = _allMyRenderers[1].material.GetColor("_ColorC");
-            Color newCol = ID == 0 ? Color.grey : ID == 1 ? Color.blue : ID == 2 ? Color.red : ID == 3 ? Color.yellow : Color.blue;
+            Color teamIDColor = ID == 0 ? Color.grey : ID == 1 ? Color.blue : ID == 2 ? Color.red : ID == 3 ? Color.yellow : Color.blue;
 
-            photonView.RPC("RPCUpdateColor", RpcTarget.AllBuffered,
-                new float[] { previousColorA.r, previousColorA.g, previousColorA.b },
-                new float[] { newCol.r, newCol.g, newCol.b },
-                new float[] { previousColorC.r, previousColorC.g, previousColorC.b });
+            photonView.RPC("RPCUpdateColorTeamAndHead", RpcTarget.AllBuffered,
+                new float[] { PlayerPrefs.GetFloat("SkinColorR"), PlayerPrefs.GetFloat("SkinColorG"), PlayerPrefs.GetFloat("SkinColorB") },
+                new float[] { teamIDColor.r, teamIDColor.g, teamIDColor.b },
+                PlayerPrefs.GetInt("HeadTypeID"), ID);
         }
 
         [PunRPC] public void RPCStartGame()
@@ -180,17 +177,17 @@ namespace Character
         private void Update() { if (!owned && pelvisRb != null) return; ArtificialUpdate(); }
         private void FixedUpdate() { if (!owned) return; ArtificialFixedUpdate(); }
         private void LateUpdate() { if (!owned) return; ArtificialLateUpdate(); }
-        [PunRPC] public void RPCUpdateColor(float[] colorA, float[] colorB, float[] colorC) //colorB es el color del equipo
+        [PunRPC] public void RPCUpdateColorTeamAndHead(float[] skinColor, float[] teamColor, int headTypeID, int teamTypeID) //colorB es el color del equipo
         {
-            _allMyRenderers.Select(x =>
+            _allMyHeads.Select(x =>
             {
-                x.material.SetColor("_ColorA", new Color(colorA[0], colorA[1], colorA[2]));
-                x.material.SetColor("_ColorB", new Color(colorB[0], colorB[1], colorB[2]));
-                x.material.SetColor("_ColorC", new Color(colorC[0], colorC[1], colorC[2]));
+                x.material.SetColor("_SkinColor", new Color(skinColor[0], skinColor[1], skinColor[2], 1f));
                 return x;
             }).ToList();
+            _characterBody.SelectHead(headTypeID);
+            _characterBody.SelectBody(teamTypeID);
 
-            GetComponent<CharacterWeapon>().UpdateWeaponColors(colorB[0], colorB[1], colorB[2]);
+            GetComponent<CharacterWeapon>().UpdateWeaponColors(teamColor[0], teamColor[1], teamColor[2]);
         }
         public void ArtificialAwakes() { _allConstructables.Select(x => { x.ArtificialAwake(); return x; }).ToList(); }
         public void ArtificialStart() { _allConstructables.Select(x => { x.ArtificialStart(); return x; }).ToList(); }
