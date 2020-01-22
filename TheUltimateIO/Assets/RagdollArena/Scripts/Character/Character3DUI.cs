@@ -13,7 +13,7 @@ namespace Character
     {
         [SerializeField] private TextMeshProUGUI _myNicknameText;
         private Vector3 _canvasOffset;
-        [SerializeField] private Transform _myCharacter;
+        [SerializeField] public Transform _myCharacter;
         [SerializeField] private GameObject _crown;
 
         private void Awake()
