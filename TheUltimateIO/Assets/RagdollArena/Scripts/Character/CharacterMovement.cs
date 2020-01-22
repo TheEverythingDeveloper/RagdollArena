@@ -100,8 +100,7 @@ namespace Character
             var horAxis = horizontal * _myModel.characterStats.speed * Time.deltaTime;
             var verAxis = vertical * _myModel.characterStats.speed * Time.deltaTime;
 
-            var animMove = horAxis != 0 || verAxis != 0;
-            if (animMove != _myModel.anim.GetBool("Move")) _myModel.anim.SetBool("Move", animMove);
+            _myModel.anim.SetTrigger("Walk");
 
             var dir = new Vector3(horAxis, 0, verAxis);
             _rb.transform.position += dir;
