@@ -85,7 +85,7 @@ public class SpawnedCube : MonoBehaviour, IDamageable, IAttractable
         //activar animacion de romperse
     }
 
-    public void Damage(float damage)
+    public void Damage(Vector3 origin, float damage)
     {
         Life -= damage;
         /*if (Life <= 0) 
@@ -98,7 +98,7 @@ public class SpawnedCube : MonoBehaviour, IDamageable, IAttractable
         float magnitude = difference.magnitude;
 
         _rb.AddForce(difference * force, ForceMode.Impulse);
-        Damage(magnitude * force);
+        Damage(origin, magnitude * force);
     }
 
     public void Attract(Vector3 attractedZone, float attractedForce)

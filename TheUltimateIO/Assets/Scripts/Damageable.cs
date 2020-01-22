@@ -9,8 +9,8 @@ public class Damageable : MonoBehaviour
         _iDamageable = GetComponentInParent<IDamageable>();
     }
 
-    public void Damage(float d)
+    public void Damage(Vector3 origin, float d)
     {
-        _iDamageable.Damage(d);
+        _iDamageable.Damage(origin, d);
     }
 }

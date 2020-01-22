@@ -18,6 +18,8 @@ namespace Character
         public GameObject _ragdollCapsule;
         public Image barLife;
 
+        public ParticleSystem particlesDamage;
+
         private LevelManager _lvlMng;
         public string nickname;
         public Rigidbody pelvisRb;
@@ -213,7 +215,7 @@ namespace Character
             if (dead)
                 FindObjectOfType<SpawnMap>().SetSpawnPointer();
             else
-                Damage(-1f);
+                Damage(transform.position, -1f);
             Debug.Log(dead ? "<color=red>Muerto</color>" : "<color=green>Respawneado</color>");
         }
         public void RespawnAtPosition(Vector3 positionToRespawn) => pelvisRb.transform.position = positionToRespawn;
@@ -243,16 +245,19 @@ namespace Character
             _movementController.Move(horizontal, vertical);
         }
 
-        public void Damage(float damage)
+        public void Damage(Vector3 origin, float damage)
         {
             if (!FindObjectOfType<Server>().DamageActive()) return;
 
+            pelvisRb.AddForce((pelvisRb.transform.position - origin) * damage, ForceMode.Impulse);
             _hp -= damage;
 
             photonView.RPC("RPCDamage", RpcTarget.All, _hp / characterStats.life);
         }
         [PunRPC] public void RPCDamage(float hp)
         {
+            particlesDamage.Play();
+
             barLife.fillAmount = hp;
             if (!owned) return;
 

@@ -82,9 +82,9 @@ public class Monster : MonoBehaviour, IDamageable
         attack.OnUpdate += () =>
         {
             if(blockWalk)
-                blockWalk.GetComponent<IDamageable>().Damage(velocityDamageCube * Time.deltaTime);
+                blockWalk.GetComponent<IDamageable>().Damage(transform.position, velocityDamageCube * Time.deltaTime);
             else
-                target.GetComponent<IDamageable>().Damage(velocityDamageCube * Time.deltaTime);
+                target.GetComponent<IDamageable>().Damage(transform.position, velocityDamageCube * Time.deltaTime);
         };
         attack.OnExit += x =>
         {
@@ -206,7 +206,7 @@ public class Monster : MonoBehaviour, IDamageable
         }
     }
 
-    public virtual void Damage(float damage)
+    public virtual void Damage(Vector3 origin, float damage)
     {
         _life -= damage;
 
@@ -228,7 +228,7 @@ public class Monster : MonoBehaviour, IDamageable
         float magnitude = difference.magnitude;
 
         _rb.AddForce(difference * force, ForceMode.Impulse);
-        Damage(magnitude * force);
+        Damage(origin, magnitude * force);
     }
 
     public void CallMonster(Vector3 pos)

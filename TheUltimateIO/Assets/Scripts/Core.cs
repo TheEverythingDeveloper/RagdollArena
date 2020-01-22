@@ -68,7 +68,7 @@ public class Core : MonoBehaviourPun, IDamageable
         Gizmos.DrawSphere(transform.position, 2f);
     }
 
-    public void Damage(float damage)
+    public void Damage(Vector3 origin, float damage)
     {
         FindObjectOfType<TeamManager>().photonView.RPC("RPCCoreLifeUpdateCall", RpcTarget.MasterClient , teamID-1, -damage);
     }

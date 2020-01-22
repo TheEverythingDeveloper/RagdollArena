@@ -14,10 +14,12 @@ public class SpawnPoint : MonoBehaviourPun
     private Server _server;
     [SerializeField] private GameObject _spawnPointCanvas;
 
+    private ParticleSystem _particleSpawn;
     private void Start()
     {
         StartCoroutine(DelayForServer());
         UpdateMaterial(teamID);
+        _particleSpawn = GetComponentInChildren<ParticleSystem>();
     }
 
     private IEnumerator DelayForServer()
@@ -68,6 +70,8 @@ public class SpawnPoint : MonoBehaviourPun
         isOccupied = true;
         //TODO: activar algun tipo de feedback de que va a spawnear alguien ahi
         yield return new WaitForSeconds(2f);
+
+        _particleSpawn.Play();
         Player enqueuedPlayer = _playerRespawnQueue.Dequeue();
         _server.photonView.RPC("RPCRespawnPlayer", RpcTarget.MasterClient, enqueuedPlayer, transform.position);
         if (_playerRespawnQueue.Count == 0) //si somos el ultimo spawn de la queue, entonces vuelve a estar desocupado

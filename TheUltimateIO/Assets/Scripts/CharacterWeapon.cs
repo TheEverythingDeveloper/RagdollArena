@@ -67,7 +67,7 @@ namespace Character
 
             RaycastHit hit;
             if (Physics.Raycast(_capsule.transform.position, _capsule.transform.up, out hit, _characterStats.verticalDistAttack, layerMask))
-                hit.collider.gameObject.GetComponent<Damageable>().Damage(_characterStats.damageAttack);
+                hit.collider.gameObject.GetComponent<Damageable>().Damage(transform.position, _characterStats.damageAttack);
 
             return 1;
         }
