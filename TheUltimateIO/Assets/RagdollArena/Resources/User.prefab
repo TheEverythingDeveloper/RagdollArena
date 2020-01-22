@@ -1051,7 +1051,7 @@ MonoBehaviour:
   life: 1
   damageAttack: 0.2
   speed: 10
-  jumpSpeed: 50
+  jumpSpeed: 10
   rotationSpeed: 2
   initialDistAttack: 2
   verticalDistAttack: 10
