@@ -15,15 +15,15 @@ namespace Character
         private List<IUpdatable> _allUpdatables = new List<IUpdatable>();
         private List<IConstructable> _allConstructables = new List<IConstructable>();
         private CharacterMovement _movementController;
-        public GameObject _ragdollCapsule;
         public Image barLife;
 
+        public GameObject model;
         public float forceImpulseDamage;
         public ParticleSystem particlesDamage;
 
         private LevelManager _lvlMng;
         public string nickname;
-        public Rigidbody pelvisRb;
+        public Rigidbody rb;
 
         public Animator anim;
         private Color _color;
@@ -95,7 +95,7 @@ namespace Character
             WeaponsManager _tempWeaponMng = GetComponentInChildren<WeaponsManager>();
             _tempWeaponMng.transform.parent = null;
             _allMyHeads = _characterBody._allHeadParts.Select(x => x.GetComponentInChildren<Renderer>()).ToArray();
-            _tempWeaponMng.transform.parent = pelvisRb.transform;
+            _tempWeaponMng.transform.parent = rb.transform;
 
             characterStats = GetComponent<CharacterStats>();
 
@@ -103,7 +103,7 @@ namespace Character
             _allUpdatables.Add(characterView);
             _allConstructables.Add(characterView);
 
-            _movementController = new CharacterMovement(this, pelvisRb, pelvisRb.transform.localRotation, floorLayers);
+            _movementController = new CharacterMovement(this, rb, rb.transform.localRotation, floorLayers);
             _allConstructables.Add(_movementController);
             _allUpdatables.Add(_movementController);
 
@@ -114,21 +114,9 @@ namespace Character
 
             FindObjectOfType<Chat>().characterModel = this; //Le aviso quien soy al chat
 
-            var allChilds = GetComponentsInChildren<Transform>();
-            //var damageable = GetComponentInChildren<Damageable>();
-            allChilds.Select(x =>
-            {
-                x.gameObject.layer = Layers.PLAYER;
-                _ragdollCapsule.layer = Layers.RAGDOLL;
-                //damageable.gameObject.layer = Layers.DAMAGEABLE;
-                return x;
-            }).ToList();
-
-            anim = GetComponent<Animator>();
-
             //_allConstructables.Add(GetComponentInChildren<CharacterHands>());
             //_allUpdatables.Add(GetComponentInChildren<CharacterHands>());
-            _allUpdatables.Add(new CharacterCamera(this, pelvisRb));
+            _allUpdatables.Add(new CharacterCamera(this, rb));
             _allUpdatables.Add(new CharacterPointsManager(this, _lvlMng, PhotonNetwork.NickName));
             _allUpdatables.Add(new CharacterFriendsManager(this, _lvlMng.playerFriendsLayermask));
 
@@ -167,14 +155,14 @@ namespace Character
 
         private void OnDrawGizmos()
         {
-            if (pelvisRb != null)
-                Gizmos.DrawWireSphere(pelvisRb.transform.position, contactRadius);
+            if (rb != null)
+                Gizmos.DrawWireSphere(rb.transform.position, contactRadius);
         }
         public void UpdatePoints(int addedPoints) => OnPointsUpdate(addedPoints);
         public void Crowned(bool on) => OnCrowned(on);
         public void TryJump() { if (_movementController.inAir) return; OnJump(); }
         private void Start() { if (!owned) return; ArtificialStart(); }
-        private void Update() { if (!owned && pelvisRb != null) return; ArtificialUpdate(); }
+        private void Update() { if (!owned && rb != null) return; ArtificialUpdate(); }
         private void FixedUpdate() { if (!owned) return; ArtificialFixedUpdate(); }
         private void LateUpdate() { if (!owned) return; ArtificialLateUpdate(); }
         [PunRPC] public void RPCUpdateColorTeamAndHead(float[] skinColor, float[] teamColor, int headTypeID, int teamTypeID) //colorB es el color del equipo
@@ -203,7 +191,7 @@ namespace Character
         }
         [PunRPC] public void RPCChangeRespawnMode(bool dead)
         {
-            pelvisRb.transform.parent.gameObject.SetActive(!dead);
+            model.SetActive(!dead);
             OnChangeRespawnMode(dead ? CharacterCamera.CameraMode.GodMode : CharacterCamera.CameraMode.ThirdPersonMode);
 
             if (!owned) return;
@@ -216,12 +204,12 @@ namespace Character
                 Damage(transform.position, -1f);
             Debug.Log(dead ? "<color=red>Muerto</color>" : "<color=green>Respawneado</color>");
         }
-        public void RespawnAtPosition(Vector3 positionToRespawn) => pelvisRb.transform.position = positionToRespawn;
+        public void RespawnAtPosition(Vector3 positionToRespawn) => rb.transform.position = positionToRespawn;
 
         void CheckHeight()
         {
-            if (pelvisRb.transform.position.y < heightRespawn)
-                _lvlMng.RespawnRandom(pelvisRb.transform);
+            if (rb.transform.position.y < heightRespawn)
+                _lvlMng.RespawnRandom(rb.transform);
         }
 
         public void AddPoint(int points)
@@ -247,7 +235,7 @@ namespace Character
         {
             if (!FindObjectOfType<Server>().DamageActive()) return;
 
-            pelvisRb.AddForce((pelvisRb.transform.position - origin) * forceImpulseDamage, ForceMode.Impulse);
+            rb.AddForce((rb.transform.position - origin) * forceImpulseDamage, ForceMode.Impulse);
             _hp -= damage;
 
             photonView.RPC("RPCDamage", RpcTarget.All, _hp / characterStats.life);
@@ -287,12 +275,12 @@ namespace Character
             StopCoroutine(_throwGrenadeCoroutine);
 
             GameObject grenade = PhotonNetwork.Instantiate("Grenade",
-                pelvisRb.transform.position + transform.forward * 2f, Quaternion.identity);
+                rb.transform.position + transform.forward * 2f, Quaternion.identity);
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             Physics.Raycast(ray, out hit, Mathf.Infinity, floorLayers);
             grenade.GetComponent<Rigidbody>()
-                .AddForce((hit.point - pelvisRb.transform.position + Vector3.up * grenadeYThrowSpeed).normalized
+                .AddForce((hit.point - rb.transform.position + Vector3.up * grenadeYThrowSpeed).normalized
                 * _grenadeThrowSpeed * Time.deltaTime, ForceMode.Impulse);
         }
         #endregion
@@ -345,12 +333,12 @@ namespace Character
         public void TryGrenadeDrunk()
         {
             GameObject grenadeDrunk = PhotonNetwork.Instantiate("GrenadeDrunk",
-                pelvisRb.transform.position + (transform.forward * 2f) + (transform.up * 3f), Quaternion.identity);
+                rb.transform.position + (transform.forward * 2f) + (transform.up * 3f), Quaternion.identity);
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             Physics.Raycast(ray, out hit, Mathf.Infinity, floorLayers);
             grenadeDrunk.GetComponent<Rigidbody>()
-                .AddForce((hit.point - pelvisRb.transform.position).normalized
+                .AddForce((hit.point - rb.transform.position).normalized
                 * 20, ForceMode.Impulse);
         }
         #endregion

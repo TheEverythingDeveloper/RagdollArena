@@ -30,7 +30,7 @@ public class QMon1Controller : MonoBehaviour
         if(model != null)
         {
             if(!model.OnClickPlayer())
-                model.pelvisRb.AddForce((model.pelvisRb.transform.position - transform.position).normalized * pushForce, ForceMode.Impulse);
+                model.rb.AddForce((model.rb.transform.position - transform.position).normalized * pushForce, ForceMode.Impulse);
         }
     }
 

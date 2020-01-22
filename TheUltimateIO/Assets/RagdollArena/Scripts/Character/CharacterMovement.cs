@@ -6,7 +6,7 @@ namespace Character
     public class CharacterMovement : IUpdatable, IConstructable
     {
         CharacterModel _myModel;
-        Rigidbody _pelvisRb;
+        Rigidbody _rb;
         bool _inAir;
         public bool inAir { get { return _inAir; } }
         Quaternion _initialRot;
@@ -17,11 +17,11 @@ namespace Character
         Action updateControls;
         Action<float, float> fixedUpdateControls;
 
-        public CharacterMovement(CharacterModel model, Rigidbody pelvis, Quaternion initialRot, LayerMask floorLayers)
+        public CharacterMovement(CharacterModel model, Rigidbody rigidbody, Quaternion initialRot, LayerMask floorLayers)
         {
             _floorLayers = floorLayers;
             _myModel = model;
-            _pelvisRb = pelvis;
+            _rb = rigidbody;
             _initialRot = initialRot;
             ChangeControls(true);
         }
@@ -36,7 +36,7 @@ namespace Character
         public void Jump()
         {
             _inAir = true;
-            _pelvisRb.AddForce(Vector3.up * _myModel.characterStats.jumpSpeed, ForceMode.Impulse);
+            _rb.AddForce(Vector3.up * _myModel.characterStats.jumpSpeed, ForceMode.Impulse);
         }
 
         public void ArtificialUpdate()
@@ -68,9 +68,9 @@ namespace Character
             Debug.DrawLine(_myModel.transform.position,
             _myModel.transform.position + Vector3.down * _myModel.inAirDistance,
             _inAir ? Color.red : Color.green);
-            _inAir = !Physics.Raycast(_pelvisRb.transform.position, Vector3.down, _myModel.inAirDistance, _floorLayers);
+            _inAir = !Physics.Raycast(_rb.transform.position, Vector3.down, _myModel.inAirDistance, _floorLayers);
 
-            _sqrMagnitudeInTime = Mathf.Lerp(_sqrMagnitudeInTime, _pelvisRb.velocity.sqrMagnitude,
+            _sqrMagnitudeInTime = Mathf.Lerp(_sqrMagnitudeInTime, _rb.velocity.sqrMagnitude,
                 _myModel.sqrMagnitudeInTimeSpeed * Time.deltaTime);
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -78,15 +78,15 @@ namespace Character
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, _floorLayers))
             {
-                if (Vector3.Distance(hit.point, _pelvisRb.transform.position) < 2) return;
-                _direction = (hit.point - _pelvisRb.transform.position).normalized;
+                if (Vector3.Distance(hit.point, _rb.transform.position) < 2) return;
+                _direction = (hit.point - _rb.transform.position).normalized;
                 _lookRotation = Quaternion.LookRotation(_direction);
                 _lookRotation *= _initialRot;
 
-                _pelvisRb.transform.localRotation = Quaternion.Slerp(
-                    _pelvisRb.transform.localRotation, _lookRotation, Time.deltaTime * _myModel.characterStats.rotationSpeed);
+                _rb.transform.localRotation = Quaternion.Slerp(
+                    _rb.transform.localRotation, _lookRotation, Time.deltaTime * _myModel.characterStats.rotationSpeed);
 
-                _pelvisRb.transform.localRotation = Quaternion.Euler(_initialRot.eulerAngles.x, _lookRotation.eulerAngles.y, _initialRot.eulerAngles.z);
+                _rb.transform.localRotation = Quaternion.Euler(_initialRot.eulerAngles.x, _lookRotation.eulerAngles.y, _initialRot.eulerAngles.z);
             }
         }
 
@@ -104,14 +104,14 @@ namespace Character
             if (animMove != _myModel.anim.GetBool("Move")) _myModel.anim.SetBool("Move", animMove);
 
             var dir = new Vector3(horAxis, 0, verAxis);
-            _myModel.transform.position += dir;
+            _rb.transform.position += dir;
         }
         #endregion
         void DrunkUpdateControls()
         {
-            _inAir = !Physics.Raycast(_pelvisRb.transform.position, Vector3.down, _myModel.inAirDistance, _floorLayers);
+            _inAir = !Physics.Raycast(_rb.transform.position, Vector3.down, _myModel.inAirDistance, _floorLayers);
 
-            _sqrMagnitudeInTime = Mathf.Lerp(_sqrMagnitudeInTime, _pelvisRb.velocity.sqrMagnitude,
+            _sqrMagnitudeInTime = Mathf.Lerp(_sqrMagnitudeInTime, _rb.velocity.sqrMagnitude,
                 _myModel.sqrMagnitudeInTimeSpeed * Time.deltaTime);
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -119,15 +119,15 @@ namespace Character
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, _floorLayers))
             {
-                if (Vector3.Distance(hit.point, _pelvisRb.transform.position) < 2) return;
-                _direction = (hit.point - _pelvisRb.transform.position).normalized;
+                if (Vector3.Distance(hit.point, _rb.transform.position) < 2) return;
+                _direction = (hit.point - _rb.transform.position).normalized;
                 _lookRotation = Quaternion.LookRotation(_direction);
                 _lookRotation *= _initialRot;
 
-                _pelvisRb.transform.localRotation = Quaternion.Slerp(
-                    _pelvisRb.transform.localRotation, _lookRotation, Time.deltaTime * _myModel.characterStats.rotationSpeed);
+                _rb.transform.localRotation = Quaternion.Slerp(
+                    _rb.transform.localRotation, _lookRotation, Time.deltaTime * _myModel.characterStats.rotationSpeed);
 
-                _pelvisRb.transform.localRotation = Quaternion.Euler(_initialRot.eulerAngles.x, -_lookRotation.eulerAngles.y, _initialRot.eulerAngles.z);
+                _rb.transform.localRotation = Quaternion.Euler(_initialRot.eulerAngles.x, -_lookRotation.eulerAngles.y, _initialRot.eulerAngles.z);
             }
         }
 
@@ -140,7 +140,7 @@ namespace Character
             if (animMove != _myModel.anim.GetBool("Move")) _myModel.anim.SetBool("Move", animMove);*/
 
             var dir = new Vector3(horAxis, 0, verAxis);
-            _myModel.transform.position += dir;
+            _rb.transform.position += dir;
         }
 
         public void ArtificialLateUpdate() { }

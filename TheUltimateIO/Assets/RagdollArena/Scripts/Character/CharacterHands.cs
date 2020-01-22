@@ -24,7 +24,7 @@ namespace Character
             if (Input.GetMouseButtonDown(buttonMouse))
             {
                 _hand.velocity = Vector3.zero;
-                _hand.AddForce(myModel.pelvisRb.transform.up * 50, ForceMode.Impulse);
+                _hand.AddForce(myModel.rb.transform.up * 50, ForceMode.Impulse);
                 activeTaken = true;
             }
 
@@ -35,7 +35,7 @@ namespace Character
                 {
                     if (sp && sp.connectedBody)
                     {
-                        sp.connectedBody.AddForce((sp.connectedBody.transform.position - myModel.pelvisRb.transform.position).normalized * myModel.pushForce, ForceMode.Impulse);
+                        sp.connectedBody.AddForce((sp.connectedBody.transform.position - myModel.rb.transform.position).normalized * myModel.pushForce, ForceMode.Impulse);
                     }
 
                     DestroyImmediate(GetComponent<SpringJoint>());

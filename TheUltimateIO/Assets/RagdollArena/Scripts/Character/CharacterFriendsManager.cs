@@ -29,7 +29,7 @@ namespace Character
         {
             //tirar overlapsphere para actualizarnos la cantidad que tenemos cerca
             var allCharacters = Physics.OverlapSphere(
-                _owner.pelvisRb.transform.position, _owner.contactRadius, _playersLayermask, QueryTriggerInteraction.Collide)
+                _owner.rb.transform.position, _owner.contactRadius, _playersLayermask, QueryTriggerInteraction.Collide)
                 .Where(x => x.GetComponentInParent<CharacterModel>() != _owner);
             FriendsAmount = allCharacters.Count();
             //Debug.LogWarning("Amigos actuales ---- " + FriendsAmount);

@@ -20,7 +20,6 @@ namespace Character
         private WeaponsManager _weaponsMng;
         private bool[] _allAttacksCd = new bool[3];
 
-        GameObject _capsule;
         public LayerMask layerMask;
         public Animator animArms;
         private void Awake()
@@ -30,8 +29,6 @@ namespace Character
             weaponActive = Sword;
             _characterStats = GetComponent<CharacterStats>();
             characterModel = GetComponent<CharacterModel>();
-
-            _capsule = characterModel._ragdollCapsule;
         }
 
         private void Update()
@@ -68,7 +65,7 @@ namespace Character
             photonView.RPC("RPCAnimSword", RpcTarget.All);
 
             RaycastHit hit;
-            if (Physics.Raycast(_capsule.transform.position, _capsule.transform.up, out hit, _characterStats.verticalDistAttack, layerMask))
+            if (Physics.Raycast(characterModel.rb.transform.position, characterModel.rb.transform.up, out hit, _characterStats.verticalDistAttack, layerMask))
                 hit.collider.gameObject.GetComponent<Damageable>().Damage(transform.position, _characterStats.damageAttack);
 
             return 1;
@@ -162,8 +159,8 @@ namespace Character
 
         private void OnDrawGizmos()
         {
-            if (_capsule == null) return;
-            Gizmos.DrawLine(_capsule.transform.position, _capsule.transform.up * _characterStats.verticalDistAttack); 
+            if (characterModel == null) return;
+            Gizmos.DrawLine(characterModel.rb.transform.position, characterModel.rb.transform.up * _characterStats.verticalDistAttack); 
         }
     } 
 }

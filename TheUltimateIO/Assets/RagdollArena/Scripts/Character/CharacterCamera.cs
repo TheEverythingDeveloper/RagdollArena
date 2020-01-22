@@ -65,7 +65,7 @@ namespace Character
                 _pelvisRb.velocity.sqrMagnitude * _myModel.ratioMultiplierFoV);
 
             //Camera offset
-            Vector3 offsetPosition = _myModel.pelvisRb.transform.position + _myModel.thirdPersonCameraOffset;
+            Vector3 offsetPosition = _myModel.rb.transform.position + _myModel.thirdPersonCameraOffset;
             Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position,
                 offsetPosition, _myModel.cameraSpeed * Time.deltaTime);
         }
@@ -99,9 +99,9 @@ namespace Character
             if (UnityEngine.Object.FindObjectsOfType<Core>().Count() < 1) return;
 
             _nearestCore = UnityEngine.Object.FindObjectsOfType<Core>()
-                .OrderBy(x => Vector3.Distance(_myModel.pelvisRb.transform.position, x.transform.position)).First();
+                .OrderBy(x => Vector3.Distance(_myModel.rb.transform.position, x.transform.position)).First();
             if (_nearestCore == null) return;
-            if (Vector3.Distance(_nearestCore.transform.position, _myModel.pelvisRb.transform.position) > _myModel.coreDistancingCloseness)
+            if (Vector3.Distance(_nearestCore.transform.position, _myModel.rb.transform.position) > _myModel.coreDistancingCloseness)
             {
                 if (_previousCameraMode == CameraMode.ThirdPersonMode)
                     ChangeRespawnMode(CameraMode.ThirdPersonMode);

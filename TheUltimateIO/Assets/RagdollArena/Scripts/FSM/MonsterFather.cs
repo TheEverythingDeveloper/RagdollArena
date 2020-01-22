@@ -43,7 +43,7 @@ public class MonsterFather : Monster
     {
         List<MonsterChildren> childrens = new List<MonsterChildren>();
         var targets = FindObjectsOfType<CharacterModel>().ToList();
-        _player = targets.OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).FirstOrDefault().pelvisRb.transform;
+        _player = targets.OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).FirstOrDefault().rb.transform;
 
         if (_player == null) return;
 
