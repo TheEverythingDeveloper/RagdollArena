@@ -114,6 +114,8 @@ namespace Character
 
         private void SelectWeapon(bool right) //cadena de ifs porque no hay necesidad de hacerlo mas complejo al ser solo 3, yay!
         {
+            if (_weaponsMng.constructionMode) return;
+
             if (right)
             {
                 if (weaponActive == Shield)

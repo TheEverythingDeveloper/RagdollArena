@@ -11,6 +11,19 @@ namespace Weapons
         private Weapon _actualFrontWeapon;
         private Weapon _actualBackWeapon;
         public Transform arrowSpawnTransform;
+        public bool constructionMode;
+
+        private void Awake()
+        {
+            ChangeWeapon(1);
+        }
+
+        public void ConstructionMode(bool show)
+        {
+            constructionMode = show;
+            _actualBackWeapon.gameObject.SetActive(show);
+            _actualFrontWeapon.gameObject.SetActive(!show);
+        }
 
         public void ChangeWeapon(int weaponID)
         {

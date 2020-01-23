@@ -7,6 +7,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Weapons;
+using Construction;
 
 namespace Character
 {
@@ -110,6 +111,7 @@ namespace Character
             Debug.Log("<color=green> Paso por aca porque es owner. ArtificialAwake </color>");
 
             FindObjectOfType<Chat>().InitializedChat(this);
+            FindObjectOfType<ConstructionPanel>().OnConstructionMode += GetComponentInChildren<WeaponsManager>().ConstructionMode;
 
             _allUpdatables.Add(new CharacterCamera(this, rb));
             _allUpdatables.Add(new CharacterPointsManager(this, _lvlMng, PhotonNetwork.NickName));
