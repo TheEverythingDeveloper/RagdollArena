@@ -7,10 +7,10 @@ using UnityEngine.UI;
 
 public enum SpawnItem
 {
-    None = 0,
-    ConstructionBlock = 1,
-    ConstructionBlockIron = 2,
-    ConstructionBlockAttraction = 3
+    Block = 0,
+    Respawn = 1,
+    Ram = 2,
+    Catapult = 3
 }
 
 public class CubeSpawner : MonoBehaviour
@@ -66,7 +66,7 @@ public class CubeSpawner : MonoBehaviour
             Debug.Log("amount is " + amount + " and my last is " + last);
             if(_preSpawnedCubes.Count < amount)
             {
-                _preSpawnedCubes.Add(Instantiate((GameObject)Resources.Load(SpawnItem.ConstructionBlock.ToString()), Vector3.zero, Quaternion.identity).GetComponent<SpawnedCube>());
+                _preSpawnedCubes.Add(Instantiate((GameObject)Resources.Load(SpawnItem.Respawn.ToString()), Vector3.zero, Quaternion.identity).GetComponent<SpawnedCube>());
 
                 _preSpawnedCubes[0]
                     .SetLife(life)
@@ -139,30 +139,42 @@ public class CubeSpawner : MonoBehaviour
 
     private Vector3 _mouseDownHitPoint;
 
-    private void Update()
+    private void ChooseSpawningItem()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) //nada
-            SpawningItem = SpawnItem.None;
-        else if (Input.GetKeyDown(KeyCode.Alpha2)) //bloque construction
-            SpawningItem = SpawnItem.ConstructionBlock;
-        else if (Input.GetKeyDown(KeyCode.Alpha3)) //bloque construccion reforzada
-            SpawningItem = SpawnItem.ConstructionBlockIron;
-        else if (Input.GetKeyDown(KeyCode.Alpha4)) //bloque de atraccion de bloques
-            SpawningItem = SpawnItem.ConstructionBlockAttraction;
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            SpawningItem = SpawnItem.Block;
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+            SpawningItem = SpawnItem.Respawn;
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+            SpawningItem = SpawnItem.Ram;
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+            SpawningItem = SpawnItem.Catapult;
+    }
 
-        if (_spawningItem == 0 || _cooldownOn) return;
-
-        //GameObject _initialSpawn = _preSpawnedCubes[0].gameObject;
-        //_preSpawnedCubes.Clear();
-        //_preSpawnedCubes.Add(_initialSpawn.GetComponentInChildren<SpawnedCube>());
-        //Raycast y Construccion
-
+    private Vector3 GetMouseSpawnPos()
+    {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, _spawnLayermask))
             _canSpawn = true;
         else
             _canSpawn = false;
+
+        return hit.point;
+    }
+
+    private void Update()
+    {
+        ChooseSpawningItem();
+
+        if (_spawningItem == 0 || _cooldownOn) return; //TODO: Que sea igual a -1 u otra cosa aca
+
+        //GameObject _initialSpawn = _preSpawnedCubes[0].gameObject;
+        //_preSpawnedCubes.Clear();
+        //_preSpawnedCubes.Add(_initialSpawn.GetComponentInChildren<SpawnedCube>());
+        //Raycast y Construccion
+
+        Vector3 hitPoint = GetMouseSpawnPos();
 
         _newSize = Mathf.Clamp(_lastCubeSize + Input.mouseScrollDelta.y * wheelSizeSpeed * Time.deltaTime, minMaxSize.x, minMaxSize.y);
         _lastCubeSize = _newSize;
@@ -177,18 +189,17 @@ public class CubeSpawner : MonoBehaviour
         }
 
         float scaleOffset = (1 - (_preSpawnedCubes[0].Size % 2)) * 0.5f;
-        Vector3 gridHitPoint = new Vector3(Mathf.Ceil(hit.point.x) - scaleOffset, Mathf.Ceil(hit.point.y), Mathf.Ceil(hit.point.z) - scaleOffset);
+        Vector3 gridHitPoint = new Vector3(Mathf.Ceil(hitPoint.x) - scaleOffset, Mathf.Ceil(hitPoint.y), Mathf.Ceil(hitPoint.z) - scaleOffset);
 
         if (Input.GetMouseButtonDown(0))
-        {
             _mouseDownHitPoint = gridHitPoint;
-        }
 
+        //Diferencias de X,Y,Z con este tamaño de grilla. Equivale a cuantas celdas de la grilla tiene de diferencia.
         int dx = Mathf.FloorToInt(Mathf.Abs(gridHitPoint.x - _mouseDownHitPoint.x));
-        int dy = Mathf.FloorToInt(Mathf.Abs(gridHitPoint.y - _mouseDownHitPoint.y));
+        int dy = Mathf.FloorToInt(Mathf.Abs(gridHitPoint.y - _mouseDownHitPoint.y)); 
         int dz = Mathf.FloorToInt(Mathf.Abs(gridHitPoint.z - _mouseDownHitPoint.z));
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0)) //Ir creando la maxima cantidad de PreSpawnedCubes que se pueda
         {
             int cubesAmoount = Mathf.FloorToInt(Mathf.Max(dx, dy, dz) / _lastCubeSize);
             Debug.Log("Se pueden spawnear: " + cubesAmoount + "cubos de este tamaño");
@@ -197,44 +208,42 @@ public class CubeSpawner : MonoBehaviour
         }
 
         if (_preSpawnedCubes == null) return;
-
         foreach (var spawnCube in _preSpawnedCubes)
         {
             scaleOffset = (1 - (spawnCube.Size % 2)) * 0.5f; //para que todos los bloques esten en el mismo tipo de grilla sin importar la escala hay que hacer que los impares esten 0.5 mas al costado
-            gridHitPoint = new Vector3(Mathf.Ceil(hit.point.x) - scaleOffset, Mathf.Ceil(hit.point.y), Mathf.Ceil(hit.point.z) - scaleOffset);
+            gridHitPoint = new Vector3(Mathf.Ceil(hitPoint.x) - scaleOffset, Mathf.Ceil(hitPoint.y), Mathf.Ceil(hitPoint.z) - scaleOffset);
             int x, z = 0;
             for (x = Mathf.FloorToInt(_mouseDownHitPoint.x); x < Mathf.FloorToInt(gridHitPoint.x); x++)
             {
                 z = Mathf.FloorToInt(gridHitPoint.z + dz * (x - gridHitPoint.x) / dx);
             }
             Vector3 spawnPos = new Vector3(x, gridHitPoint.y, z);
-            Debug.DrawLine(transform.position, spawnPos, Color.cyan, 0.1f);
-            spawnCube.CorrectPosition(spawnPos);
+            gizmospos = gridHitPoint;
+            spawnCube.CorrectPosition(gridHitPoint);
 
             if (spawnCube.IsColliding(_spawnLayermask))
-            {
                 spawnCube.SetColor(Color.red);
-            }
             else
             {
                 spawnCube.SetColor(Color.green);
-
-                Debug.DrawLine(Camera.main.transform.position, ray.direction * 100f, _canSpawn ? Color.green : Color.red);
-
-                if (Input.GetMouseButtonUp(0))
-                {
-                    if (_canSpawn && ConstructionPoints > 0)
-                    {
-                        StartCoroutine(SpawnCubeCooldown());
-
-                        SpawnCube(SpawningItem, spawnPos);
-                    }
-                    else
-                        Debug.Log("No se pudo spawnear");
-                }
+                CanSpawn(gridHitPoint);
             }
         }
-        Debug.Log(_preSpawnedCubes.Count);
+        Debug.Log(_preSpawnedCubes.Count + " can be spawned");
+    }
+
+    private void CanSpawn(Vector3 spawnPos)
+    {
+        if (Input.GetMouseButtonUp(0))
+        {
+            if (_canSpawn && ConstructionPoints > 0)
+            {
+                StartCoroutine(SpawnCubeCooldown());
+                SpawnCube(SpawningItem, spawnPos);
+            }
+            else
+                Debug.Log("No se pudo spawnear");
+        }
     }
 
     public void SpawnCube(SpawnItem spawnCube, Vector3 hitPos)
@@ -255,5 +264,13 @@ public class CubeSpawner : MonoBehaviour
                 .CorrectPosition(hitPos)
                 .SetColor(Color.white);
         }
+    }
+
+    Vector3 gizmospos;
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(gizmospos, 3f);
     }
 }

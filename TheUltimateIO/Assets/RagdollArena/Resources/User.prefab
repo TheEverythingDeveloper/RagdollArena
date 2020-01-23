@@ -990,6 +990,7 @@ MonoBehaviour:
   - {fileID: 5413345817457660246}
   - {fileID: 7585850484135328487}
   arrowSpawnTransform: {fileID: 1011360716591543628}
+  constructionMode: 0
 --- !u!114 &922945521970549692
 MonoBehaviour:
   m_ObjectHideFlags: 0
