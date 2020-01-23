@@ -125,7 +125,7 @@ namespace Character
                 new float[] { Color.grey.r, Color.grey.g, Color.grey.b },
                 PlayerPrefs.GetInt("HeadTypeID"), 0);
 
-            ChangeTeam(0);
+            ChangeTeam(1);
 
             ArtificialAwakes();
         }
@@ -134,14 +134,14 @@ namespace Character
         private void ChangeTeam(int ID) //cambiar el team equivale tambien a cambiar el color del jugador y color de efectos
         {
             Debug.Log("<color=green> Fuiste cambiado al equipo " + ID.ToString() + "</color>");
-            team = ID;
+            team = ID-1;
 
             Color teamIDColor = ID == 0 ? Color.grey : ID == 1 ? Color.blue : ID == 2 ? Color.red : ID == 3 ? Color.yellow : Color.blue;
 
             photonView.RPC("RPCUpdateColorTeamAndHead", RpcTarget.AllBuffered,
                 new float[] { PlayerPrefs.GetFloat("SkinColorR"), PlayerPrefs.GetFloat("SkinColorG"), PlayerPrefs.GetFloat("SkinColorB") },
                 new float[] { teamIDColor.r, teamIDColor.g, teamIDColor.b },
-                PlayerPrefs.GetInt("HeadTypeID"), ID);
+                PlayerPrefs.GetInt("HeadTypeID"), team);
         }
 
         [PunRPC] public void RPCStartGame()
@@ -165,7 +165,7 @@ namespace Character
         private void Update() { if (!owned && rb != null) return; ArtificialUpdate(); }
         private void FixedUpdate() { if (!owned) return; ArtificialFixedUpdate(); }
         private void LateUpdate() { if (!owned) return; ArtificialLateUpdate(); }
-        [PunRPC] public void RPCUpdateColorTeamAndHead(float[] skinColor, float[] teamColor, int headTypeID, int teamTypeID) //colorB es el color del equipo
+        [PunRPC] public void RPCUpdateColorTeamAndHead(float[] skinColor, float[] teamColor, int headTypeID, int teamTypeID)
         {
             _allMyHeads.Select(x =>
             {
