@@ -112,7 +112,7 @@ namespace Character
             if (!owned) return;
             Debug.Log("<color=green> Paso por aca porque es owner. ArtificialAwake </color>");
 
-            FindObjectOfType<Chat>().characterModel = this; //Le aviso quien soy al chat
+            FindObjectOfType<Chat>().InitializedChat(this); //Le aviso quien soy al chat
 
             //_allConstructables.Add(GetComponentInChildren<CharacterHands>());
             //_allUpdatables.Add(GetComponentInChildren<CharacterHands>());

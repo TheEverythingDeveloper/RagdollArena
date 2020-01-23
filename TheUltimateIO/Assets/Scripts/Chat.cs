@@ -11,16 +11,18 @@ using System;
 public class Chat : MonoBehaviourPun
 {
     public GameObject chatArea;
+    public EmojisChat emojisPanel;
+    private bool _emojisPanelActive;
     public InputField msgInput;
     Dictionary<int, string> _typesMsg = new Dictionary<int, string>();
-    public Dropdown typeMsg;
+    //public Dropdown typeMsg;
     public GameObject content;
     public TextMeshProUGUI textMsg;
 
     public List<Color> colorsTeam;
     Action _chatActive;
 
-    [HideInInspector] public CharacterModel characterModel;
+    private CharacterModel _characterModel;
     [HideInInspector] public Controller controller;
     [HideInInspector] public Server server;
 
@@ -40,11 +42,24 @@ public class Chat : MonoBehaviourPun
     private void Update()
     {
         _chatActive();
+        if (Input.GetKeyDown(KeyCode.Escape) && _emojisPanelActive) ActivePanelEmojis(false);
+    }
+
+    public void InitializedChat(CharacterModel model)
+    {
+        _characterModel = model;
+        emojisPanel.InitializedEmojis(model, this);
+    }
+
+    public void ActivePanelEmojis(bool active)
+    {
+        emojisPanel.gameObject.SetActive(active);
+        _emojisPanelActive = active;
     }
 
     public void OnConnected()
     {
-        photonView.RPC(_typesMsg[typeMsg.value], RpcTarget.All, "joined", PhotonNetwork.LocalPlayer.NickName);
+        photonView.RPC("RPCGlobalSendMsg", RpcTarget.All, "joined", PhotonNetwork.LocalPlayer.NickName);
     }
 
     public void OnInputMsg(bool enter)
@@ -60,10 +75,12 @@ public class Chat : MonoBehaviourPun
     {
         if(msgInput.text != default)
         {
+            photonView.RPC("RPCGlobalSendMsg", RpcTarget.All, msgInput.text, PhotonNetwork.LocalPlayer.NickName);
+            /*
             if (typeMsg.value != 1)
                 photonView.RPC(_typesMsg[typeMsg.value], RpcTarget.All, msgInput.text, PhotonNetwork.LocalPlayer.NickName);
             else
-                photonView.RPC(_typesMsg[typeMsg.value], RpcTarget.All, msgInput.text, PhotonNetwork.LocalPlayer.NickName, characterModel.team);
+                photonView.RPC(_typesMsg[typeMsg.value], RpcTarget.All, msgInput.text, PhotonNetwork.LocalPlayer.NickName, _characterModel.team);*/
         }
 
         OnInputMsg(false);
@@ -86,7 +103,7 @@ public class Chat : MonoBehaviourPun
     [PunRPC]
     void RPCTeamSendMsg(string msg, string name, int team)
     {
-        if (team != characterModel.team) return;
+        if (team != _characterModel.team) return;
 
         string colorText = ColorUtility.ToHtmlStringRGB(colorsTeam[team]);
 
