@@ -210,19 +210,8 @@ public class CubeSpawner : MonoBehaviour
             CreatePreCube(cubesAmoount, _lastCubeSize, _lastCubeSize);
         }
         if (_preSpawnedCubes == null) return;
-        bool leftSense = false;
-        switch (maxAxis)
-        {
-            case 0:
-                leftSense = _mouseDownHitPoint.x > gridHitPoint.x;
-                break;
-            case 1:
-                leftSense = _mouseDownHitPoint.y > gridHitPoint.y;
-                break;
-            case 2:
-                leftSense = _mouseDownHitPoint.z > gridHitPoint.z;
-                break;
-        }
+        bool leftSense = _mouseDownHitPoint[maxAxis] > gridHitPoint[maxAxis];
+
         for (int i = 0; i < _preSpawnedCubes.Count; i++)
         {
             SpawnedCube spawnCube = _preSpawnedCubes[i];
@@ -233,13 +222,13 @@ public class CubeSpawner : MonoBehaviour
             switch (maxAxis)
             {
                 case 0:
-                    spawnPos = new Vector3(_mouseDownHitPoint.x + ((i + leftSenseNum) * _lastCubeSize * leftSenseNum), _mouseDownHitPoint.y, _mouseDownHitPoint.z);
+                    spawnPos = new Vector3(_mouseDownHitPoint.x + (i * _lastCubeSize * leftSenseNum) * 1.013f, _mouseDownHitPoint.y, _mouseDownHitPoint.z);
                     break;
                 case 1:
-                    spawnPos = new Vector3(_mouseDownHitPoint.x, _mouseDownHitPoint.y + (i + leftSenseNum) * _lastCubeSize * leftSenseNum, _mouseDownHitPoint.z);
+                    spawnPos = new Vector3(_mouseDownHitPoint.x, _mouseDownHitPoint.y + i * _lastCubeSize * leftSenseNum * 1.013f, _mouseDownHitPoint.z);
                     break;
                 case 2:
-                    spawnPos = new Vector3(_mouseDownHitPoint.x, _mouseDownHitPoint.y, _mouseDownHitPoint.z + (i + leftSenseNum) * _lastCubeSize * leftSenseNum);
+                    spawnPos = new Vector3(_mouseDownHitPoint.x, _mouseDownHitPoint.y, _mouseDownHitPoint.z + i * _lastCubeSize * leftSenseNum * 1.013f);
                     break;
             }
             if (_preSpawnedCubes.Count == 1)
