@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: HeadMaterial
-  m_Shader: {fileID: 4800000, guid: 1508833385bdef147a6b58b443511311, type: 3}
+  m_Shader: {fileID: 4800000, guid: 8090c9c0388237a458c47f25d40d146b, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -31,4 +31,4 @@ Material:
     - __dirty: 0
     m_Colors:
     - _Color: {r: 0.8679245, g: 0.72463506, b: 0.72463506, a: 0}
-    - _SkinColor: {r: 0.8584906, g: 0.7329566, b: 0.7329566, a: 0}
+    - _SkinColor: {r: 0.8679245, g: 0.72463506, b: 0.72463506, a: 0}

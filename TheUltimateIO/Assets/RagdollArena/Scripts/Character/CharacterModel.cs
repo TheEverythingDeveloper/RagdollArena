@@ -92,10 +92,7 @@ namespace Character
 
             _characterBody = FindObjectOfType<CharacterBody>();
 
-            WeaponsManager _tempWeaponMng = GetComponentInChildren<WeaponsManager>();
-            _tempWeaponMng.transform.parent = null;
             _allMyHeads = _characterBody._allHeadParts.Select(x => x.GetComponentInChildren<Renderer>()).ToArray();
-            _tempWeaponMng.transform.parent = rb.transform;
 
             characterStats = GetComponent<CharacterStats>();
 
@@ -112,10 +109,8 @@ namespace Character
             if (!owned) return;
             Debug.Log("<color=green> Paso por aca porque es owner. ArtificialAwake </color>");
 
-            FindObjectOfType<Chat>().InitializedChat(this); //Le aviso quien soy al chat
+            FindObjectOfType<Chat>().InitializedChat(this);
 
-            //_allConstructables.Add(GetComponentInChildren<CharacterHands>());
-            //_allUpdatables.Add(GetComponentInChildren<CharacterHands>());
             _allUpdatables.Add(new CharacterCamera(this, rb));
             _allUpdatables.Add(new CharacterPointsManager(this, _lvlMng, PhotonNetwork.NickName));
             _allUpdatables.Add(new CharacterFriendsManager(this, _lvlMng.playerFriendsLayermask));
@@ -200,12 +195,15 @@ namespace Character
             _lvlMng.gameCanvas.SwitchMapPanel(dead);
             if (dead)
                 FindObjectOfType<SpawnMap>().SetSpawnPointer();
-            else
-                Damage(transform.position, -1f);
+           // else
+                //Damage(transform.position, -1f);
             Debug.Log(dead ? "<color=red>Muerto</color>" : "<color=green>Respawneado</color>");
         }
-        public void RespawnAtPosition(Vector3 positionToRespawn) => rb.transform.position = positionToRespawn;
-
+        public void RespawnAtPosition(Vector3 positionToRespawn)
+        {
+            rb.transform.position = positionToRespawn;
+            rb.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        }
         void CheckHeight()
         {
             if (rb.transform.position.y < heightRespawn)

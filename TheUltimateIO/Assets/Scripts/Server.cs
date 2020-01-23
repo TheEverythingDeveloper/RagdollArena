@@ -7,6 +7,7 @@ using UnityEngine;
 using System.Linq;
 using System;
 using GameUI;
+using Random = UnityEngine.Random;
 
 public class Server : MonoBehaviourPun
 {
@@ -134,7 +135,7 @@ public class Server : MonoBehaviourPun
     }
     [PunRPC] public void RPCRespawnPlayer(Player photonPlayer, Vector3 position)
     {
-        Debug.Log("<color=green>Respawneado</color>");
+        Debug.Log("<color=green>Respawneado en  " + position + "</color>");
 
         photonView.RPC("RPCChangeRespawnFeedback", photonPlayer, false);
         _allPlayers[photonPlayer].photonView.RPC("RPCRespawn", RpcTarget.AllBuffered, position);
