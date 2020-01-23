@@ -206,27 +206,23 @@ public class CubeSpawner : MonoBehaviour
             Debug.DrawLine(_mouseDownHitPoint, gridHitPoint, Color.red);
             CreatePreCube(cubesAmoount, _lastCubeSize, _lastCubeSize);
         }
-
         if (_preSpawnedCubes == null) return;
-        foreach (var spawnCube in _preSpawnedCubes)
+        bool leftSense = _mouseDownHitPoint.x > gridHitPoint.x;
+        for (int i = 0; i < _preSpawnedCubes.Count; i++)
         {
+            SpawnedCube spawnCube = _preSpawnedCubes[i];
             scaleOffset = (1 - (spawnCube.Size % 2)) * 0.5f; //para que todos los bloques esten en el mismo tipo de grilla sin importar la escala hay que hacer que los impares esten 0.5 mas al costado
             gridHitPoint = new Vector3(Mathf.Ceil(hitPoint.x) - scaleOffset, Mathf.Ceil(hitPoint.y), Mathf.Ceil(hitPoint.z) - scaleOffset);
-            int x, z = 0;
-            for (x = Mathf.FloorToInt(_mouseDownHitPoint.x); x < Mathf.FloorToInt(gridHitPoint.x); x++)
-            {
-                z = Mathf.FloorToInt(gridHitPoint.z + dz * (x - gridHitPoint.x) / dx);
-            }
-            Vector3 spawnPos = new Vector3(x, gridHitPoint.y, z);
+            Vector3 spawnPos = new Vector3(gridHitPoint.x + i * _lastCubeSize * (leftSense ? 1 : -1), gridHitPoint.y, gridHitPoint.z);
             gizmospos = gridHitPoint;
-            spawnCube.CorrectPosition(gridHitPoint);
+            spawnCube.CorrectPosition(spawnPos);
 
             if (spawnCube.IsColliding(_spawnLayermask))
                 spawnCube.SetColor(Color.red);
             else
             {
                 spawnCube.SetColor(Color.green);
-                CanSpawn(gridHitPoint);
+                CanSpawn(spawnPos);
             }
         }
         Debug.Log(_preSpawnedCubes.Count + " can be spawned");
