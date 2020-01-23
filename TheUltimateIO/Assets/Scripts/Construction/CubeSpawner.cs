@@ -66,7 +66,7 @@ public class CubeSpawner : MonoBehaviour
             Debug.Log("amount is " + amount + " and my last is " + last);
             if(_preSpawnedCubes.Count < amount)
             {
-                _preSpawnedCubes.Add(Instantiate((GameObject)Resources.Load(SpawnItem.Respawn.ToString()), Vector3.zero, Quaternion.identity).GetComponent<SpawnedCube>());
+                _preSpawnedCubes.Add(Instantiate((GameObject)Resources.Load(SpawningItem.ToString()), Vector3.zero, Quaternion.identity).GetComponent<SpawnedCube>());
 
                 _preSpawnedCubes[0]
                     .SetLife(life)
@@ -169,17 +169,12 @@ public class CubeSpawner : MonoBehaviour
 
         if (_spawningItem == 0 || _cooldownOn) return; //TODO: Que sea igual a -1 u otra cosa aca
 
-        //GameObject _initialSpawn = _preSpawnedCubes[0].gameObject;
-        //_preSpawnedCubes.Clear();
-        //_preSpawnedCubes.Add(_initialSpawn.GetComponentInChildren<SpawnedCube>());
-        //Raycast y Construccion
-
         Vector3 hitPoint = GetMouseSpawnPos();
 
         _newSize = Mathf.Clamp(_lastCubeSize + Input.mouseScrollDelta.y * wheelSizeSpeed * Time.deltaTime, minMaxSize.x, minMaxSize.y);
         _lastCubeSize = _newSize;
         float gridSize = Mathf.Ceil(_newSize) - 0.002f;
-        if (_preSpawnedCubes[0].Size != gridSize)
+        if (_preSpawnedCubes[_preSpawnedCubes.Count-1].Size != gridSize)
         {
             foreach (var x in _preSpawnedCubes)
             {
@@ -190,15 +185,23 @@ public class CubeSpawner : MonoBehaviour
 
         float scaleOffset = (1 - (_preSpawnedCubes[0].Size % 2)) * 0.5f;
         Vector3 gridHitPoint = new Vector3(Mathf.Ceil(hitPoint.x) - scaleOffset, Mathf.Ceil(hitPoint.y), Mathf.Ceil(hitPoint.z) - scaleOffset);
+        //_preSpawnedCubes[0].CorrectPosition(gridHitPoint);
 
         if (Input.GetMouseButtonDown(0))
+        {
             _mouseDownHitPoint = gridHitPoint;
+            ChangePreSpawnedCube(SpawningItem);
+        }
 
         //Diferencias de X,Y,Z con este tamaño de grilla. Equivale a cuantas celdas de la grilla tiene de diferencia.
         int dx = Mathf.FloorToInt(Mathf.Abs(gridHitPoint.x - _mouseDownHitPoint.x));
         int dy = Mathf.FloorToInt(Mathf.Abs(gridHitPoint.y - _mouseDownHitPoint.y)); 
         int dz = Mathf.FloorToInt(Mathf.Abs(gridHitPoint.z - _mouseDownHitPoint.z));
 
+        int maxAxis = 0; //0 = x, 1 = y, 2 = z.
+        if (dx > dy && dx > dz) maxAxis = 0;
+        else if (dy > dx && dy > dz) maxAxis = 1;
+        else maxAxis = 2;
         if (Input.GetMouseButton(0)) //Ir creando la maxima cantidad de PreSpawnedCubes que se pueda
         {
             int cubesAmoount = Mathf.FloorToInt(Mathf.Max(dx, dy, dz) / _lastCubeSize);
@@ -207,14 +210,41 @@ public class CubeSpawner : MonoBehaviour
             CreatePreCube(cubesAmoount, _lastCubeSize, _lastCubeSize);
         }
         if (_preSpawnedCubes == null) return;
-        bool leftSense = _mouseDownHitPoint.x > gridHitPoint.x;
+        bool leftSense = false;
+        switch (maxAxis)
+        {
+            case 0:
+                leftSense = _mouseDownHitPoint.x > gridHitPoint.x;
+                break;
+            case 1:
+                leftSense = _mouseDownHitPoint.y > gridHitPoint.y;
+                break;
+            case 2:
+                leftSense = _mouseDownHitPoint.z > gridHitPoint.z;
+                break;
+        }
         for (int i = 0; i < _preSpawnedCubes.Count; i++)
         {
             SpawnedCube spawnCube = _preSpawnedCubes[i];
             scaleOffset = (1 - (spawnCube.Size % 2)) * 0.5f; //para que todos los bloques esten en el mismo tipo de grilla sin importar la escala hay que hacer que los impares esten 0.5 mas al costado
+            Vector3 spawnPos = Vector3.zero;
             gridHitPoint = new Vector3(Mathf.Ceil(hitPoint.x) - scaleOffset, Mathf.Ceil(hitPoint.y), Mathf.Ceil(hitPoint.z) - scaleOffset);
-            Vector3 spawnPos = new Vector3(gridHitPoint.x + i * _lastCubeSize * (leftSense ? 1 : -1), gridHitPoint.y, gridHitPoint.z);
-            gizmospos = gridHitPoint;
+            int leftSenseNum = (leftSense ? -1 : 1);
+            switch (maxAxis)
+            {
+                case 0:
+                    spawnPos = new Vector3(_mouseDownHitPoint.x + ((i + leftSenseNum) * _lastCubeSize * leftSenseNum), _mouseDownHitPoint.y, _mouseDownHitPoint.z);
+                    break;
+                case 1:
+                    spawnPos = new Vector3(_mouseDownHitPoint.x, _mouseDownHitPoint.y + (i + leftSenseNum) * _lastCubeSize * leftSenseNum, _mouseDownHitPoint.z);
+                    break;
+                case 2:
+                    spawnPos = new Vector3(_mouseDownHitPoint.x, _mouseDownHitPoint.y, _mouseDownHitPoint.z + (i + leftSenseNum) * _lastCubeSize * leftSenseNum);
+                    break;
+            }
+            if (_preSpawnedCubes.Count == 1)
+                spawnPos = gridHitPoint;
+
             spawnCube.CorrectPosition(spawnPos);
 
             if (spawnCube.IsColliding(_spawnLayermask))
@@ -226,8 +256,20 @@ public class CubeSpawner : MonoBehaviour
             }
         }
         Debug.Log(_preSpawnedCubes.Count + " can be spawned");
+        if (_hadSpawn)
+        {
+            _hadSpawn = false;
+            SpawnedCube _firstCube = _preSpawnedCubes[0];
+            _preSpawnedCubes.Remove(_firstCube);
+            foreach (var x in _preSpawnedCubes)
+                Destroy(x.gameObject);
+            _preSpawnedCubes.Clear();
+            _preSpawnedCubes.Add(_firstCube);
+            ChangePreSpawnedCube(SpawningItem);
+        }
     }
 
+    private bool _hadSpawn;
     private void CanSpawn(Vector3 spawnPos)
     {
         if (Input.GetMouseButtonUp(0))
@@ -244,29 +286,18 @@ public class CubeSpawner : MonoBehaviour
 
     public void SpawnCube(SpawnItem spawnCube, Vector3 hitPos)
     {
-        Debug.Log("se spawneo el cubo " + spawnCube.ToString());
+        _hadSpawn = true;
 
         var spawnedCube = PhotonNetwork.Instantiate(spawnCube.ToString(), hitPos, Quaternion.identity)
             .GetComponent<SpawnedCube>();
 
-        foreach (var x in _preSpawnedCubes)
-        {
-            ConstructionPoints -= x.Size;
+        spawnedCube
+            .SetLife((int)spawnCube)
+            .SetSize(_preSpawnedCubes[0].Size)
+            .Constructor(false)
+            .CorrectPosition(hitPos)
+            .SetColor(Color.white);
 
-            spawnedCube
-                .SetLife((int)spawnCube)
-                .SetSize(x.Size)
-                .Constructor(false)
-                .CorrectPosition(hitPos)
-                .SetColor(Color.white);
-        }
-    }
-
-    Vector3 gizmospos;
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(gizmospos, 3f);
+        ConstructionPoints -= spawnedCube.Size;
     }
 }
