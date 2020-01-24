@@ -211,4 +211,10 @@ public class Server : MonoBehaviourPun
     {
         allPlayers[emojiPlayer].photonView.RPC("RPCActivateEmoji", RpcTarget.All, emojiID);
     }
+
+    [PunRPC]
+    public void RPCActivateChat(Player player, bool chatActive)
+    {
+        allPlayers[player].photonView.RPC("RPCActivateChat", RpcTarget.All, chatActive);
+    }
 }

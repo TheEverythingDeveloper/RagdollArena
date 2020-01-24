@@ -47,7 +47,7 @@ public class Chat : MonoBehaviourPun
     public void InitializedChat(CharacterModel model)
     {
         _characterModel = model;
-        emojisPanel.InitializedEmojis(model, this);
+        emojisPanel.InitializedEmojis(this);
     }
 
     public void ActivePanelEmojis(bool active)
@@ -68,15 +68,7 @@ public class Chat : MonoBehaviourPun
 
         controller.controlsActive = !enter;
 
-        photonView.RPC("RPCActiveParticlesChat", RpcTarget.All, enter);
-    }
-
-    [PunRPC] void RPCActiveParticlesChat(bool active)
-    {
-        if(active)
-            _characterModel.particlesPlayer.particleChat.Play();
-        else
-            _characterModel.particlesPlayer.particleChat.Stop();
+        FindObjectOfType<Server>().photonView.RPC("RPCActivateChat", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer, enter);
     }
 
     public void SendMsg()

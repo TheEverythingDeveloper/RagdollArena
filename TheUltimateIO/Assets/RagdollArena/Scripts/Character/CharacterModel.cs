@@ -258,6 +258,14 @@ namespace Character
             particlesPlayer.particlesEmoji[emojiID].Play();
         }
 
+        [PunRPC]
+        public void RPCActivateChat(bool activateChat)
+        {
+            if(activateChat)
+                particlesPlayer.particleChat.Play();
+            else
+                particlesPlayer.particleChat.Stop();
+        }
 
         public void Explosion(Vector3 origin, float force) { throw new NotImplementedException(); }
         #region Grenade
