@@ -81,6 +81,7 @@ namespace Character
         private CharacterBody _characterBody;
 
         Server _server;
+        private bool _controlsActive = true;
 
         [HideInInspector] public int team = 0; // { 0 } = sin equipo. { 1, 2, 3, 4 } = posibles equipos que pueden haber.
         [Tooltip("Este owned es parecido al photonView.isMine, solo que es para FullAutho, ya que el server es el photonView.isMine")] public bool owned;
@@ -109,7 +110,10 @@ namespace Character
 
             particlesPlayer = GetComponentInChildren<ParticlesPlayer>();
             if (!owned) return;
-            FindObjectOfType<Chat>().InitializedChat(this);
+            var chat = FindObjectOfType<Chat>();
+            chat.InitializedChat(this);
+            chat.SuscribeChat(ChatActive);
+
             Debug.Log("<color=green> Paso por aca porque es owner. ArtificialAwake </color>");
 
             FindObjectOfType<ConstructionPanel>().OnConstructionMode += GetComponentInChildren<WeaponsManager>().ConstructionMode;
@@ -151,6 +155,11 @@ namespace Character
             //TODO: Abrir panel de mapa junto a todo lo que tenga
         }
 
+        void ChatActive(bool active)
+        {
+            _controlsActive = active;
+        }
+
         private void OnDrawGizmos()
         {
             if (rb != null)
@@ -160,9 +169,9 @@ namespace Character
         public void Crowned(bool on) => OnCrowned(on);
         public void TryJump() { if (_movementController.inAir) return; OnJump(); }
         private void Start() { if (!owned) return; ArtificialStart(); }
-        private void Update() { if (!owned && rb != null) return; ArtificialUpdate(); }
-        private void FixedUpdate() { if (!owned) return; ArtificialFixedUpdate(); }
-        private void LateUpdate() { if (!owned) return; ArtificialLateUpdate(); }
+        private void Update() { if ((!owned && rb != null) || !_controlsActive) return; ArtificialUpdate(); }
+        private void FixedUpdate() { if (!owned || !_controlsActive) return; ArtificialFixedUpdate(); }
+        private void LateUpdate() { if (!owned || !_controlsActive) return; ArtificialLateUpdate(); }
         [PunRPC] public void RPCUpdateColorTeamAndHead(float[] skinColor, float[] teamColor, int headTypeID, int teamTypeID)
         {
             _allMyHeads.Select(x =>

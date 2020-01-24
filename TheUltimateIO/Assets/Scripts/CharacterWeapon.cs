@@ -22,6 +22,8 @@ namespace Character
 
         public LayerMask layerMask;
         public Animator animArms;
+
+        private bool controlsActive = true;
         private void Awake()
         {
             _weaponUIMng = FindObjectOfType<WeaponsAndStatsUIManager>();
@@ -29,11 +31,13 @@ namespace Character
             weaponActive = Sword;
             _characterStats = GetComponent<CharacterStats>();
             characterModel = GetComponent<CharacterModel>();
+
+            FindObjectOfType<Chat>().SuscribeChat(ChatActive);
         }
 
         private void Update()
         {
-            if (!characterModel.owned) return;
+            if (!characterModel.owned || !controlsActive) return;
 
             if (Input.GetKeyDown(KeyCode.Q))
                 SelectWeapon(false);
@@ -44,7 +48,10 @@ namespace Character
                 StartCoroutine(AttackCoroutine());
                 
         }
-
+        void ChatActive(bool active)
+        {
+            controlsActive = active;
+        }
         int Shield()
         {
             if (_allAttacksCd[0]) return 0;

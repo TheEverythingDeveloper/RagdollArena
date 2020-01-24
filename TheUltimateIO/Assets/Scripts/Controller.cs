@@ -15,9 +15,14 @@ public class Controller : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
 
-        FindObjectOfType<Chat>().controller = this;
+        FindObjectOfType<Chat>().SuscribeChat(ChatActive);
 
         StartCoroutine(DelayWaitForServer()); //esta corrutina se llama porque el controller se crea antes que el server. Esto es ya que el server esperaba a los demas jugadores.
+    }
+
+    void ChatActive(bool active)
+    {
+        controlsActive = active;
     }
 
     IEnumerator DelayWaitForServer()

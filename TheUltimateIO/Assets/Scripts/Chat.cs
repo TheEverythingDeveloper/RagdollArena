@@ -14,20 +14,22 @@ public class Chat : MonoBehaviourPun
     public EmojisChat emojisPanel;
     private bool _emojisPanelActive;
     public InputField msgInput;
-    Dictionary<int, string> _typesMsg = new Dictionary<int, string>();
+    private Dictionary<int, string> _typesMsg = new Dictionary<int, string>();
     //public Dropdown typeMsg;
     public GameObject content;
     public TextMeshProUGUI textMsg;
 
     public List<Color> colorsTeam;
-    Action _chatActive;
+    private Action _chatActive;
 
     private CharacterModel _characterModel;
     [HideInInspector] public Controller controller;
 
+    private List<Action<bool>> metodsSuscribes = new List<Action<bool>>();
     private void Awake()
     {
         _chatActive = ChatControllerOff;
+        SuscribeChat(ChangeControls);
     }
 
     void Start()
@@ -42,6 +44,11 @@ public class Chat : MonoBehaviourPun
     {
         _chatActive();
         if (Input.GetKeyDown(KeyCode.Escape) && _emojisPanelActive) ActivePanelEmojis(false);
+    }
+
+    public void SuscribeChat(Action<bool> metod)
+    {
+        metodsSuscribes.Add(metod);
     }
 
     public void InitializedChat(CharacterModel model)
@@ -63,12 +70,18 @@ public class Chat : MonoBehaviourPun
 
     public void OnInputMsg(bool enter)
     {
-        if (enter) _chatActive = ChatControllerActive;
-        else _chatActive = ChatControllerOff;
-
-        controller.controlsActive = !enter;
+        foreach (var item in metodsSuscribes)
+        {
+            item(!enter);
+        }
 
         FindObjectOfType<Server>().photonView.RPC("RPCActivateChat", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer, enter);
+    }
+
+    void ChangeControls(bool active)
+    {
+        if (active) _chatActive = ChatControllerActive;
+        else _chatActive = ChatControllerOff;
     }
 
     public void SendMsg()

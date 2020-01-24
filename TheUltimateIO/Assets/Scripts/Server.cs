@@ -32,6 +32,8 @@ public class Server : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
 
+        FindObjectOfType<Chat>().SuscribeChat(ChatActive);
+
         _lvlMng.gameCanvas.SwitchEnterToStartText(true);
     }
 
@@ -51,6 +53,11 @@ public class Server : MonoBehaviourPun
 
         if (Input.GetKeyDown(KeyCode.Return))
             StartCoroutine(StartGameCoroutine(5));
+    }
+
+    void ChatActive(bool active)
+    {
+        controlsActive = active;
     }
     IEnumerator StartGameCoroutine(int waitSeconds)
     {
