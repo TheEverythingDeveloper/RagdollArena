@@ -32,15 +32,7 @@ namespace Construction
                 Destroy(_preConstruction.transform.parent.gameObject);
         }
 
-        [PunRPC] public void RPCCreateAConstructionPlan(Player photonPlayer, int planID, Vector3 pos)
-        {
-            var go =  PhotonNetwork.Instantiate("ConstructionPlan", pos, Quaternion.identity);
-            var constructionPlan = go.GetComponentInChildren<ConstructionPlan>();
-            constructionPlan.SetConstructionTeamID(FindObjectOfType<Server>().allPlayers[photonPlayer].team);
-            _allConstructions.Add(constructionPlan);
-            constructionPlan.enabled = true;
-            constructionPlan.ArtificialAwake();
-        }
+
 
         private Vector3 GetMouseSpawnPos()
         {
@@ -68,6 +60,17 @@ namespace Construction
                 FindObjectOfType<ServerConstructionManager>().photonView
                     .RPC("RPCCreateAConstructionPlan", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer, _actualPlanID, _preConstruction.transform.parent.position);
             }
+        }
+
+        [PunRPC] public void RPCCreateAConstructionPlan(Player photonPlayer, int planID, Vector3 pos)
+        {
+            var go = PhotonNetwork.Instantiate(allPlans[planID], pos, Quaternion.identity);
+            var constructionPlan = go.GetComponentInChildren<ConstructionPlan>();
+            Debug.LogError(FindObjectOfType<Server>().allPlayers[photonPlayer].team);
+            constructionPlan.SetConstructionTeamID(FindObjectOfType<Server>().allPlayers[photonPlayer].team);
+            _allConstructions.Add(constructionPlan);
+            constructionPlan.enabled = true;
+            constructionPlan.ArtificialAwake();
         }
     }
 }
