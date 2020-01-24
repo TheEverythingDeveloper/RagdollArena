@@ -32,9 +32,6 @@ public class Server : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
 
-        _chat = FindObjectOfType<Chat>();
-        _chat.server = this;
-
         _lvlMng.gameCanvas.SwitchEnterToStartText(true);
     }
 
