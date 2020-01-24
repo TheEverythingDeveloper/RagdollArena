@@ -121,5 +121,7 @@ MonoBehaviour:
   - RPCActiveParticlesChat
   - RPCCreateAConstructionPlan
   - RPCActivateChat
+  - RPCConstructon
+  - RPCConstructor
   DisableAutoOpenWizard: 1
   ShowSettings: 1

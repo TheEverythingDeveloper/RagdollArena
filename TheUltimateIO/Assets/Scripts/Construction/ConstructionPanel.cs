@@ -18,6 +18,7 @@ namespace Construction
     {
         public int actualConstructionSelection;
         private bool _openedPanel;
+        private bool _constructionSelected;
         [SerializeField] private GameObject _constructionPanelGo;
         private WeaponsAndStatsUIManager _weaponsAndStats;
         private Image[] _allConstructionOptions;
@@ -44,8 +45,7 @@ namespace Construction
                 x.color = Color.white;
             actualConstructionSelection = ID;
             _allConstructionOptions[ID].color = Color.green;
-
-            FindObjectOfType<ServerConstructionManager>().photonView.RPC("RPCCreateAConstructionPlan", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer, 0, Vector3.zero);
+            _constructionSelected = true;
         }
 
         private void Update()
@@ -56,6 +56,14 @@ namespace Construction
                     OpenClosePanel(false);
                 else
                     OpenClosePanel(true);
+            }
+            if (Input.GetMouseButtonDown(1))
+                _constructionSelected = false;
+
+            if (_constructionSelected)
+            {
+                FindObjectOfType<ServerConstructionManager>().CreateAPreConstructionPlan(actualConstructionSelection);
+                _constructionSelected = false;
             }
         }
     }

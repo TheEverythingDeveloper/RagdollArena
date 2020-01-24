@@ -29,6 +29,7 @@ namespace Construction
         public int teamID;
         private bool _playerIn;
         private bool _constructed;
+        private bool _prePlan;
         [HideInInspector] public ConstructionPiece constructionPiece;
         [SerializeField] private GameObject _infoPanel;
         [SerializeField] private TextMeshProUGUI _amountText;
