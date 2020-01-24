@@ -109,10 +109,11 @@ namespace Character
 
             particlesPlayer = GetComponentInChildren<ParticlesPlayer>();
             FindObjectOfType<Chat>().InitializedChat(this);
-            FindObjectOfType<ConstructionPanel>().OnConstructionMode += GetComponentInChildren<WeaponsManager>().ConstructionMode;
 
             if (!owned) return;
             Debug.Log("<color=green> Paso por aca porque es owner. ArtificialAwake </color>");
+
+            FindObjectOfType<ConstructionPanel>().OnConstructionMode += GetComponentInChildren<WeaponsManager>().ConstructionMode;
 
             _allUpdatables.Add(new CharacterCamera(this, rb));
             _allUpdatables.Add(new CharacterPointsManager(this, _lvlMng, PhotonNetwork.NickName));
