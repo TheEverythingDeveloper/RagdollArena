@@ -7,15 +7,15 @@ using Photon.Pun;
 
 namespace Construction
 {
-    public class ServerConstructionManager : MonoBehaviour
+    public class ServerConstructionManager : MonoBehaviourPun
     {
         public List<ConstructionPlan> _allConstructions = new List<ConstructionPlan>();
 
-        public void CreateAConstructionPlan(int teamID, int planID, Vector3 pos)
+        [PunRPC] public void RPCCreateAConstructionPlan(Player photonPlayer, int planID, Vector3 pos)
         {
             var go =  PhotonNetwork.Instantiate("ConstructionPlan", pos, Quaternion.identity);
             var constructionPlan = go.GetComponentInChildren<ConstructionPlan>();
-            constructionPlan.SetConstructionTeamID(teamID);
+            constructionPlan.SetConstructionTeamID(FindObjectOfType<Server>().allPlayers[photonPlayer].team);
             _allConstructions.Add(constructionPlan);
         }
     }

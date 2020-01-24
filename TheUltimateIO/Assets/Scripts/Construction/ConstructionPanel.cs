@@ -8,6 +8,9 @@ using Weapons;
 using System;
 using Random = UnityEngine.Random;
 using System.Linq;
+using Photon.Pun;
+using Photon.Realtime;
+using Photon;
 
 namespace Construction
 {
@@ -41,6 +44,8 @@ namespace Construction
                 x.color = Color.white;
             actualConstructionSelection = ID;
             _allConstructionOptions[ID].color = Color.green;
+
+            FindObjectOfType<ServerConstructionManager>().photonView.RPC("RPCCreateAConstructionPlan", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer, 0, Vector3.zero);
         }
 
         private void Update()

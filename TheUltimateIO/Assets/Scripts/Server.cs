@@ -11,7 +11,7 @@ using Random = UnityEngine.Random;
 
 public class Server : MonoBehaviourPun
 {
-    private Dictionary<Player, CharacterModel> _allPlayers = new Dictionary<Player, CharacterModel>();
+    public Dictionary<Player, CharacterModel> allPlayers = new Dictionary<Player, CharacterModel>();
     private LevelManager _lvlMng;
     public int PackagesPerSecond { get; private set; }
 
@@ -42,7 +42,7 @@ public class Server : MonoBehaviourPun
         if (Input.GetKeyDown(KeyCode.Space))
         {
             int counter = 0;
-            foreach (var player in _allPlayers)
+            foreach (var player in allPlayers)
             {
                 counter++;
                 Debug.Log("<color=blue>PLAYER " + counter + " = </color>" + player.Key.NickName);
@@ -62,7 +62,7 @@ public class Server : MonoBehaviourPun
         }
         photonView.RPC("RPCUpdateCounter", RpcTarget.All, 0);
         yield return new WaitForSeconds(1f);
-        foreach (var player in _allPlayers)
+        foreach (var player in allPlayers)
             player.Value.photonView.RPC("RPCStartGame", player.Key);
 
         StartCoroutine(TimerConstructMode());
@@ -82,7 +82,7 @@ public class Server : MonoBehaviourPun
         _lvlMng.gameCanvas.CounterUpdate(i);
         if(i == 0) startGame = true;
     }
-    [PunRPC] public void RPCChangePlayerTeam(Player photonPlayer, int teamID) => _allPlayers[photonPlayer].photonView.RPC("RPCChangePlayerTeam", photonPlayer, teamID);
+    [PunRPC] public void RPCChangePlayerTeam(Player photonPlayer, int teamID) => allPlayers[photonPlayer].photonView.RPC("RPCChangePlayerTeam", photonPlayer, teamID);
     public void AddPlayer(Player newPhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, newPhotonPlayer, true);
     public void RemovePlayer(Player toRemovePhotonPlayer)
     {
@@ -93,49 +93,49 @@ public class Server : MonoBehaviourPun
     {
         if (!add) //si estamos removiendo un jugador
         {
-            if (!_allPlayers.ContainsKey(photonPlayer)) return; //en caso de que NO este en la lista, return
+            if (!allPlayers.ContainsKey(photonPlayer)) return; //en caso de que NO este en la lista, return
             Debug.Log("<color=red>Se fue de la partida un usuario!</color>");
-            PhotonNetwork.Destroy(_allPlayers[photonPlayer].gameObject);
-            _allPlayers.Remove(photonPlayer);
+            PhotonNetwork.Destroy(allPlayers[photonPlayer].gameObject);
+            allPlayers.Remove(photonPlayer);
         }
         else
         {
-            if (_allPlayers.ContainsKey(photonPlayer)) return; //en caso de que ya este en la lista, return
+            if (allPlayers.ContainsKey(photonPlayer)) return; //en caso de que ya este en la lista, return
             CharacterModel model = LevelManager.Instance.SpawnUser();
             Debug.Log("<color=green>Se unio a la partida un usuario! Se llama </color>" + photonPlayer.NickName);
-            _allPlayers.Add(photonPlayer, model);
-            _allPlayers[photonPlayer].photonView.RPC("RPCSetModelOwner", photonPlayer, true);
-            _allPlayers[photonPlayer].photonView.RPC("RPCArtificialAwake", RpcTarget.AllBuffered);
+            allPlayers.Add(photonPlayer, model);
+            allPlayers[photonPlayer].photonView.RPC("RPCSetModelOwner", photonPlayer, true);
+            allPlayers[photonPlayer].photonView.RPC("RPCArtificialAwake", RpcTarget.AllBuffered);
             FindObjectOfType<TeamManager>().AddPlayer(photonPlayer);
         }
     }
     [PunRPC] public void RPCPlayerDeath(Player photonPlayer) //Decirle al modelo que se apague y que ponga los paneles de respawn en el HUD
     {
         photonView.RPC("RPCChangeRespawnFeedback", photonPlayer, true);
-        _allPlayers[photonPlayer].photonView.RPC("RPCChangeRespawnMode", RpcTarget.AllBuffered, true);
+        allPlayers[photonPlayer].photonView.RPC("RPCChangeRespawnMode", RpcTarget.AllBuffered, true);
     }
     public void MovePlayer(Player photonPlayer, float horAxis, float verAxis)
     { photonView.RPC("RPCMovePlayer", RpcTarget.MasterClient, photonPlayer, horAxis, verAxis); }
     [PunRPC] private void RPCMovePlayer(Player photonPlayer, float horAxis, float verAxis)
     {
-        if (!_allPlayers.ContainsKey(photonPlayer)) return;
+        if (!allPlayers.ContainsKey(photonPlayer)) return;
 
-        _allPlayers[photonPlayer].MovePlayer(horAxis, verAxis);
+        allPlayers[photonPlayer].MovePlayer(horAxis, verAxis);
     }
 
     public void JumpPlayer(Player photonPlayer) { photonView.RPC("RPCJumpPlayer", RpcTarget.MasterClient, photonPlayer); }
     [PunRPC] private void RPCJumpPlayer(Player photonPlayer)
     {
-        if (!_allPlayers.ContainsKey(photonPlayer)) return;
+        if (!allPlayers.ContainsKey(photonPlayer)) return;
 
-        _allPlayers[photonPlayer].TryJump();
+        allPlayers[photonPlayer].TryJump();
     }
     [PunRPC] public void RPCRespawnPlayer(Player photonPlayer, Vector3 position)
     {
         Debug.Log("<color=green>Respawneado en  " + position + "</color>");
 
         photonView.RPC("RPCChangeRespawnFeedback", photonPlayer, false);
-        _allPlayers[photonPlayer].photonView.RPC("RPCRespawn", RpcTarget.AllBuffered, position);
+        allPlayers[photonPlayer].photonView.RPC("RPCRespawn", RpcTarget.AllBuffered, position);
     }
     [PunRPC] public void RPCInstantiateSpawnPoint(int teamID, Vector3 pos)
     {
@@ -173,7 +173,7 @@ public class Server : MonoBehaviourPun
         foreach (var x in allSpawnPoints)
             PhotonNetwork.Destroy(x.gameObject);
         photonView.RPC("RPCStartRematch", RpcTarget.All);
-        foreach (var x in _allPlayers)
+        foreach (var x in allPlayers)
             RPCRespawnPlayer(x.Key, _lvlMng.PositionRandom());
 
         PhotonNetwork.Destroy(FindObjectOfType<EndPanel>().gameObject);
@@ -195,7 +195,7 @@ public class Server : MonoBehaviourPun
                 _allPlayers.Remove(x.Key);
         }*/
 
-        FindObjectOfType<TeamManager>().RematchReorganization(_allPlayers.Select(x => x.Key).ToList());
+        FindObjectOfType<TeamManager>().RematchReorganization(allPlayers.Select(x => x.Key).ToList());
         FindObjectOfType<SpawnMap>().photonView.RPC("RPCResetAllPointers", RpcTarget.All);
 
     }
@@ -209,6 +209,6 @@ public class Server : MonoBehaviourPun
 
     [PunRPC] public void RPCActivateEmoji(Player emojiPlayer, int emojiID)
     {
-        _allPlayers[emojiPlayer].photonView.RPC("RPCActivateEmoji", RpcTarget.All, emojiID);
+        allPlayers[emojiPlayer].photonView.RPC("RPCActivateEmoji", RpcTarget.All, emojiID);
     }
 }
