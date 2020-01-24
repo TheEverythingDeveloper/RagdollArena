@@ -11,9 +11,12 @@ namespace Construction
     {
         public List<ConstructionPlan> _allConstructions = new List<ConstructionPlan>();
 
-        public void CreateAConstructionPlan()
+        public void CreateAConstructionPlan(int teamID, int planID, Vector3 pos)
         {
-
+            var go =  PhotonNetwork.Instantiate("ConstructionPlan", pos, Quaternion.identity);
+            var constructionPlan = go.GetComponentInChildren<ConstructionPlan>();
+            constructionPlan.SetConstructionTeamID(teamID);
+            _allConstructions.Add(constructionPlan);
         }
     }
 }

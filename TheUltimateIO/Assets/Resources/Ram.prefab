@@ -91,11 +91,10 @@ GameObject:
   - component: {fileID: 6243196535240019223}
   - component: {fileID: 8877040119804817997}
   - component: {fileID: 568595515307800219}
-  - component: {fileID: 3268678063355959613}
   - component: {fileID: 8596574010611870399}
   - component: {fileID: 1829560060139215581}
   m_Layer: 16
-  m_Name: ConstructionBlockAttraction
+  m_Name: Ram
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -218,18 +217,6 @@ MonoBehaviour:
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
---- !u!114 &3268678063355959613
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6243196535240019212}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac49b2b6d50c7a749bea4d8294713dac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!198 &8596574010611870399
 ParticleSystem:
   m_ObjectHideFlags: 0
