@@ -75,7 +75,7 @@ public class SpawnedCube : MonoBehaviourPun, IDamageable, IAttractable
         return this;
     }
 
-    [PunRPC] public void RPCConstructon()
+    [PunRPC] public void RPCConstructor()
     {
         _rb.isKinematic = false;
         _boxColl.enabled = true;
