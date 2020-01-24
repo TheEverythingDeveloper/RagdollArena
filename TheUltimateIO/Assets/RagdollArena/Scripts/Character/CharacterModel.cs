@@ -107,10 +107,10 @@ namespace Character
 
             _hp = characterStats.life;
 
+            particlesPlayer = GetComponentInChildren<ParticlesPlayer>();
             if (!owned) return;
             Debug.Log("<color=green> Paso por aca porque es owner. ArtificialAwake </color>");
 
-            particlesPlayer = GetComponentInChildren<ParticlesPlayer>();
             FindObjectOfType<Chat>().InitializedChat(this);
             FindObjectOfType<ConstructionPanel>().OnConstructionMode += GetComponentInChildren<WeaponsManager>().ConstructionMode;
 
