@@ -206,4 +206,9 @@ public class Server : MonoBehaviourPun
         Instantiate(Resources.Load("InitialStateOfGame"));
         _lvlMng.SetInitialSpawnPoints();
     }
+
+    [PunRPC] public void RPCActivateEmoji(Player emojiPlayer, int emojiID)
+    {
+        _allPlayers[emojiPlayer].photonView.RPC("RPCActivateEmoji", RpcTarget.All, emojiID);
+    }
 }

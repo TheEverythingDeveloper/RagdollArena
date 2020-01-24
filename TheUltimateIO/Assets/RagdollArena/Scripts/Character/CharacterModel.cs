@@ -108,9 +108,8 @@ namespace Character
             _hp = characterStats.life;
 
             particlesPlayer = GetComponentInChildren<ParticlesPlayer>();
-            FindObjectOfType<Chat>().InitializedChat(this);
-
             if (!owned) return;
+            FindObjectOfType<Chat>().InitializedChat(this);
             Debug.Log("<color=green> Paso por aca porque es owner. ArtificialAwake </color>");
 
             FindObjectOfType<ConstructionPanel>().OnConstructionMode += GetComponentInChildren<WeaponsManager>().ConstructionMode;
@@ -252,6 +251,11 @@ namespace Character
 
             if (hp <= 0)
                 FindObjectOfType<Server>().photonView.RPC("RPCPlayerDeath", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer);
+        }
+
+        [PunRPC] public void RPCActivateEmoji(int emojiID)
+        {
+            particlesPlayer.particlesEmoji[emojiID].Play();
         }
 
 

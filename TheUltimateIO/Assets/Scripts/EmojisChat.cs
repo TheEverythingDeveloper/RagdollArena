@@ -17,7 +17,9 @@ namespace Character
 
         public void ActivateEmoji(int number)
         {
-
+            FindObjectOfType<Server>().photonView.RPC("RPCActivateEmoji", RpcTarget.MasterClient ,PhotonNetwork.LocalPlayer, number);
+            ClosePanel();
+            return;
             if (_characterModel.particlesPlayer.particlesEmoji[number])
             {
                 photonView.RPC("RPCActivateEmoji", RpcTarget.All, number);
