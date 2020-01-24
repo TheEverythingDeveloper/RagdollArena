@@ -117,5 +117,6 @@ MonoBehaviour:
   - RPCAnimBow
   - RPCUpdateColorTeamAndHead
   - RPCActivateEmoji
+  - RPCAddBlocks
   DisableAutoOpenWizard: 1
   ShowSettings: 1

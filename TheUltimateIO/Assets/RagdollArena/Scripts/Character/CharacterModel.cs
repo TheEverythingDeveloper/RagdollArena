@@ -251,6 +251,7 @@ namespace Character
                 FindObjectOfType<Server>().photonView.RPC("RPCPlayerDeath", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer);
         }
 
+
         public void Explosion(Vector3 origin, float force) { throw new NotImplementedException(); }
         #region Grenade
         public void TryGrenade()

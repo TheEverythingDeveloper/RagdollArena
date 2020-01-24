@@ -214,6 +214,7 @@ public class CubeSpawner : MonoBehaviour
 
         for (int i = 0; i < _preSpawnedCubes.Count; i++)
         {
+            _preSpawnedCubes[0].gameObject.SetActive(true);
             SpawnedCube spawnCube = _preSpawnedCubes[i];
             scaleOffset = (1 - (spawnCube.Size % 2)) * 0.5f; //para que todos los bloques esten en el mismo tipo de grilla sin importar la escala hay que hacer que los impares esten 0.5 mas al costado
             Vector3 spawnPos = Vector3.zero;
@@ -244,7 +245,8 @@ public class CubeSpawner : MonoBehaviour
                 CanSpawn(spawnPos);
             }
         }
-        Debug.Log(_preSpawnedCubes.Count + " can be spawned");
+        if (_preSpawnedCubes.Count > 1)
+            _preSpawnedCubes[0].CorrectPosition(_mouseDownHitPoint);
         if (_hadSpawn)
         {
             _hadSpawn = false;
