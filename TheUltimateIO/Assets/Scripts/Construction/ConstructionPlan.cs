@@ -40,13 +40,13 @@ namespace Construction
             this.teamID = teamID;
         }
 
-        private void Awake()
+        public void ArtificialAwake()
         {
             constructionPiece = transform.parent.GetComponentInChildren<ConstructionPiece>();
             TotalBlocks = 100;
             ActualBlocks = 0;
             SetProgress(0,100);
-            constructionPiece.SetMaterialColor(teamID == 0 ? Color.blue : teamID == 1 ? Color.red : teamID == 2 ? Color.yellow : Color.green);
+            constructionPiece.SetMaterialColor(teamID == 0 ? Color.blue : teamID == 1 ? Color.red : teamID == 2 ? Color.yellow : teamID == 3 ? Color.green : Color.grey);
         }
 
         private void OnTriggerEnter(Collider other)
@@ -105,6 +105,7 @@ namespace Construction
         
         private void Update()
         {
+            if (_prePlan) return;
             if (!_playerIn || _constructed) return;
 
             if (Input.GetMouseButtonDown(0))
@@ -112,7 +113,7 @@ namespace Construction
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
 
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, 1 << 9))
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, 1 << Layers.MAQUINARY))
                 {
                     if (hit.collider.gameObject.GetComponentInChildren<ConstructionPiece>())
                     {

@@ -29,4 +29,4 @@ Material:
     - __dirty: 0
     m_Colors:
     - _FresnelColor: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
-    - _MainColor: {r: 0.108933, g: 0, b: 1, a: 1}
+    - _MainColor: {r: 0.0048570633, g: 0, b: 1, a: 1}

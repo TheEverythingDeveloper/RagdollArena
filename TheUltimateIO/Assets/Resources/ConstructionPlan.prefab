@@ -233,7 +233,7 @@ GameObject:
   - component: {fileID: 7245214078677169586}
   - component: {fileID: 7245214078677169576}
   - component: {fileID: 7088842265963816396}
-  m_Layer: 9
+  m_Layer: 18
   m_Name: ConstructionPlan
   m_TagString: Untagged
   m_Icon: {fileID: 0}

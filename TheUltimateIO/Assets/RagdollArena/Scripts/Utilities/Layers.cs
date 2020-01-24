@@ -13,4 +13,5 @@ public class Layers : MonoBehaviour
     public static int MONSTER = 15;
     public static int CONSTRUCTIONBLOCK = 16;
     public static int DAMAGEABLE = 17;
+    public static int MAQUINARY = 18;
 }

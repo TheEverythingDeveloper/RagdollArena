@@ -19,13 +19,17 @@ namespace Construction
             DestroyPreConstruction();
             _preConstruction = ((GameObject)Instantiate(Resources.Load(allPlans[planID]))).GetComponentInChildren<ConstructionPlan>();
             _preConstruction.enabled = false;
+            _preConstruction.GetComponentInParent<BoxCollider>().enabled = false;
+            _preConstruction.GetComponentInParent<Rigidbody>().detectCollisions = false;
+            _preConstruction.SetConstructionTeamID(6);
             _actualPlanID = planID;
+            _preConstruction.ArtificialAwake();
         }
 
         public void DestroyPreConstruction()
         {
             if (_preConstruction != null)
-                Destroy(_preConstruction.gameObject);
+                Destroy(_preConstruction.transform.parent.gameObject);
         }
 
         [PunRPC] public void RPCCreateAConstructionPlan(Player photonPlayer, int planID, Vector3 pos)
@@ -35,13 +39,14 @@ namespace Construction
             constructionPlan.SetConstructionTeamID(FindObjectOfType<Server>().allPlayers[photonPlayer].team);
             _allConstructions.Add(constructionPlan);
             constructionPlan.enabled = true;
+            constructionPlan.ArtificialAwake();
         }
 
         private Vector3 GetMouseSpawnPos()
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, 1 << 9))
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, 1 << Layers.FLOOR))
                 _canSpawn = true;
             else
                 _canSpawn = false;
@@ -56,12 +61,12 @@ namespace Construction
             if (!_canSpawn) return;
 
             _preConstruction.transform.parent.transform.position = hitPos;
-
+           
             if (Input.GetMouseButtonDown(0))
             {
                 DestroyPreConstruction();
                 FindObjectOfType<ServerConstructionManager>().photonView
-                    .RPC("RPCCreateAConstructionPlan", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer, _actualPlanID, Vector3.zero);
+                    .RPC("RPCCreateAConstructionPlan", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer, _actualPlanID, _preConstruction.transform.parent.position);
             }
         }
     }

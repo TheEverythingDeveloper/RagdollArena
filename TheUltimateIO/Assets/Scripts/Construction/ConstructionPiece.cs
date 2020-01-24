@@ -8,19 +8,14 @@ namespace Construction
     {
         private MeshRenderer _meshRenderer;
 
-        private void Awake()
-        {
-            _meshRenderer = GetComponent<MeshRenderer>();            
-        }
-
         public void Construct()
         {
-            _meshRenderer.material = (Material)Resources.Load("ConstructPieceMaterial");
+            GetComponent<MeshRenderer>().material = (Material)Resources.Load("ConstructPieceMaterial");
         }
 
         public void SetMaterialColor(Color newColor)
         {
-            _meshRenderer.material.SetColor("_MainColor", newColor);
+            GetComponent<MeshRenderer>().material.SetColor("_MainColor", newColor);
         }
     }
 }
