@@ -98,6 +98,8 @@ namespace Character
         {
             if (_lastArrow == null)
                 SpawnArrow();
+            photonView.RPC("RPCAnimBow", RpcTarget.All);
+            yield return new WaitForSeconds(_characterStats.delayAnimBowInSeconds);
             _lastArrow.ThrowArrow();
             yield return new WaitForSeconds(_characterStats.delayBowAttackInSeconds);
             SpawnArrow();
@@ -105,7 +107,6 @@ namespace Character
 
         private void SpawnArrow()
         {
-            photonView.RPC("RPCAnimBow", RpcTarget.All);
             _lastArrow = PhotonNetwork.Instantiate("Arrow", _weaponsMng.arrowSpawnTransform.position, _weaponsMng.arrowSpawnTransform.rotation).GetComponent<Arrow>();
             _lastArrow.photonView.RPC("RPCUpdateWeaponColors", RpcTarget.All, _teamColor.r, _teamColor.g, _teamColor.b);
             _lastArrow.ownerWeapon = this;
