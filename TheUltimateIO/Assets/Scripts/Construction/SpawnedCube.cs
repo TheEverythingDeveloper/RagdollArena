@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 using System.Linq;
+using Photon;
+using Photon.Realtime;
+using Photon.Pun;
 
-public class SpawnedCube : MonoBehaviour, IDamageable, IAttractable
+public class SpawnedCube : MonoBehaviourPun, IDamageable, IAttractable
 {
     private float _life = 1;
     private float _maxLife;
@@ -68,9 +71,14 @@ public class SpawnedCube : MonoBehaviour, IDamageable, IAttractable
         preCube = isPreCube;
         if (preCube) return this;
 
+        photonView.RPC("RPCConstructor", RpcTarget.All);
+        return this;
+    }
+
+    [PunRPC] public void RPCConstructon()
+    {
         _rb.isKinematic = false;
         _boxColl.enabled = true;
-        return this;
     }
 
     private void UpdateHealthState(float life, float maxLife)
