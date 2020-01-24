@@ -69,11 +69,21 @@ public class Chat : MonoBehaviourPun
 
         controller.controlsActive = !enter;
         server.controlsActive = !enter;
+
+        photonView.RPC("RPCActiveParticlesChat", RpcTarget.All, enter);
+    }
+
+    [PunRPC] void RPCActiveParticlesChat(bool active)
+    {
+        if(active)
+            _characterModel.particlesPlayer.particleChat.Play();
+        else
+            _characterModel.particlesPlayer.particleChat.Stop();
     }
 
     public void SendMsg()
     {
-        if(msgInput.text != default)
+        if(msgInput.text != "")
         {
             photonView.RPC("RPCGlobalSendMsg", RpcTarget.All, msgInput.text, PhotonNetwork.LocalPlayer.NickName);
             /*
@@ -84,11 +94,9 @@ public class Chat : MonoBehaviourPun
         }
 
         OnInputMsg(false);
-        msgInput.MoveTextEnd(false);
+        //msgInput.MoveTextEnd(false);
         msgInput.text = "";
     }
-
-
 
     [PunRPC]
     void RPCGlobalSendMsg(string msg, string name)

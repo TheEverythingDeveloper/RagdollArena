@@ -118,5 +118,6 @@ MonoBehaviour:
   - RPCUpdateColorTeamAndHead
   - RPCActivateEmoji
   - RPCAddBlocks
+  - RPCActiveParticlesChat
   DisableAutoOpenWizard: 1
   ShowSettings: 1

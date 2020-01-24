@@ -20,7 +20,7 @@ namespace Character
 
         public GameObject model;
         public float forceImpulseDamage;
-        public ParticleSystem particlesDamage;
+        public ParticlesPlayer particlesPlayer;
 
         private LevelManager _lvlMng;
         public string nickname;
@@ -110,6 +110,7 @@ namespace Character
             if (!owned) return;
             Debug.Log("<color=green> Paso por aca porque es owner. ArtificialAwake </color>");
 
+            particlesPlayer = GetComponentInChildren<ParticlesPlayer>();
             FindObjectOfType<Chat>().InitializedChat(this);
             FindObjectOfType<ConstructionPanel>().OnConstructionMode += GetComponentInChildren<WeaponsManager>().ConstructionMode;
 
@@ -242,12 +243,13 @@ namespace Character
         }
         [PunRPC] public void RPCDamage(float hp)
         {
-            particlesDamage.Play();
+            particlesPlayer.particlesDamage.Play();
 
             barLife.fillAmount = hp;
+
             if (!owned) return;
 
-            if(hp <= 0)
+            if (hp <= 0)
                 FindObjectOfType<Server>().photonView.RPC("RPCPlayerDeath", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer);
         }
 
