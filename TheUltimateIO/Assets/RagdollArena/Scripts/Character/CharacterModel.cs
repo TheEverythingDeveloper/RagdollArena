@@ -108,11 +108,11 @@ namespace Character
             _hp = characterStats.life;
 
             particlesPlayer = GetComponentInChildren<ParticlesPlayer>();
-            if (!owned) return;
-            Debug.Log("<color=green> Paso por aca porque es owner. ArtificialAwake </color>");
-
             FindObjectOfType<Chat>().InitializedChat(this);
             FindObjectOfType<ConstructionPanel>().OnConstructionMode += GetComponentInChildren<WeaponsManager>().ConstructionMode;
+
+            if (!owned) return;
+            Debug.Log("<color=green> Paso por aca porque es owner. ArtificialAwake </color>");
 
             _allUpdatables.Add(new CharacterCamera(this, rb));
             _allUpdatables.Add(new CharacterPointsManager(this, _lvlMng, PhotonNetwork.NickName));

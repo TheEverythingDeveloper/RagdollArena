@@ -24,7 +24,6 @@ public class Chat : MonoBehaviourPun
 
     private CharacterModel _characterModel;
     [HideInInspector] public Controller controller;
-    [HideInInspector] public Server server;
 
     private void Awake()
     {
@@ -68,7 +67,6 @@ public class Chat : MonoBehaviourPun
         else _chatActive = ChatControllerOff;
 
         controller.controlsActive = !enter;
-        server.controlsActive = !enter;
 
         photonView.RPC("RPCActiveParticlesChat", RpcTarget.All, enter);
     }
