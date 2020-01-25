@@ -32,8 +32,6 @@ namespace Construction
                 Destroy(_preConstruction.transform.parent.gameObject);
         }
 
-
-
         private Vector3 GetMouseSpawnPos()
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
