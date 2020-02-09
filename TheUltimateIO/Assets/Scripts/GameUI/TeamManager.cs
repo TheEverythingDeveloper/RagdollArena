@@ -118,6 +118,8 @@ namespace GameUI
 
             playersPerTeam = AnalyzeTeamOrganization(playersAmount);
 
+            FindObjectOfType<FriendSystem>().AddButtonPanel(newPlayer.NickName);
+
             FindObjectOfType<SpawnMap>().SetTeamAmountOfPlayers(_teamCombinations[playersPerTeam][0], _teamCombinations[playersPerTeam][1]);
             //crear paneles segun la estructura nueva
             photonView.RPC("CreatePanelsWithStructure", RpcTarget.All, _allPlayers.ToArray(), _teamCombinations[playersPerTeam][0], _teamCombinations[playersPerTeam][1]);

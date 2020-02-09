@@ -14,8 +14,6 @@ public class Chat : MonoBehaviourPun
     public EmojisChat emojisPanel;
     private bool _emojisPanelActive;
     public InputField msgInput;
-    private Dictionary<int, string> _typesMsg = new Dictionary<int, string>();
-    //public Dropdown typeMsg;
     public GameObject content;
     public TextMeshProUGUI textMsg;
 
@@ -25,7 +23,11 @@ public class Chat : MonoBehaviourPun
     private CharacterModel _characterModel;
     [HideInInspector] public Controller controller;
 
-    private List<Action<bool>> metodsSuscribes = new List<Action<bool>>();
+    private List<Action<bool>> _metodsSuscribes = new List<Action<bool>>();
+
+    public delegate void ConsoleCommand(string txt);
+    private Dictionary<string, ConsoleCommand> _myCommands = new Dictionary<string, ConsoleCommand>();
+
     private void Awake()
     {
         _chatActive = ChatControllerOff;
@@ -34,9 +36,9 @@ public class Chat : MonoBehaviourPun
 
     void Start()
     {
-        _typesMsg.Add(0, "RPCGlobalSendMsg");
-        _typesMsg.Add(1, "RPCTeamSendMsg");
-        _typesMsg.Add(2, "RPCPrivateSendMsg");
+        AddCommands("/private", PrivateSendMsg);
+        AddCommands("/team", TeamSendMsg);
+
         OnConnected();
     }
 
@@ -48,7 +50,7 @@ public class Chat : MonoBehaviourPun
 
     public void SuscribeChat(Action<bool> metod)
     {
-        metodsSuscribes.Add(metod);
+        _metodsSuscribes.Add(metod);
     }
 
     public void InitializedChat(CharacterModel model)
@@ -70,7 +72,7 @@ public class Chat : MonoBehaviourPun
 
     public void OnInputMsg(bool enter)
     {
-        foreach (var item in metodsSuscribes)
+        foreach (var item in _metodsSuscribes)
         {
             item(!enter);
         }
@@ -86,18 +88,14 @@ public class Chat : MonoBehaviourPun
 
     public void SendMsg()
     {
-        if(msgInput.text != "")
+        if(CheckCommand()) return;
+
+        if (msgInput.text != "")
         {
             photonView.RPC("RPCGlobalSendMsg", RpcTarget.All, msgInput.text, PhotonNetwork.LocalPlayer.NickName);
-            /*
-            if (typeMsg.value != 1)
-                photonView.RPC(_typesMsg[typeMsg.value], RpcTarget.All, msgInput.text, PhotonNetwork.LocalPlayer.NickName);
-            else
-                photonView.RPC(_typesMsg[typeMsg.value], RpcTarget.All, msgInput.text, PhotonNetwork.LocalPlayer.NickName, _characterModel.team);*/
         }
 
         OnInputMsg(false);
-        //msgInput.MoveTextEnd(false);
         msgInput.text = "";
     }
 
@@ -111,6 +109,18 @@ public class Chat : MonoBehaviourPun
         newText.rectTransform.localScale = Vector3.one;
     }
 
+    public void TeamSendMsg(string txt)
+    {
+        var command = txt.Split(' ');
+        var msg = "";
+
+        for (int i = 1; i < command.Length; i++)
+        {
+            msg += " " + command[i];
+        }
+
+        photonView.RPC("RPCTeamSendMsg", RpcTarget.All, msg, PhotonNetwork.LocalPlayer.NickName, _characterModel.team);
+    }
     [PunRPC]
     void RPCTeamSendMsg(string msg, string name, int team)
     {
@@ -126,12 +136,29 @@ public class Chat : MonoBehaviourPun
         newText.rectTransform.localScale = Vector3.one;
     }
 
-    [PunRPC]
-    void RPCPrivateSendMsg(string msg, string name)
+    public void PrivateSendMsg(string txt)
     {
+        var command = txt.Split(' ');
+        var nameSend = command[1];
+
+        var msg = "";
+
+        for (int i = 2; i < command.Length; i++)
+        {
+            msg += " " + command[i];
+        }
+
+        photonView.RPC("RPCPrivateSendMsg", RpcTarget.All, msg, PhotonNetwork.LocalPlayer.NickName, nameSend);
+    }
+
+    [PunRPC]
+    void RPCPrivateSendMsg(string msg, string namePlayer, string nameSendMsg)
+    {
+        if (_characterModel.nickname != nameSendMsg && PhotonNetwork.LocalPlayer.NickName != namePlayer) return;
+
         var newText = Instantiate(textMsg);
         newText.gameObject.SetActive(true);
-        newText.text = "<color=blue> |PRIVATE| </color>" + name + ": " + msg;
+        newText.text = "<color=blue> " + namePlayer + " ---> " + nameSendMsg + "</color> : " + msg;
         newText.transform.parent = content.transform;
         newText.rectTransform.localScale = Vector3.one;
     }
@@ -171,4 +198,36 @@ public class Chat : MonoBehaviourPun
         newText.rectTransform.localScale = Vector3.one;
     }
     #endregion
+
+    public void AddCommands(string cheat, ConsoleCommand com)
+    {
+        _myCommands.Add(cheat, com);
+    }
+
+    public bool CheckCommand()
+    {
+        if (msgInput.text.StartsWith("/"))
+        {
+            var command = msgInput.text.Split(' ');
+            if (_myCommands.ContainsKey(command[0]))
+            {
+                _myCommands[command[0]](msgInput.text);
+            }
+            else
+            {
+                var newText = Instantiate(textMsg);
+                newText.gameObject.SetActive(true);
+                newText.text = "<color=red> The command does not exist";
+                newText.transform.parent = content.transform;
+                newText.rectTransform.localScale = Vector3.one;
+            }
+
+            OnInputMsg(false);
+            msgInput.text = "";
+
+            return true;
+        }
+
+        return false;
+    }
 }
