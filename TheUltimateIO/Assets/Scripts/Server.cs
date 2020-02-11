@@ -90,7 +90,8 @@ public class Server : MonoBehaviourPun
         if(i == 0) startGame = true;
     }
     [PunRPC] public void RPCChangePlayerTeam(Player photonPlayer, int teamID) => allPlayers[photonPlayer].photonView.RPC("RPCChangePlayerTeam", photonPlayer, teamID);
-    public void AddPlayer(Player newPhotonPlayer) => photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, newPhotonPlayer, true);
+    public void AddPlayer(Player newPhotonPlayer) { photonView.RPC("RPCChangePlayer", RpcTarget.MasterClient, newPhotonPlayer, true); photonView.RPC("RPCAddPlayerFriend", RpcTarget.All, newPhotonPlayer.NickName); }
+    [PunRPC] private void RPCAddPlayerFriend(string namePlayer) { FindObjectOfType<FriendSystem>().AddButtonPanel(namePlayer); }
     public void RemovePlayer(Player toRemovePhotonPlayer)
     {
         if (!PhotonNetwork.IsConnected) return;

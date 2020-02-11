@@ -123,5 +123,7 @@ MonoBehaviour:
   - RPCActivateChat
   - RPCConstructon
   - RPCConstructor
+  - RPCFriendsSendMsg
+  - RPCAddPlayerFriend
   DisableAutoOpenWizard: 1
   ShowSettings: 1

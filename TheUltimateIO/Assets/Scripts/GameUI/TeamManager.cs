@@ -13,7 +13,7 @@ namespace GameUI
     public class TeamManager : MonoBehaviourPun
     {
         private List<TeamPanel> _allTeamPanels = new List<TeamPanel>();
-        private List<Player> _allPlayers = new List<Player>();
+        public List<Player> allPlayers = new List<Player>();
         private List<Player> _winners = new List<Player>();
         private Server _server;
         public Dictionary<int, int[]> _teamCombinations = new Dictionary<int, int[]>();
@@ -79,12 +79,12 @@ namespace GameUI
 
             Server server = FindObjectOfType<Server>();
 
-            _winners = new List<Player>(_allPlayers);
+            _winners = new List<Player>(allPlayers);
 
             for (int i = destroyedTeamID * combinationsPlayersAmount; i < destroyedTeamID * combinationsPlayersAmount + combinationsPlayersAmount; i++)
             {
-                server.photonView.RPC("RPCPlayerDeath", RpcTarget.MasterClient, _allPlayers[i]);
-                _winners.Remove(_allPlayers[i]);
+                server.photonView.RPC("RPCPlayerDeath", RpcTarget.MasterClient, allPlayers[i]);
+                _winners.Remove(allPlayers[i]);
             }
 
             //TODO: Avisar a los jugadores en el chat y en popup, junto con muchisimo feedback
@@ -93,10 +93,10 @@ namespace GameUI
             if (lastCores.Length <= 1)
             {
                 int coreTeam = lastCores.Length > 0 ? lastCores[0].teamID-1 : 0;
-                server.photonView.RPC("RPCEndGame", RpcTarget.MasterClient, coreTeam, _allPlayers.
+                server.photonView.RPC("RPCEndGame", RpcTarget.MasterClient, coreTeam, allPlayers.
                     Aggregate(new List<Player>(), (list, elem) => 
                     { 
-                        int playerIndex = _allPlayers.FindIndex(x => x == elem);
+                        int playerIndex = allPlayers.FindIndex(x => x == elem);
                         if (playerIndex >= coreTeam * combinationsPlayersAmount && playerIndex < coreTeam * combinationsPlayersAmount + combinationsPlayersAmount)
                         { list.Add(elem); Debug.LogWarning(elem.NickName); }
                         return list; 
@@ -113,25 +113,22 @@ namespace GameUI
         private int playersPerTeam;
         public void AddPlayer(Player newPlayer)
         {
-            _allPlayers.Add(newPlayer);
+            allPlayers.Add(newPlayer);
             playersAmount++;
 
             playersPerTeam = AnalyzeTeamOrganization(playersAmount);
-
-            FindObjectOfType<FriendSystem>().AddButtonPanel(newPlayer.NickName);
-
             FindObjectOfType<SpawnMap>().SetTeamAmountOfPlayers(_teamCombinations[playersPerTeam][0], _teamCombinations[playersPerTeam][1]);
             //crear paneles segun la estructura nueva
-            photonView.RPC("CreatePanelsWithStructure", RpcTarget.All, _allPlayers.ToArray(), _teamCombinations[playersPerTeam][0], _teamCombinations[playersPerTeam][1]);
+            photonView.RPC("CreatePanelsWithStructure", RpcTarget.All, allPlayers.ToArray(), _teamCombinations[playersPerTeam][0], _teamCombinations[playersPerTeam][1]);
         }
-        
+
         public void RematchReorganization(List<Player> allPlayers)
         {
-            _allPlayers = allPlayers;
+            this.allPlayers = allPlayers;
             playersAmount = allPlayers.Count;
             playersPerTeam = AnalyzeTeamOrganization(playersAmount);
             FindObjectOfType<SpawnMap>().SetTeamAmountOfPlayers(_teamCombinations[playersPerTeam][0], _teamCombinations[playersPerTeam][1]);
-            photonView.RPC("CreatePanelsWithStructure", RpcTarget.All, _allPlayers.ToArray(), _teamCombinations[playersPerTeam][0], _teamCombinations[playersPerTeam][1]);
+            photonView.RPC("CreatePanelsWithStructure", RpcTarget.All, this.allPlayers.ToArray(), _teamCombinations[playersPerTeam][0], _teamCombinations[playersPerTeam][1]);
         }
 
         public int AnalyzeTeamOrganization(int actualPlayersAmount)

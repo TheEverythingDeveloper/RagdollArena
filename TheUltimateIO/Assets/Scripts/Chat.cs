@@ -21,6 +21,7 @@ public class Chat : MonoBehaviourPun
     private Action _chatActive;
 
     private CharacterModel _characterModel;
+    public FriendSystem friendSystem;
     [HideInInspector] public Controller controller;
 
     private List<Action<bool>> _metodsSuscribes = new List<Action<bool>>();
@@ -38,6 +39,7 @@ public class Chat : MonoBehaviourPun
     {
         AddCommands("/private", PrivateSendMsg);
         AddCommands("/team", TeamSendMsg);
+        AddCommands("/friends", FriendsSendMsg);
 
         OnConnected();
     }
@@ -136,6 +138,56 @@ public class Chat : MonoBehaviourPun
         newText.rectTransform.localScale = Vector3.one;
     }
 
+    public void FriendsSendMsg(string txt)
+    {
+        if(friendSystem.namesFriendsOn.Count <= 0)
+        {
+            var newText = Instantiate(textMsg);
+            newText.gameObject.SetActive(true);
+            newText.text = "<color=red> No friends connected";
+            newText.transform.parent = content.transform;
+            newText.rectTransform.localScale = Vector3.one;
+
+            return;
+        }
+
+        var command = txt.Split(' ');
+        var msg = "";
+
+        for (int i = 1; i < command.Length; i++)
+        {
+            msg += " " + command[i];
+        }
+
+        photonView.RPC("RPCFriendsSendMsg", RpcTarget.All, msg, PhotonNetwork.LocalPlayer.NickName, friendSystem.namesFriendsOn.ToArray());
+    }
+    [PunRPC]
+    void RPCFriendsSendMsg(string msg, string name, string[] friends)
+    {
+        bool friend = false;
+
+        if (PhotonNetwork.LocalPlayer.NickName != name)
+        {
+            foreach (var f in friends)
+            {
+                if (f == PhotonNetwork.LocalPlayer.NickName)
+                {
+                    friend = true;
+                }
+            }
+        }
+        else friend = true;
+
+        if (!friend) return;
+
+        var newText = Instantiate(textMsg);
+
+        newText.gameObject.SetActive(true);
+        newText.text = "<color=green> |FRIENDS| " + name + ": </color>" + msg;
+        newText.transform.parent = content.transform;
+        newText.rectTransform.localScale = Vector3.one;
+    }
+
     public void PrivateSendMsg(string txt)
     {
         var command = txt.Split(' ');
@@ -154,7 +206,7 @@ public class Chat : MonoBehaviourPun
     [PunRPC]
     void RPCPrivateSendMsg(string msg, string namePlayer, string nameSendMsg)
     {
-        if (_characterModel.nickname != nameSendMsg && PhotonNetwork.LocalPlayer.NickName != namePlayer) return;
+        if (PhotonNetwork.LocalPlayer.NickName != nameSendMsg && PhotonNetwork.LocalPlayer.NickName != namePlayer) return;
 
         var newText = Instantiate(textMsg);
         newText.gameObject.SetActive(true);
