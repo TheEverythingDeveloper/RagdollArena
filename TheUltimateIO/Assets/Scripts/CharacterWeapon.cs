@@ -1,43 +1,38 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
-using System.Linq;
 using Photon.Pun;
-using Photon.Realtime;
-using Photon;
 using GameUI;
 using Weapons;
 
 namespace Character 
 {
-    public class CharacterWeapon : MonoBehaviourPun
+    public class CharacterWeapon : IUpdatable
     {
+        public WeaponsManager weaponsMng;
+
         Func<int> weaponActive;
-        CharacterStats _characterStats;
-        [HideInInspector] public CharacterModel characterModel;
+        CharacterModel _characterModel;
+
         WeaponsAndStatsUIManager _weaponUIMng;
-        private WeaponsManager _weaponsMng;
+
         private bool[] _allAttacksCd = new bool[3];
 
-        public LayerMask layerMask;
-        public Animator animArms;
+        bool controlsActive = true;
 
-        private bool controlsActive = true;
-        private void Awake()
+        public CharacterWeapon(CharacterModel cm, WeaponsAndStatsUIManager weaponUIMng, WeaponsManager weaponsManager, Chat chat)
         {
-            _weaponUIMng = FindObjectOfType<WeaponsAndStatsUIManager>();
-            _weaponsMng = GetComponentInChildren<WeaponsManager>();
+            _characterModel = cm;
+            _weaponUIMng = weaponUIMng;
+            weaponsMng = weaponsManager;
             weaponActive = Sword;
-            _characterStats = GetComponent<CharacterStats>();
-            characterModel = GetComponent<CharacterModel>();
 
-            FindObjectOfType<Chat>().SuscribeChat(ChatActive);
+            chat.SuscribeChat(ChatActive);
         }
 
-        private void Update()
+        public void ArtificialUpdate()
         {
-            if (!characterModel.owned || !controlsActive) return;
+            if (!_characterModel.owned || !controlsActive) return;
 
             if (Input.GetKeyDown(KeyCode.Q))
                 SelectWeapon(false);
@@ -45,9 +40,13 @@ namespace Character
                 SelectWeapon(true);
 
             if (Input.GetMouseButtonDown(0))
-                StartCoroutine(AttackCoroutine());
-                
+                _characterModel.StartCoroutine(AttackCoroutine());
         }
+
+        public void ArtificialFixedUpdate() { }
+
+        public void ArtificialLateUpdate() { }
+
         void ChatActive(bool active)
         {
             controlsActive = active;
@@ -69,16 +68,16 @@ namespace Character
             _allAttacksCd[1] = true;
             Debug.Log("<color=blue> Se ataco con la espada. </color>");
 
-            photonView.RPC("RPCAnimSword", RpcTarget.All);
+            _characterModel.photonView.RPC("RPCAnimSword", RpcTarget.All);
 
             RaycastHit hit;
-            if (Physics.Raycast(characterModel.rb.transform.position, characterModel.rb.transform.up, out hit, _characterStats.verticalDistAttack, layerMask))
-                hit.collider.gameObject.GetComponent<Damageable>().Damage(transform.position, _characterStats.damageAttack);
+            if (Physics.Raycast(_characterModel.rb.transform.position, _characterModel.rb.transform.up, out hit, _characterModel.characterStats.verticalDistAttack, _characterModel.layerMaskWeaponDamage))
+                hit.collider.gameObject.GetComponent<Damageable>().Damage(_characterModel.transform.position, _characterModel.characterStats.damageAttack);
 
             return 1;
         }
 
-        [PunRPC] void RPCAnimSword() { animArms.SetTrigger("SwordAttack"); }
+        
 
         int Bow()
         {
@@ -86,43 +85,43 @@ namespace Character
             _allAttacksCd[2] = true;
             Debug.Log("<color=blue> Se ataco con el arco. </color>");
 
-            StartCoroutine(BowCoroutine());
+            _characterModel.StartCoroutine(BowCoroutine());
 
             return 2;
         }
 
-        [PunRPC] void RPCAnimBow() { animArms.SetTrigger("BowAttack"); }
+        
 
         private Arrow _lastArrow;
         IEnumerator BowCoroutine()
         {
             if (_lastArrow == null)
                 SpawnArrow();
-            photonView.RPC("RPCAnimBow", RpcTarget.All);
-            yield return new WaitForSeconds(_characterStats.delayAnimBowInSeconds);
+            _characterModel.photonView.RPC("RPCAnimBow", RpcTarget.All);
+            yield return new WaitForSeconds(_characterModel.characterStats.delayAnimBowInSeconds);
             _lastArrow.ThrowArrow();
-            yield return new WaitForSeconds(_characterStats.delayBowAttackInSeconds);
+            yield return new WaitForSeconds(_characterModel.characterStats.delayBowAttackInSeconds);
             SpawnArrow();
         }
 
         private void SpawnArrow()
         {
-            _lastArrow = PhotonNetwork.Instantiate("Arrow", _weaponsMng.arrowSpawnTransform.position, _weaponsMng.arrowSpawnTransform.rotation).GetComponent<Arrow>();
+            _lastArrow = PhotonNetwork.Instantiate("Arrow", weaponsMng.arrowSpawnTransform.position, weaponsMng.arrowSpawnTransform.rotation).GetComponent<Arrow>();
             _lastArrow.photonView.RPC("RPCUpdateWeaponColors", RpcTarget.All, _teamColor.r, _teamColor.g, _teamColor.b);
-            _lastArrow.ownerWeapon = this;
-            _lastArrow.transform.parent = _weaponsMng.arrowSpawnTransform;
+            _lastArrow.ownerWeapon = _characterModel;
+            _lastArrow.transform.parent = weaponsMng.arrowSpawnTransform;
         }
 
         IEnumerator AttackCoroutine()
         {
             int attackID = weaponActive();
-            yield return new WaitForSeconds(_characterStats.delayMeleeAttackInSeconds);
+            yield return new WaitForSeconds(_characterModel.characterStats.delayMeleeAttackInSeconds);
             _allAttacksCd[attackID] = false;
         }
 
         private void SelectWeapon(bool right) //cadena de ifs porque no hay necesidad de hacerlo mas complejo al ser solo 3, yay!
         {
-            if (_weaponsMng.constructionMode) return;
+            if (weaponsMng.constructionMode) return;
 
             if (right)
             {
@@ -152,25 +151,21 @@ namespace Character
 
             _weaponUIMng.UpdateWeapon(selectedWeaponID);
             //TODO: Si ya empezo la partida que sea RpcTarget.All, y si no empezo, entonces que sea RpcTarget.AllBuffered
-            photonView.RPC("RPCChangeWeapon", RpcTarget.All, selectedWeaponID); 
-        }
-
-        [PunRPC] public void RPCChangeWeapon(int selectedWeaponID)
-        {
-            _weaponsMng.ChangeWeapon(selectedWeaponID);
+            _characterModel.photonView.RPC("RPCChangeWeapon", RpcTarget.All, selectedWeaponID); 
         }
 
         private Color _teamColor;
         public void UpdateWeaponColors(float r, float g, float b)
         {
-            _weaponsMng.UpdateWeaponColors(r, g, b);
+            weaponsMng.UpdateWeaponColors(r, g, b);
             _teamColor = new Color(r, g, b, 1f);
         }
 
         private void OnDrawGizmos()
         {
-            if (characterModel == null) return;
-            Gizmos.DrawLine(characterModel.rb.transform.position, characterModel.rb.transform.up * _characterStats.verticalDistAttack); 
+            if (_characterModel == null) return;
+            Gizmos.DrawLine(_characterModel.rb.transform.position, _characterModel.rb.transform.up * _characterModel.characterStats.verticalDistAttack); 
         }
+
     } 
 }

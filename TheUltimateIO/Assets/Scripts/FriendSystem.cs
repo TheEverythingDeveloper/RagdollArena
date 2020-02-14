@@ -23,7 +23,6 @@ public class FriendSystem : MonoBehaviourPun
     public List<Action> panelsRemoveActive = new List<Action>();
     List<FriendButton> _buttons = new List<FriendButton>();
     List<string> namesPlayers = new List<string>();
-
     string _jsonSavePath;
     bool _panelActive;
 
@@ -73,8 +72,6 @@ public class FriendSystem : MonoBehaviourPun
 
     public void AddButtonPanel(string name)
     {
-        Debug.LogError(name);
-
         if (PhotonNetwork.NickName == name) return;
 
         var newButton = Instantiate(prefabButtons);

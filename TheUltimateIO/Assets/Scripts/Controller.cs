@@ -7,7 +7,7 @@ using Photon.Pun;
 using Character;
 using UnityEngine.SceneManagement;
 
-public class Controller : MonoBehaviourPun
+public class Controller : MonoBehaviourPun, IUpdatable
 {
     Server server;
     public bool controlsActive = true;
@@ -58,16 +58,14 @@ public class Controller : MonoBehaviourPun
             FindObjectOfType<SpawnPoint>().UseSpawnPoint(photonView.Controller);
         }
 
-        Move();
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //_myModel.TryJump();
-        /*if (Input.GetKeyDown(KeyCode.E))
-            _myModel.TryGrenade();
-        if (Input.GetKeyUp(KeyCode.E))
-            _myModel.ThrowGrenade();
-        if (Input.GetKeyDown(KeyCode.R))
-            _myModel.TryGrenadeDrunk();*/
+        
     }
+
+    public void ArtificialUpdate()
+    {
+        Move();
+    }
+
     private void Move()
     {
         var horAxis = Input.GetAxis("Horizontal");
@@ -79,4 +77,8 @@ public class Controller : MonoBehaviourPun
         if (Input.GetKeyDown(KeyCode.Space))
             server.JumpPlayer(photonView.Controller);
     }
+
+    public void ArtificialFixedUpdate() { }
+
+    public void ArtificialLateUpdate() { }
 }

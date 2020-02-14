@@ -64,7 +64,6 @@ namespace Construction
         {
             var go = PhotonNetwork.Instantiate(allPlans[planID], pos, Quaternion.identity);
             var constructionPlan = go.GetComponentInChildren<ConstructionPlan>();
-            Debug.LogError(FindObjectOfType<Server>().allPlayers[photonPlayer].team);
             constructionPlan.SetConstructionTeamID(FindObjectOfType<Server>().allPlayers[photonPlayer].team);
             _allConstructions.Add(constructionPlan);
             constructionPlan.enabled = true;

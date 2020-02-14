@@ -52,6 +52,7 @@ namespace Character
         public float coreDistancingSpeed;
         [Tooltip("Distancia a la que se va a alejar la camara cerca de un nexo")]
         public float coreDistancingAmount;
+        public CharacterCamera characterCamera;
 
         public float sqrMagnitudeInTimeSpeed;
         [Tooltip("Altura minima en la que el player debe volver")]
@@ -83,6 +84,14 @@ namespace Character
         Server _server;
         private bool _controlsActive = true;
 
+        [Tooltip("Armas: ")]
+        public LayerMask layerMaskWeaponDamage;
+        public Animator animArms;
+        CharacterWeapon _characterWeapon;
+
+        Action _Update, _FixedUpdate, _LateUpdate;
+        Action<float, float> _Move;
+
         [HideInInspector] public int team = 0; // { 0 } = sin equipo. { 1, 2, 3, 4 } = posibles equipos que pueden haber.
         [Tooltip("Este owned es parecido al photonView.isMine, solo que es para FullAutho, ya que el server es el photonView.isMine")] public bool owned;
 
@@ -90,6 +99,10 @@ namespace Character
 
         [PunRPC] public void RPCArtificialAwake()
         {
+            _Update = ArtificialUpdate;
+            _FixedUpdate = ArtificialFixedUpdate;
+            _LateUpdate = ArtificialLateUpdate;
+
             _lvlMng = FindObjectOfType<LevelManager>();
 
             _characterBody = FindObjectOfType<CharacterBody>();
@@ -105,12 +118,26 @@ namespace Character
             _movementController = new CharacterMovement(this, rb, rb.transform.localRotation, floorLayers);
             _allConstructables.Add(_movementController);
             _allUpdatables.Add(_movementController);
+            _Move = _movementController.Move;
+
+            characterCamera = new CharacterCamera(this, rb);
+            _allUpdatables.Add(characterCamera);
+
+            var weaponsUIManager = FindObjectOfType<WeaponsAndStatsUIManager>();
+            var WeaponsManager = GetComponentInChildren<WeaponsManager>();
+            var chat = FindObjectOfType<Chat>();
+
+            _characterWeapon = new CharacterWeapon(this, weaponsUIManager, WeaponsManager, chat);
+            _allUpdatables.Add(_characterWeapon);
 
             _hp = characterStats.life;
 
             particlesPlayer = GetComponentInChildren<ParticlesPlayer>();
+
+            _allUpdatables.Add(FindObjectOfType<Controller>());
+
             if (!owned) return;
-            var chat = FindObjectOfType<Chat>();
+
             chat.InitializedChat(this);
             chat.SuscribeChat(ChatActive);
 
@@ -118,7 +145,6 @@ namespace Character
 
             FindObjectOfType<ConstructionPanel>().OnConstructionMode += GetComponentInChildren<WeaponsManager>().ConstructionMode;
 
-            _allUpdatables.Add(new CharacterCamera(this, rb));
             _allUpdatables.Add(new CharacterPointsManager(this, _lvlMng, PhotonNetwork.NickName));
             _allUpdatables.Add(new CharacterFriendsManager(this, _lvlMng.playerFriendsLayermask));
 
@@ -169,9 +195,9 @@ namespace Character
         public void Crowned(bool on) => OnCrowned(on);
         public void TryJump() { if (_movementController.inAir) return; OnJump(); }
         private void Start() { if (!owned) return; ArtificialStart(); }
-        private void Update() { if ((!owned && rb != null) || !_controlsActive) return; ArtificialUpdate(); }
-        private void FixedUpdate() { if (!owned || !_controlsActive) return; ArtificialFixedUpdate(); }
-        private void LateUpdate() { if (!owned || !_controlsActive) return; ArtificialLateUpdate(); }
+        private void Update() { if ((!owned && rb != null) || !_controlsActive) return; _Update(); }
+        private void FixedUpdate() { if (!owned || !_controlsActive) return; _FixedUpdate(); }
+        private void LateUpdate() { if (!owned || !_controlsActive) return; _LateUpdate(); }
         [PunRPC] public void RPCUpdateColorTeamAndHead(float[] skinColor, float[] teamColor, int headTypeID, int teamTypeID)
         {
             _allMyHeads.Select(x =>
@@ -182,7 +208,7 @@ namespace Character
             _characterBody.SelectHead(headTypeID);
             _characterBody.SelectBody(teamTypeID);
 
-            GetComponent<CharacterWeapon>().UpdateWeaponColors(teamColor[0], teamColor[1], teamColor[2]);
+            _characterWeapon.UpdateWeaponColors(teamColor[0], teamColor[1], teamColor[2]);
         }
         public void ArtificialAwakes() { _allConstructables.Select(x => { x.ArtificialAwake(); return x; }).ToList(); }
         public void ArtificialStart() { _allConstructables.Select(x => { x.ArtificialStart(); return x; }).ToList(); }
@@ -238,7 +264,7 @@ namespace Character
         }
         public void MovePlayer(float horizontal, float vertical)
         {
-            _movementController.Move(horizontal, vertical);
+            _Move(horizontal, vertical);
         }
 
         public void Damage(Vector3 origin, float damage)
@@ -309,6 +335,15 @@ namespace Character
                 * _grenadeThrowSpeed * Time.deltaTime, ForceMode.Impulse);
         }
         #endregion
+        #region RPCWeapons
+        [PunRPC] void RPCAnimSword() { animArms.SetTrigger("SwordAttack"); }
+        [PunRPC] void RPCAnimBow() { animArms.SetTrigger("BowAttack"); }
+        [PunRPC]
+        public void RPCChangeWeapon(int selectedWeaponID)
+        {
+            _characterWeapon.weaponsMng.ChangeWeapon(selectedWeaponID);
+        }
+        #endregion
         #region Drunk
         public void DrunkEffectActive()
         {
@@ -365,6 +400,32 @@ namespace Character
             grenadeDrunk.GetComponent<Rigidbody>()
                 .AddForce((hit.point - rb.transform.position).normalized
                 * 20, ForceMode.Impulse);
+        }
+        #endregion
+        #region Controls
+        public void ChangeControls(Action u, Action fu, Action lu, Action<float, float> move)
+        {
+            _Update = u;
+            _FixedUpdate = fu;
+            _LateUpdate = lu;
+            _Move = move;
+        }
+        public void ChangeControls(Action u, Action fu, Action lu, Action<float, float> move, Rigidbody newRb)
+        {
+            _Update = u;
+            _FixedUpdate = fu;
+            _LateUpdate = lu;
+            _Move = move;
+            characterCamera.ChangeTarget(newRb);
+        }
+
+        public void NormalControls()
+        {
+            _Update = ArtificialUpdate;
+            _FixedUpdate = ArtificialFixedUpdate;
+            _LateUpdate = ArtificialLateUpdate;
+            _Move = _movementController.Move;
+            characterCamera.ChangeTarget(rb);
         }
         #endregion
     }

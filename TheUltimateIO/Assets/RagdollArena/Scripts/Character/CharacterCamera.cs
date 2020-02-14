@@ -10,7 +10,7 @@ namespace Character
     public class CharacterCamera : IUpdatable
     {
         CharacterModel _myModel;
-        Rigidbody _pelvisRb;
+        Rigidbody rb;
         private Action myAction = delegate { };
         public enum CameraMode
         {
@@ -24,9 +24,14 @@ namespace Character
         public CharacterCamera(CharacterModel model, Rigidbody pelvis)
         {
             _myModel = model;
-            _pelvisRb = pelvis;
+            rb = pelvis;
             model.OnChangeRespawnMode += ChangeRespawnMode;
             myAction = ThirdPersonCamera;
+        }
+
+        public void ChangeTarget(Rigidbody newRb)
+        {
+            rb = newRb;
         }
 
         private void ChangeRespawnMode(CameraMode newCamMode)
@@ -62,10 +67,10 @@ namespace Character
         {
             //FoV Camera
             Camera.main.fieldOfView = Mathf.Lerp(_myModel.minFOV, _myModel.maxFOV,
-                _pelvisRb.velocity.sqrMagnitude * _myModel.ratioMultiplierFoV);
+                rb.velocity.sqrMagnitude * _myModel.ratioMultiplierFoV);
 
             //Camera offset
-            Vector3 offsetPosition = _myModel.rb.transform.position + _myModel.thirdPersonCameraOffset;
+            Vector3 offsetPosition = rb.transform.position + _myModel.thirdPersonCameraOffset;
             Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position,
                 offsetPosition, _myModel.cameraSpeed * Time.deltaTime);
         }
@@ -74,7 +79,7 @@ namespace Character
         {
             //FoV Camera
             Camera.main.fieldOfView = Mathf.Lerp(_myModel.minFOV, _myModel.maxFOV,
-                _pelvisRb.velocity.sqrMagnitude * _myModel.ratioMultiplierFoV);
+                rb.velocity.sqrMagnitude * _myModel.ratioMultiplierFoV);
 
             //Camera offset
             Camera.main.transform.forward = Vector3.Lerp(Camera.main.transform.forward,
@@ -99,9 +104,9 @@ namespace Character
             if (UnityEngine.Object.FindObjectsOfType<Core>().Count() < 1) return;
 
             _nearestCore = UnityEngine.Object.FindObjectsOfType<Core>()
-                .OrderBy(x => Vector3.Distance(_myModel.rb.transform.position, x.transform.position)).First();
+                .OrderBy(x => Vector3.Distance(rb.transform.position, x.transform.position)).First();
             if (_nearestCore == null) return;
-            if (Vector3.Distance(_nearestCore.transform.position, _myModel.rb.transform.position) > _myModel.coreDistancingCloseness)
+            if (Vector3.Distance(_nearestCore.transform.position, rb.transform.position) > _myModel.coreDistancingCloseness)
             {
                 if (_previousCameraMode == CameraMode.ThirdPersonMode)
                     ChangeRespawnMode(CameraMode.ThirdPersonMode);

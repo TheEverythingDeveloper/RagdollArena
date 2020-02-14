@@ -125,5 +125,6 @@ MonoBehaviour:
   - RPCConstructor
   - RPCFriendsSendMsg
   - RPCAddPlayerFriend
+  - RPCHideModelCharacter
   DisableAutoOpenWizard: 1
   ShowSettings: 1
