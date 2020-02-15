@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Character;
+using Friends;
 using System;
 
 public class Chat : MonoBehaviourPun
