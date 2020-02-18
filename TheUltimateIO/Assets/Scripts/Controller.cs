@@ -74,10 +74,10 @@ public class Controller : MonoBehaviourPun, IUpdatable
         var verAxis = Input.GetAxis("Vertical");
 
         if (horAxis != 0 || verAxis != 0)
-            server.MovePlayer(photonView.Controller, horAxis, verAxis);
+            FindObjectOfType<Server>().MovePlayer(photonView.Controller, horAxis, verAxis);
 
         if (Input.GetKeyDown(KeyCode.Space))
-            server.JumpPlayer(photonView.Controller);
+            FindObjectOfType<Server>().JumpPlayer(photonView.Controller);
     }
 
     public void ArtificialFixedUpdate() { }
