@@ -178,6 +178,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -205,15 +206,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1159}
     m_Modifications:
-    - target: {fileID: 9064732337308217289, guid: ca21e1d59ab2a224fa18484ac0444550,
+    - target: {fileID: 3348587972884062180, guid: ca21e1d59ab2a224fa18484ac0444550,
         type: 3}
-      propertyPath: m_Name
-      value: ParticlesArrow
-      objectReference: {fileID: 0}
-    - target: {fileID: 9064732337308217289, guid: ca21e1d59ab2a224fa18484ac0444550,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 6689843320209428264, guid: ca21e1d59ab2a224fa18484ac0444550,
         type: 3}
@@ -270,10 +266,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3348587972884062180, guid: ca21e1d59ab2a224fa18484ac0444550,
+    - target: {fileID: 9064732337308217289, guid: ca21e1d59ab2a224fa18484ac0444550,
         type: 3}
-      propertyPath: InitialModule.startSpeed.scalar
-      value: 0.3
+      propertyPath: m_Name
+      value: ParticlesArrow
+      objectReference: {fileID: 0}
+    - target: {fileID: 9064732337308217289, guid: ca21e1d59ab2a224fa18484ac0444550,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ca21e1d59ab2a224fa18484ac0444550, type: 3}

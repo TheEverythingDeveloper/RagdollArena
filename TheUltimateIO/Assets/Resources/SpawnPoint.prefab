@@ -63,8 +63,6 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: CLICK TO SPAWN
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -257,7 +255,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6394636909846091125}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_UiScaleMode: 0
@@ -279,7 +277,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6394636909846091125}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1301386320, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreReversedGraphics: 1
@@ -415,7 +413,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7723734711063691857}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -424,8 +422,6 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 1
   m_PreserveAspect: 0
@@ -435,6 +431,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!114 &1855720863228321945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -444,7 +441,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7723734711063691857}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -458,17 +455,20 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.4909883, g: 0.990566, b: 0.2569865, a: 1}
     m_PressedColor: {r: 0.9433962, g: 0.79179645, b: 0.10234961, a: 1}
+    m_SelectedColor: {r: 0.4909883, g: 0.990566, b: 0.2569865, a: 1}
     m_DisabledColor: {r: 0.5283019, g: 0.5283019, b: 0.5283019, a: 0.67058825}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
+    m_SelectedTrigger: Highlighted
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 6154936911237071291}
@@ -486,8 +486,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!1001 &2237037004745091860
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -495,11 +493,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7535337251854632180}
     m_Modifications:
-    - target: {fileID: 9089507839432757215, guid: bd92b6566bcb6c24db89c1620012d2b7,
-        type: 3}
-      propertyPath: m_Name
-      value: MagicSpawnBlueTeam
-      objectReference: {fileID: 0}
     - target: {fileID: 3294139910036809920, guid: bd92b6566bcb6c24db89c1620012d2b7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -570,11 +563,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1.5
       objectReference: {fileID: 0}
-    - target: {fileID: 6273143840854521951, guid: bd92b6566bcb6c24db89c1620012d2b7,
-        type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4506480411557243685, guid: bd92b6566bcb6c24db89c1620012d2b7,
         type: 3}
       propertyPath: playOnAwake
@@ -584,6 +572,16 @@ PrefabInstance:
         type: 3}
       propertyPath: playOnAwake
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6273143840854521951, guid: bd92b6566bcb6c24db89c1620012d2b7,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9089507839432757215, guid: bd92b6566bcb6c24db89c1620012d2b7,
+        type: 3}
+      propertyPath: m_Name
+      value: MagicSpawnBlueTeam
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bd92b6566bcb6c24db89c1620012d2b7, type: 3}
