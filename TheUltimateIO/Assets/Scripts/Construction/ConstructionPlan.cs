@@ -132,7 +132,6 @@ namespace Construction
 
             SetProgress(_actualBlocks, TotalBlocks);
 
-            //TODO: 3DHud del plan actualizado con la cantidad de bloques que tiene ahora
             //TODO: Feedback de que pusiste bloques, particulas, sonido
             //TODO: Algun tipo de shader que se vaya llenando en el modelo como feedback 3D.
 
