@@ -115,7 +115,6 @@ namespace Character
             _movementController = new CharacterMovement(this, rb, rb.transform.localRotation, floorLayers);
             _allConstructables.Add(_movementController);
             _allUpdatables.Add(_movementController);
-            _Move = _movementController.Move;
 
             characterCamera = new CharacterCamera(this, rb);
             _allUpdatables.Add(characterCamera);
@@ -138,6 +137,7 @@ namespace Character
             _Update = ArtificialUpdate;
             _FixedUpdate = ArtificialFixedUpdate;
             _LateUpdate = ArtificialLateUpdate;
+            _Move = _movementController.Move;
 
             chat.InitializedChat(this);
             chat.SuscribeChat(ChatActive);
