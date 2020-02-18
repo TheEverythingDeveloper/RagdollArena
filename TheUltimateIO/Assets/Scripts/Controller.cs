@@ -13,6 +13,8 @@ public class Controller : MonoBehaviourPun, IUpdatable
     public bool controlsActive = true;
     private void Start()
     {
+        if (FindObjectOfType<NetSpawner>()) Destroy(gameObject);
+
         if (!photonView.IsMine) return;
 
         FindObjectOfType<Chat>().SuscribeChat(ChatActive);

@@ -16,6 +16,7 @@ namespace GameUI
         [SerializeField] private TextMeshProUGUI _timeText;
         [SerializeField] private TextMeshProUGUI _coordText;
         public Image[] _allPointers = new Image[4];
+        public Image[] _allExteriorPointers = new Image[4];
         [SerializeField] private Image _corePointer;
         [SerializeField] private Button _spawnButton;
         private float _mapPointerPosScaler = 1.43f;
@@ -52,9 +53,12 @@ namespace GameUI
         {
             if (team != teamID) return;
             _allPointers[playerID].gameObject.SetActive(true);
+            _allExteriorPointers[playerID].gameObject.SetActive(true);
             if(_allPointers[playerID].color != Color.white)
             {
                 _allPointers[playerID].color = _corePointer.color = 
+                    team == 0 ? Color.blue : team == 1 ? Color.red : team == 2 ? Color.yellow : Color.green;
+                _allExteriorPointers[playerID].color = _corePointer.color =
                     team == 0 ? Color.blue : team == 1 ? Color.red : team == 2 ? Color.yellow : Color.green;
             }
             _allPointers[playerID].rectTransform.anchoredPosition = pos;
@@ -89,6 +93,10 @@ namespace GameUI
                 x.rectTransform.anchoredPosition = Vector2.zero;
                 x.color = Color.black;
             }
+            foreach (var y in _allExteriorPointers) 
+            {
+                y.color = Color.black;
+            }
             _corePointer.rectTransform.anchoredPosition = Vector2.zero;
         }
 
@@ -112,6 +120,8 @@ namespace GameUI
             if (selectedTeamID != teamID) return;
 
             _allPointers[playerID].color = Color.white;
+            _allExteriorPointers[playerID].color = Color.white;
+            _allExteriorPointers[playerID].GetComponentInChildren<TextMeshProUGUI>().text = "READY";
         }
 
         [PunRPC] public void RPCServerSpawnConfirmation(int playerID, int selectedTeamID) //el server va a decidir cuando spawnean todos

@@ -21,8 +21,8 @@ public class NetManager : MonoBehaviourPunCallbacks
     private bool _host;
 
     public int minPlayersStartGame; //cantidad de jugadores que tienen que haber entrado para que inicie el juego
-    public GameObject canvasWaitingStart;
-    public TextMeshProUGUI textNamesPlayers, textWaiting;
+    [HideInInspector] public GameObject canvasWaitingStart;
+    [HideInInspector] public TextMeshProUGUI textNamesPlayers, textWaiting;
 
     Server server;
 

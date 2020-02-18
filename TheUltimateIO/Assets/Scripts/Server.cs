@@ -22,6 +22,8 @@ public class Server : MonoBehaviourPun
     public int timeConstructInSeconds;
     private void Awake()
     {
+        if (FindObjectOfType<NetSpawner>()) Destroy(gameObject);
+
         _lvlMng = FindObjectOfType<LevelManager>();
 
         if (!photonView.IsMine) return;
@@ -55,7 +57,6 @@ public class Server : MonoBehaviourPun
         if (Input.GetKeyDown(KeyCode.Return))
             StartCoroutine(StartGameCoroutine(5));
     }
-
     void ChatActive(bool active)
     {
         controlsActive = active;
