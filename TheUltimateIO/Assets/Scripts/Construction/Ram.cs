@@ -42,7 +42,7 @@ public class Ram : Mountable
         {
             if (Input.GetKey(KeyCode.M) && !mounted)
             {
-                ActiveMountable();
+                EnterMountable();
                 StopCoroutine(ActiveEquip());
             }
             yield return WaitForEndOfFrame;
@@ -70,6 +70,7 @@ public class Ram : Mountable
         mounted = true;
         HideModelCharacter(true);
         _characterModel.model.SetActive(false);
+        ActiveMountable();
     }
 
     public override void ExitMountable()

@@ -138,7 +138,7 @@ namespace Character
             _FixedUpdate = ArtificialFixedUpdate;
             _LateUpdate = ArtificialLateUpdate;
             _Move = _movementController.Move;
-
+            Debug.LogError(1);
             chat.InitializedChat(this);
             chat.SuscribeChat(ChatActive);
 
@@ -265,6 +265,7 @@ namespace Character
         }
         public void MovePlayer(float horizontal, float vertical)
         {
+            Debug.LogError(3);
             _Move(horizontal, vertical);
         }
 
@@ -403,6 +404,11 @@ namespace Character
                 * 20, ForceMode.Impulse);
         }
         #endregion
+        public void HideModel(bool hide)
+        {
+            photonView.RPC("RPCHideModelCharacter", RpcTarget.AllBuffered, hide);
+        }
+        [PunRPC] void RPCHideModelCharacter(bool hide) { model.SetActive(!hide); }
         #region Controls
         public void ChangeControls(Action u, Action fu, Action lu, Action<float, float> move)
         {

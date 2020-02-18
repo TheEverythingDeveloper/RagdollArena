@@ -92,11 +92,13 @@ namespace Character
 
         public void Move(float horizontal, float vertical)
         {
+            Debug.LogError(4);
             fixedUpdateControls(horizontal, vertical);
         }
 
         void NormalFixedUpdateControls(float horizontal, float vertical)
         {
+            Debug.LogError(5);
             var horAxis = horizontal * _myModel.characterStats.speed * Time.deltaTime;
             var verAxis = vertical * _myModel.characterStats.speed * Time.deltaTime;
 

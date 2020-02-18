@@ -19,9 +19,8 @@ public class Mountable : MonoBehaviourPun
 
     public virtual void HideModelCharacter(bool hide)
     {
-        photonView.RPC("RPCMovePlayer", RpcTarget.All, hide);
+        _characterModel.HideModel(hide);
     }
-    [PunRPC] void RPCHideModelCharacter(bool hide) { _characterModel.model.SetActive(!hide); }
 
     public virtual void ArtificialUpdate()
     {

@@ -74,7 +74,10 @@ public class Controller : MonoBehaviourPun, IUpdatable
         var verAxis = Input.GetAxis("Vertical");
 
         if (horAxis != 0 || verAxis != 0)
+        {
+            Debug.LogError(2);
             FindObjectOfType<Server>().MovePlayer(photonView.Controller, horAxis, verAxis);
+        }
 
         if (Input.GetKeyDown(KeyCode.Space))
             FindObjectOfType<Server>().JumpPlayer(photonView.Controller);
