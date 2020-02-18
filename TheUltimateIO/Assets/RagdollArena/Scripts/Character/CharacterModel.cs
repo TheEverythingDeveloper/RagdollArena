@@ -99,9 +99,6 @@ namespace Character
 
         [PunRPC] public void RPCArtificialAwake()
         {
-            _Update = ArtificialUpdate;
-            _FixedUpdate = ArtificialFixedUpdate;
-            _LateUpdate = ArtificialLateUpdate;
 
             _lvlMng = FindObjectOfType<LevelManager>();
 
@@ -137,6 +134,10 @@ namespace Character
             _allUpdatables.Add(FindObjectOfType<Controller>());
 
             if (!owned) return;
+
+            _Update = ArtificialUpdate;
+            _FixedUpdate = ArtificialFixedUpdate;
+            _LateUpdate = ArtificialLateUpdate;
 
             chat.InitializedChat(this);
             chat.SuscribeChat(ChatActive);
