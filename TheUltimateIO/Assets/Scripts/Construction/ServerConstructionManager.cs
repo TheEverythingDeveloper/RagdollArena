@@ -11,6 +11,7 @@ namespace Construction
     {
         public List<ConstructionPlan> _allConstructions = new List<ConstructionPlan>();
         public List<string> allPlans = new List<string>();
+        public List<int> allPlanPrices = new List<int>();
         private ConstructionPlan _preConstruction;
         private int _actualPlanID;
         private bool _canSpawn;
@@ -64,6 +65,7 @@ namespace Construction
         {
             var go = PhotonNetwork.Instantiate(allPlans[planID], pos, Quaternion.identity);
             var constructionPlan = go.GetComponentInChildren<ConstructionPlan>();
+            constructionPlan.SetProgress(0,allPlanPrices[planID]);
             constructionPlan.SetConstructionTeamID(FindObjectOfType<Server>().allPlayers[photonPlayer].team);
             _allConstructions.Add(constructionPlan);
             constructionPlan.enabled = true;

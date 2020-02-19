@@ -43,9 +43,6 @@ namespace Construction
         public void ArtificialAwake()
         {
             constructionPiece = transform.parent.GetComponentInChildren<ConstructionPiece>();
-            TotalBlocks = 100;
-            ActualBlocks = 0;
-            SetProgress(0,100);
             constructionPiece.SetMaterialColor(teamID == 0 ? Color.blue : teamID == 1 ? Color.red : teamID == 2 ? Color.yellow : teamID == 3 ? Color.green : Color.grey);
         }
 

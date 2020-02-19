@@ -31,11 +31,17 @@ namespace GameUI
 
         [SerializeField] private SpawnMapArea _spawnMapArea;
 
-        [PunRPC] public void RPCUpdatePlayerIDs(int newPlayerID, int newTeamID) => UpdatePlayerIDs(newPlayerID, newTeamID);
+        [PunRPC] public void RPCUpdatePlayerIDs(int newPlayerID, int newTeamID)
+        {
+            Debug.LogError(PhotonNetwork.LocalPlayer.NickName);
+            UpdatePlayerIDs(newPlayerID, newTeamID);
+        }
+
         public void UpdatePlayerIDs(int newPlayerID, int newTeamID) //esto se llama en cada jugador, actualizando estos valores de la clase
         {
             Debug.Log("SE ACTUALIZO EL TEAM A " + newTeamID + " Y EL NEWPLAYERTEAM A " + newPlayerID);
             this.playerID = newPlayerID;
+            
             teamID = newTeamID;
         }
 

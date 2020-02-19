@@ -92,7 +92,7 @@ namespace Character
         Action _Update, _FixedUpdate, _LateUpdate;
         Action<float, float> _Move;
 
-        [HideInInspector] public int team = 0; // { 0 } = sin equipo. { 1, 2, 3, 4 } = posibles equipos que pueden haber.
+        public int team = 0; // { 0 } = sin equipo. { 1, 2, 3, 4 } = posibles equipos que pueden haber.
         [Tooltip("Este owned es parecido al photonView.isMine, solo que es para FullAutho, ya que el server es el photonView.isMine")] public bool owned;
 
         [PunRPC] public void RPCSetModelOwner(bool own) => owned = own;
@@ -208,6 +208,8 @@ namespace Character
             }).ToList();
             _characterBody.SelectHead(headTypeID);
             _characterBody.SelectBody(teamTypeID);
+
+            team = teamTypeID;
 
             _characterWeapon.UpdateWeaponColors(teamColor[0], teamColor[1], teamColor[2]);
         }
