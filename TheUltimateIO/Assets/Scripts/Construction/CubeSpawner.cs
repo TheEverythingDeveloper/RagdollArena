@@ -51,9 +51,7 @@ public class CubeSpawner : MonoBehaviour
     private void Awake()
     {
         ConstructionPoints = _constructionPointsAmount;
-
         CreatePreCube(1, 1f, 1f);
-
         ChangePreSpawnedCube(0);
     }
 
@@ -165,6 +163,9 @@ public class CubeSpawner : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Keypad1)) ConstructionPoints += 100;
+        if (Input.GetKeyDown(KeyCode.Keypad2)) ConstructionPoints += 2000;
+
         ChooseSpawningItem();
 
         if (_spawningItem == 0 || _cooldownOn) return; //TODO: Que sea igual a -1 u otra cosa aca

@@ -116,6 +116,7 @@ namespace Construction
         {
             if (_prePlan) return;
             if (!_playerIn || _constructed) return;
+            if (FindObjectOfType<CubeSpawner>().ConstructionPoints < 10) return;
 
             if (Input.GetMouseButtonDown(0))
             {
@@ -141,7 +142,12 @@ namespace Construction
             GetComponent<BoxCollider>().isTrigger = true;
         }
 
-        public void AddBlocks(int newBlocks) => photonView.RPC("RPCAddBlocks", RpcTarget.All, newBlocks);
+        public void AddBlocks(int newBlocks)
+        {
+            FindObjectOfType<CubeSpawner>().ConstructionPoints -= newBlocks;
+            photonView.RPC("RPCAddBlocks", RpcTarget.All, newBlocks);
+        }
+
         [PunRPC] public void RPCAddBlocks(int newBlocks)
         {
             ActualBlocks += newBlocks;

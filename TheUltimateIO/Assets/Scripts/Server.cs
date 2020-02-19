@@ -76,6 +76,26 @@ public class Server : MonoBehaviourPun
             player.Value.photonView.RPC("RPCStartGame", player.Key);
 
         StartCoroutine(TimerConstructMode());
+        SpawnBricks(30);
+        StartCoroutine(SpawnBricksCoroutine());
+    }
+    IEnumerator SpawnBricksCoroutine()
+    {
+        while(true)
+        {
+            SpawnBricks(_lvlMng.amountOfBricksPerSecond);
+            yield return new WaitForSeconds(1f);
+        }
+    }
+
+    public void SpawnBricks(int amount)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            float rnd = Random.value;
+            PhotonNetwork.Instantiate(rnd > 0.9f ? "BricksBig" : rnd > 0.65f ? "BricksMedium" : "BrickSmall", 
+                _lvlMng.PrecisionPositionRandom() + Vector3.up * 50, Quaternion.identity);
+        }
     }
     IEnumerator TimerConstructMode()
     {
@@ -180,7 +200,11 @@ public class Server : MonoBehaviourPun
 
     public void StartRematch(List<Player> allRematchedPlayers)
     {
+        StopCoroutine(SpawnBricksCoroutine());
         var allSpawnPoints = FindObjectsOfType<SpawnPoint>();
+        var allBricks = FindObjectsOfType<Brick>();
+        foreach (var x in allBricks)
+            PhotonNetwork.Destroy(x.gameObject);
         foreach (var x in allSpawnPoints)
             PhotonNetwork.Destroy(x.gameObject);
         photonView.RPC("RPCStartRematch", RpcTarget.All);

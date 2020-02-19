@@ -18,6 +18,7 @@ public class LevelManager : MonoBehaviour
     [Tooltip("Posiciones random de spawneo")] public GameObject pointsSpawn;
     SpawnPoint[] _points;
 
+    public int amountOfBricksPerSecond;
     public bool finishLevel;
     public float pointsToWin;
     public GameObject panelWin;
@@ -30,6 +31,12 @@ public class LevelManager : MonoBehaviour
         for (int i = 0; i < _points.Length; i++)
             Destroy(_points[i].gameObject);
         _points = new SpawnPoint[0];
+    }
+    public Vector3 PrecisionPositionRandom()
+    {
+        float rnd = Random.Range(-transform.position.z, transform.position.z);
+        float rnd2 = Random.Range(-transform.position.z, transform.position.z);
+        return new Vector3(rnd *2, 0, rnd2 *2);
     }
     public void RespawnRandom(Transform player) { player.position = PositionRandom(); }
     public Vector3 PositionRandom()
