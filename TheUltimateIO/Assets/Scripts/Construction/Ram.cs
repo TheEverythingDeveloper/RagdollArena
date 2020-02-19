@@ -29,13 +29,18 @@ public class Ram : Mountable
 
         if(other.gameObject.layer == Layers.PLAYER)
         {
-            animButtonActive.SetTrigger("On");
             _characterModel = other.GetComponentInParent<CharacterModel>();
-            lookCharacter.LookActive(_characterModel.transform);
-            _activeEquip = true;
-            StartCoroutine(ActiveEquip());
+            EnterTrigger();
         }
     }  
+
+    void EnterTrigger()
+    {
+        animButtonActive.SetTrigger("On");
+        lookCharacter.LookActive(_characterModel.transform);
+        _activeEquip = true;
+        StartCoroutine(ActiveEquip());
+    }
 
     IEnumerator ActiveEquip()
     {
@@ -82,6 +87,8 @@ public class Ram : Mountable
         _characterModel.transform.position = spawnOut.position;
         _characterModel.model.transform.localPosition = Vector3.zero;
         _characterModel.NormalControls();
+
+        EnterTrigger();
     }
     IEnumerator WaitMountedAgain()
     {
