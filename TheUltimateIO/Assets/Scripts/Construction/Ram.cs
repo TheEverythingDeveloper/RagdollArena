@@ -9,6 +9,7 @@ public class Ram : Mountable
     public Animator animButtonActive;
     public LookCharacter lookCharacter;
     public Transform spawnOut;
+    public RamWeapon weapon;
     public bool mounted;
     bool _activeEquip;
     Server server;
@@ -90,6 +91,7 @@ public class Ram : Mountable
 
     public override void ArtificialUpdate()
     {
+        Attack();
         if (Input.GetKeyDown(KeyCode.M)) ExitMountable();
     }
 
@@ -118,6 +120,15 @@ public class Ram : Mountable
 
         var dir = new Vector3(horAxis, 0, verAxis);
         transform.position += dir;
+    }
+
+    void Attack()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Debug.LogError("CLICK");
+            weapon.ActiveWeapon();
+        }
     }
 
 }

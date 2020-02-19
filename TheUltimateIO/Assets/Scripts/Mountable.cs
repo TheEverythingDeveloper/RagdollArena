@@ -13,13 +13,13 @@ public class Mountable : MonoBehaviourPun, IUpdatable
     protected Quaternion _initialRot;
     protected Quaternion _lookRotation;
     protected Vector3 _direction;
-    protected float _sqrMagnitudeInTime;
 
     public int teamID;
 
     public virtual void Start()
     {
-        _rb = GetComponent<Rigidbody>();      
+        _rb = GetComponent<Rigidbody>();
+        _initialRot = _rb.transform.localRotation;
     }
 
     [PunRPC] public void RPCSetTeamID(int newTeamID)
@@ -70,9 +70,6 @@ public class Mountable : MonoBehaviourPun, IUpdatable
 
     public virtual void RotateLookMouse()
     {
-        _sqrMagnitudeInTime = Mathf.Lerp(_sqrMagnitudeInTime, _rb.velocity.sqrMagnitude,
-            sqrMagnitudeInTimeSpeed * Time.deltaTime);
-
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
@@ -81,7 +78,6 @@ public class Mountable : MonoBehaviourPun, IUpdatable
             if (Vector3.Distance(hit.point, _rb.transform.position) < 2) return;
             _direction = (hit.point - _rb.transform.position).normalized;
             _lookRotation = Quaternion.LookRotation(_direction);
-            _lookRotation *= _initialRot;
 
             _rb.transform.localRotation = Quaternion.Slerp(
                 _rb.transform.localRotation, _lookRotation, Time.deltaTime * rotationSpeed);
