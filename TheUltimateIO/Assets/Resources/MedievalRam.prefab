@@ -73,6 +73,9 @@ MonoBehaviour:
   floorLayers:
     serializedVersion: 2
     m_Bits: 66049
+  allRenderers:
+  - {fileID: 1712717087486746034}
+  - {fileID: 8726250726809235440}
   teamID: 0
   speed: 4
   animButtonActive: {fileID: 8685746275218998224}
@@ -808,6 +811,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -2416733968201007103, guid: f8fa2d9e876742342889243ec1e0906e,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b738dbd96b17ff048aaff3587bcfdfda, type: 2}
     - target: {fileID: -927199367670048503, guid: f8fa2d9e876742342889243ec1e0906e,
         type: 3}
       propertyPath: m_Name
@@ -834,6 +842,12 @@ Transform:
 --- !u!1 &6074857378903783160 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: f8fa2d9e876742342889243ec1e0906e,
+    type: 3}
+  m_PrefabInstance: {fileID: 2841726902508924913}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &8726250726809235440 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -2416733968201007103, guid: f8fa2d9e876742342889243ec1e0906e,
     type: 3}
   m_PrefabInstance: {fileID: 2841726902508924913}
   m_PrefabAsset: {fileID: 0}

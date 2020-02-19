@@ -130,5 +130,6 @@ MonoBehaviour:
   - RPCSetTeamID
   - RPCSetCollider
   - RPCDestroyObject
+  - RPCGeneralUpdate
   DisableAutoOpenWizard: 1
   ShowSettings: 1

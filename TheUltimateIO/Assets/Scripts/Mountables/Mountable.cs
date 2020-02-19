@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Character;
 using Photon.Pun;
+using System.Collections.Generic;
 
 public class Mountable : MonoBehaviourPun, IUpdatable
 {
@@ -14,6 +15,8 @@ public class Mountable : MonoBehaviourPun, IUpdatable
     protected Quaternion _lookRotation;
     protected Vector3 _direction;
 
+    public List<MeshRenderer> allRenderers = new List<MeshRenderer>();
+
     public int teamID;
 
     public virtual void Start()
@@ -25,7 +28,10 @@ public class Mountable : MonoBehaviourPun, IUpdatable
     [PunRPC] public void RPCSetTeamID(int newTeamID)
     {
         teamID = newTeamID;
-        //TODO: Cambiar color del material al que seria
+        foreach (var x in allRenderers)
+        {
+            x.material.SetColor("_SkinColor", newTeamID == 0 ? Color.blue : newTeamID == 1 ? Color.red : newTeamID == 2 ? Color.yellow : Color.green);
+        }
     } 
 
     public virtual void ActiveMountable()

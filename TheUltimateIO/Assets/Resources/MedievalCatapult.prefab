@@ -425,6 +425,9 @@ MonoBehaviour:
   floorLayers:
     serializedVersion: 2
     m_Bits: 66049
+  allRenderers:
+  - {fileID: 2095452060322974521}
+  - {fileID: 7099717360609337783}
   teamID: 0
   speed: 2
   positionCam: {fileID: 4062413319852307583}

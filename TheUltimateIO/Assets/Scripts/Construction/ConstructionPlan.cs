@@ -45,6 +45,14 @@ namespace Construction
             photonView.RPC("RPCServerConstructPiece", RpcTarget.MasterClient, prefabName);
         }
 
+        [PunRPC] public void RPCGeneralUpdate(int price, int teamID)
+        {
+            SetProgress(0, price);
+            SetConstructionTeamID(teamID);
+            enabled = true;
+            ArtificialAwake();
+        }
+
         [PunRPC] private void RPCServerConstructPiece(string prefabName)
         {
             var go = PhotonNetwork.Instantiate(prefabName, transform.parent.position, transform.parent.rotation);

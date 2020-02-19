@@ -16,7 +16,8 @@ public class Controller : MonoBehaviourPun, IUpdatable
     {
         if (FindObjectOfType<NetSpawner>()) Destroy(gameObject);
         if (!photonView.IsMine) return;
-        FindObjectOfType<Chat>().SuscribeChat(ChatActive);
+        if(FindObjectOfType<Chat>() != null)
+            FindObjectOfType<Chat>().SuscribeChat(ChatActive);
 
         StartCoroutine(DelayWaitForServer()); //esta corrutina se llama porque el controller se crea antes que el server. Esto es ya que el server esperaba a los demas jugadores.
     }

@@ -63,12 +63,9 @@ namespace Construction
         {
             var go = PhotonNetwork.Instantiate(allPlans[planID], pos, Quaternion.identity);
             var constructionPlan = go.GetComponentInChildren<ConstructionPlan>();
-            constructionPlan.SetProgress(0,allPlanPrices[planID]);
             constructionPlan.photonView.RPC("RPCSetCollider", RpcTarget.AllBuffered);
-            constructionPlan.SetConstructionTeamID(FindObjectOfType<Server>().allPlayers[photonPlayer].team);
+            constructionPlan.photonView.RPC("RPCGeneralUpdate", RpcTarget.AllBuffered, allPlanPrices[planID], FindObjectOfType<Server>().allPlayers[photonPlayer].team);
             _allConstructions.Add(constructionPlan);
-            constructionPlan.enabled = true;
-            constructionPlan.ArtificialAwake();
         }
     }
 }

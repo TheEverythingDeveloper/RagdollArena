@@ -2078,7 +2078,7 @@ namespace Photon.Realtime
             #else
             if (level == DebugLevel.ERROR)
             {
-                Debug.LogError(message);
+                //Debug.LogError(message);
             }
             else if (level == DebugLevel.WARNING)
             {
