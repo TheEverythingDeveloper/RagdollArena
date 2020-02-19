@@ -2,7 +2,7 @@
 using Character;
 using Photon.Pun;
 
-public class Mountable : MonoBehaviourPun
+public class Mountable : MonoBehaviourPun, IUpdatable
 {
     public CharacterModel _characterModel;
     public float sqrMagnitudeInTimeSpeed;
@@ -15,10 +15,18 @@ public class Mountable : MonoBehaviourPun
     protected Vector3 _direction;
     protected float _sqrMagnitudeInTime;
 
+    public int teamID;
+
     public virtual void Start()
     {
         _rb = GetComponent<Rigidbody>();      
     }
+
+    [PunRPC] public void RPCSetTeamID(int newTeamID)
+    {
+        teamID = newTeamID;
+        //TODO: Cambiar color del material al que seria
+    } 
 
     public virtual void ActiveMountable()
     {

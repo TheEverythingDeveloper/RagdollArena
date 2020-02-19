@@ -40,6 +40,18 @@ namespace Construction
             this.teamID = teamID;
         }
 
+        public void ConstructPiece(string prefabName)
+        {
+            photonView.RPC("RPCServerConstructPiece", RpcTarget.MasterClient, prefabName);
+        }
+
+        [PunRPC] private void RPCServerConstructPiece(string prefabName)
+        {
+            var go = PhotonNetwork.Instantiate(prefabName, transform.position, transform.rotation);
+            go.GetComponentInChildren<Mountable>().photonView.RPC("RPCSetTeamID", RpcTarget.AllBuffered, teamID);
+            PhotonNetwork.Destroy(gameObject);
+        }
+
         public void ArtificialAwake()
         {
             constructionPiece = transform.parent.GetComponentInChildren<ConstructionPiece>();
