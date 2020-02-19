@@ -59,6 +59,7 @@ public class Server : MonoBehaviourPun
     }
     void ChatActive(bool active)
     {
+        Debug.LogError("chat" + active);
         controlsActive = active;
     }
     IEnumerator StartGameCoroutine(int waitSeconds)

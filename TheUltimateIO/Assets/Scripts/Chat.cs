@@ -25,7 +25,7 @@ public class Chat : MonoBehaviourPun
     public FriendSystem friendSystem;
     [HideInInspector] public Controller controller;
 
-    private List<Action<bool>> _metodsSuscribes = new List<Action<bool>>();
+    private List<Action<bool>> _methodsSuscribes = new List<Action<bool>>();
 
     public delegate void ConsoleCommand(string txt);
     private Dictionary<string, ConsoleCommand> _myCommands = new Dictionary<string, ConsoleCommand>();
@@ -51,9 +51,9 @@ public class Chat : MonoBehaviourPun
         if (Input.GetKeyDown(KeyCode.Escape) && _emojisPanelActive) ActivePanelEmojis(false);
     }
 
-    public void SuscribeChat(Action<bool> metod)
+    public void SuscribeChat(Action<bool> method)
     {
-        _metodsSuscribes.Add(metod);
+        _methodsSuscribes.Add(method);
     }
 
     public void InitializedChat(CharacterModel model)
@@ -75,18 +75,24 @@ public class Chat : MonoBehaviourPun
 
     public void OnInputMsg(bool enter)
     {
-        foreach (var item in _metodsSuscribes)
-        {
-            item(!enter);
-        }
-
         FindObjectOfType<Server>().photonView.RPC("RPCActivateChat", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer, enter);
+
+
+        StartCoroutine(CallMethods(!enter, enter ? 0 : 0.5f));
+    }
+
+    IEnumerator CallMethods(bool enter, float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+
+        foreach (var item in _methodsSuscribes)
+            item(enter);
     }
 
     void ChangeControls(bool active)
     {
-        if (active) _chatActive = ChatControllerActive;
-        else _chatActive = ChatControllerOff;
+        if (active) _chatActive = ChatControllerOff;
+        else _chatActive = ChatControllerActive;
     }
 
     public void SendMsg()
