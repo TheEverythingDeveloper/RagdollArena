@@ -9,6 +9,8 @@ namespace Character
 {
     public class CharacterCamera : IUpdatable
     {
+        public Transform catapultLook;
+        Quaternion _initialRot;
         CharacterModel _myModel;
         Rigidbody rb;
         private Action myAction = delegate { };
@@ -16,7 +18,8 @@ namespace Character
         {
             ThirdPersonMode = 0,
             GodMode = 1,
-            CoreMode = 2
+            CoreMode = 2,
+            CatapultMode = 3
         }
         private CameraMode _actualCameraMode;
         private CameraMode _previousCameraMode;
@@ -26,6 +29,7 @@ namespace Character
             _myModel = model;
             rb = pelvis;
             model.OnChangeRespawnMode += ChangeRespawnMode;
+            _initialRot = Camera.main.transform.rotation;
             myAction = ThirdPersonCamera;
         }
 
@@ -34,7 +38,7 @@ namespace Character
             rb = newRb;
         }
 
-        private void ChangeRespawnMode(CameraMode newCamMode)
+        public void ChangeRespawnMode(CameraMode newCamMode)
         {
             if (newCamMode == _actualCameraMode) return;
 
@@ -50,6 +54,9 @@ namespace Character
                     break;
                 case CameraMode.CoreMode:
                     myAction = CoreCamera;
+                    break;
+                case CameraMode.CatapultMode:
+                    myAction = CatapultCamera;
                     break;
                 default:
                     myAction = ThirdPersonCamera;
@@ -73,6 +80,8 @@ namespace Character
             Vector3 offsetPosition = rb.transform.position + _myModel.thirdPersonCameraOffset;
             Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position,
                 offsetPosition, _myModel.cameraSpeed * Time.deltaTime);
+
+            Camera.main.transform.rotation = Quaternion.Lerp(Camera.main.transform.rotation, _initialRot, _myModel.cameraSpeed * Time.deltaTime);
         }
 
         private void GodModeCamera()
@@ -86,6 +95,8 @@ namespace Character
                 _myModel.godModeCameraOffset.forward, _myModel.cameraSpeed / 10f * Time.deltaTime);
             Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position,
                 _myModel.godModeCameraOffset.position, _myModel.cameraSpeed / 7f * Time.deltaTime);
+
+            Camera.main.transform.rotation = Quaternion.Lerp(Camera.main.transform.rotation, _initialRot, _myModel.cameraSpeed * Time.deltaTime);
         }
 
         private void CoreCamera()
@@ -96,6 +107,18 @@ namespace Character
             Vector3 resultVector = Vector3.Lerp(Camera.main.transform.position,
                 offsetPosition, _myModel.coreDistancingSpeed * Time.deltaTime);
             Camera.main.transform.position = resultVector;
+
+            Camera.main.transform.rotation = Quaternion.Lerp(Camera.main.transform.rotation, _initialRot, _myModel.cameraSpeed * Time.deltaTime);
+        }
+
+        private void CatapultCamera()
+        {
+            if (catapultLook == null) return;
+
+            Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position,
+                catapultLook.position, _myModel.cameraSpeed * Time.deltaTime);
+
+            Camera.main.transform.rotation = Quaternion.Lerp(Camera.main.transform.rotation, catapultLook.rotation, _myModel.cameraSpeed * Time.deltaTime);
         }
 
         private Core _nearestCore;
