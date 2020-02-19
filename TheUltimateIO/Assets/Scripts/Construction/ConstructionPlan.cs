@@ -47,9 +47,9 @@ namespace Construction
 
         [PunRPC] private void RPCServerConstructPiece(string prefabName)
         {
-            var go = PhotonNetwork.Instantiate(prefabName, transform.position, transform.rotation);
+            var go = PhotonNetwork.Instantiate(prefabName, transform.parent.position, transform.parent.rotation);
             go.GetComponentInChildren<Mountable>().photonView.RPC("RPCSetTeamID", RpcTarget.AllBuffered, teamID);
-            PhotonNetwork.Destroy(gameObject);
+            PhotonNetwork.Destroy(transform.parent.gameObject);
         }
 
         public void ArtificialAwake()
@@ -132,6 +132,13 @@ namespace Construction
                     //TODO: Llamar a un RPC del server que le pregunte al model para ver si tiene bloques para donar. Por cada click le va a sumar uno.
                 }
             }
+        }
+
+        [PunRPC] public void RPCSetCollider()
+        {
+            GetComponentInParent<Rigidbody>().isKinematic = false;
+            GetComponentInParent<BoxCollider>().isTrigger = false;
+            GetComponent<BoxCollider>().isTrigger = true;
         }
 
         public void AddBlocks(int newBlocks) => photonView.RPC("RPCAddBlocks", RpcTarget.All, newBlocks);

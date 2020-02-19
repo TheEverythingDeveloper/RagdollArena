@@ -20,8 +20,6 @@ namespace Construction
             DestroyPreConstruction();
             _preConstruction = ((GameObject)Instantiate(Resources.Load(allPlans[planID]))).GetComponentInChildren<ConstructionPlan>();
             _preConstruction.enabled = false;
-            _preConstruction.GetComponentInParent<BoxCollider>().enabled = false;
-            _preConstruction.GetComponentInParent<Rigidbody>().detectCollisions = false;
             _preConstruction.SetConstructionTeamID(6);
             _actualPlanID = planID;
             _preConstruction.ArtificialAwake();
@@ -66,6 +64,7 @@ namespace Construction
             var go = PhotonNetwork.Instantiate(allPlans[planID], pos, Quaternion.identity);
             var constructionPlan = go.GetComponentInChildren<ConstructionPlan>();
             constructionPlan.SetProgress(0,allPlanPrices[planID]);
+            constructionPlan.photonView.RPC("RPCSetCollider", RpcTarget.AllBuffered);
             constructionPlan.SetConstructionTeamID(FindObjectOfType<Server>().allPlayers[photonPlayer].team);
             _allConstructions.Add(constructionPlan);
             constructionPlan.enabled = true;
