@@ -5,7 +5,15 @@ using Photon.Pun;
 public class Mountable : MonoBehaviourPun
 {
     public CharacterModel _characterModel;
+    public float sqrMagnitudeInTimeSpeed;
+    public float rotationSpeed;
+    public LayerMask floorLayers;
     protected Rigidbody _rb;
+
+    protected Quaternion _initialRot;
+    protected Quaternion _lookRotation;
+    protected Vector3 _direction;
+    protected float _sqrMagnitudeInTime;
 
     public virtual void Start()
     {
@@ -50,5 +58,27 @@ public class Mountable : MonoBehaviourPun
     public virtual void ExitMountable()
     {
 
+    }
+
+    public virtual void RotateLookMouse()
+    {
+        _sqrMagnitudeInTime = Mathf.Lerp(_sqrMagnitudeInTime, _rb.velocity.sqrMagnitude,
+            sqrMagnitudeInTimeSpeed * Time.deltaTime);
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, floorLayers))
+        {
+            if (Vector3.Distance(hit.point, _rb.transform.position) < 2) return;
+            _direction = (hit.point - _rb.transform.position).normalized;
+            _lookRotation = Quaternion.LookRotation(_direction);
+            _lookRotation *= _initialRot;
+
+            _rb.transform.localRotation = Quaternion.Slerp(
+                _rb.transform.localRotation, _lookRotation, Time.deltaTime * rotationSpeed);
+
+            _rb.transform.localRotation = Quaternion.Euler(_initialRot.eulerAngles.x, _lookRotation.eulerAngles.y, _initialRot.eulerAngles.z);
+        }
     }
 }

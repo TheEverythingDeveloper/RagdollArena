@@ -9,14 +9,15 @@ using UnityEngine.SceneManagement;
 
 public class Controller : MonoBehaviourPun, IUpdatable
 {
-    Server server;
+    Server _server;
     public bool controlsActive = true;
+
     private void Start()
     {
         if (FindObjectOfType<NetSpawner>()) Destroy(gameObject);
-
+        Debug.LogError("START");
         if (!photonView.IsMine) return;
-
+        Debug.LogError("STARTpart2");
         FindObjectOfType<Chat>().SuscribeChat(ChatActive);
 
         StartCoroutine(DelayWaitForServer()); //esta corrutina se llama porque el controller se crea antes que el server. Esto es ya que el server esperaba a los demas jugadores.
@@ -31,8 +32,8 @@ public class Controller : MonoBehaviourPun, IUpdatable
     {
         yield return new WaitForSecondsRealtime(0.75f);
 
-        server = FindObjectOfType<Server>();
-        server.AddPlayer(photonView.Controller);
+        _server = FindObjectOfType<Server>();
+        _server.AddPlayer(photonView.Controller);
     }
 
     private void Update()
@@ -42,7 +43,7 @@ public class Controller : MonoBehaviourPun, IUpdatable
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Debug.Log("<color=red>Desconectado de la partida actual</color>");
-            server.RemovePlayer(photonView.Controller);
+            _server.RemovePlayer(photonView.Controller);
             PhotonNetwork.Disconnect();
             PhotonNetwork.LeaveRoom();
             SceneManager.LoadScene(0);
@@ -51,7 +52,7 @@ public class Controller : MonoBehaviourPun, IUpdatable
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             Debug.Log("<color=red>Fuiste asesinado</color>");
-            server.photonView.RPC("RPCPlayerDeath", RpcTarget.MasterClient, photonView.Controller);
+            _server.photonView.RPC("RPCPlayerDeath", RpcTarget.MasterClient, photonView.Controller);
         }
 
         if (Input.GetKeyDown(KeyCode.R))
@@ -59,8 +60,6 @@ public class Controller : MonoBehaviourPun, IUpdatable
             Debug.Log("<color=yellow>Intentando Respawnear</color>");
             FindObjectOfType<SpawnPoint>().UseSpawnPoint(photonView.Controller);
         }
-
-        
     }
 
     public void ArtificialUpdate()
@@ -75,12 +74,15 @@ public class Controller : MonoBehaviourPun, IUpdatable
 
         if (horAxis != 0 || verAxis != 0)
         {
-            Debug.LogError(2);
-            FindObjectOfType<Server>().MovePlayer(photonView.Controller, horAxis, verAxis);
+            if(_server != null)
+            {
+                _server.MovePlayer(photonView.Controller, horAxis, verAxis);
+                Debug.LogError(2);
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
-            FindObjectOfType<Server>().JumpPlayer(photonView.Controller);
+            _server.JumpPlayer(photonView.Controller);
     }
 
     public void ArtificialFixedUpdate() { }

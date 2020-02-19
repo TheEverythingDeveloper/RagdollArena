@@ -8,6 +8,7 @@ public class Ram : Mountable
     public float speed;
     public Animator animButtonActive;
     public LookCharacter lookCharacter;
+    public Transform spawnOut;
     public bool mounted;
     bool _activeEquip;
     Server server;
@@ -77,7 +78,8 @@ public class Ram : Mountable
     {
         StartCoroutine(WaitMountedAgain());
         HideModelCharacter(false);
-        _characterModel.transform.position = transform.position;
+        _characterModel.transform.position = spawnOut.position;
+        _characterModel.model.transform.localPosition = Vector3.zero;
         _characterModel.NormalControls();
     }
     IEnumerator WaitMountedAgain()
@@ -88,18 +90,20 @@ public class Ram : Mountable
 
     public override void ArtificialUpdate()
     {
-        var horAxis = Input.GetAxis("Horizontal");
-        var verAxis = Input.GetAxis("Vertical");
-
-        if (horAxis != 0 || verAxis != 0)
-            server.MovePlayer(photonView.Controller, horAxis, verAxis);
+        if (Input.GetKeyDown(KeyCode.M)) ExitMountable();
     }
 
     public override void ArtificialFixedUpdate()
     {
         _characterModel.characterCamera.ArtificialFixedUpdate();
 
-        if (Input.GetKeyDown(KeyCode.M)) ExitMountable();
+        RotateLookMouse();
+
+        var horAxis = Input.GetAxis("Horizontal");
+        var verAxis = Input.GetAxis("Vertical");
+
+        if (horAxis != 0 || verAxis != 0)
+            server.MovePlayer(photonView.Controller, horAxis, verAxis);
     }
 
     public override void ArtificialLateUpdate()
@@ -115,4 +119,5 @@ public class Ram : Mountable
         var dir = new Vector3(horAxis, 0, verAxis);
         transform.position += dir;
     }
+
 }
