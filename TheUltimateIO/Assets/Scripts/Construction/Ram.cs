@@ -125,10 +125,7 @@ public class Ram : Mountable
     void Attack()
     {
         if (Input.GetMouseButtonDown(0))
-        {
-            Debug.LogError("CLICK");
             weapon.ActiveWeapon();
-        }
     }
 
 }
