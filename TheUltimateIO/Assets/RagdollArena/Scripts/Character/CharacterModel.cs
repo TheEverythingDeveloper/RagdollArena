@@ -132,13 +132,15 @@ namespace Character
 
             _allUpdatables.Add(FindObjectOfType<Controller>());
 
+            _Move = _movementController.Move;
+            OnJump += _movementController.Jump;
+
             if (!owned) return;
 
             _Update = ArtificialUpdate;
             _FixedUpdate = ArtificialFixedUpdate;
             _LateUpdate = ArtificialLateUpdate;
-            _Move = _movementController.Move;
-            Debug.LogError(1);
+
             chat.InitializedChat(this);
             chat.SuscribeChat(ChatActive);
 
@@ -155,7 +157,6 @@ namespace Character
                 PlayerPrefs.GetInt("HeadTypeID"), 0);
 
             ChangeTeam(1);
-
             ArtificialAwakes();
         }
 
@@ -196,7 +197,7 @@ namespace Character
         public void Crowned(bool on) => OnCrowned(on);
         public void TryJump() { if (_movementController.inAir) return; OnJump(); }
         private void Start() { if (!owned) return; ArtificialStart(); }
-        private void Update() { if ((!owned && rb != null) || !_controlsActive) return; _Update(); }
+        private void Update() { _movementController.ArtificialUpdate(); if ((!owned && rb != null) || !_controlsActive) return; _Update(); }
         private void FixedUpdate() { if (!owned || !_controlsActive) return; _FixedUpdate(); }
         private void LateUpdate() { if (!owned || !_controlsActive) return; _LateUpdate(); }
         [PunRPC] public void RPCUpdateColorTeamAndHead(float[] skinColor, float[] teamColor, int headTypeID, int teamTypeID)
@@ -267,7 +268,6 @@ namespace Character
         }
         public void MovePlayer(float horizontal, float vertical)
         {
-            Debug.LogError(3);
             _Move(horizontal, vertical);
         }
 

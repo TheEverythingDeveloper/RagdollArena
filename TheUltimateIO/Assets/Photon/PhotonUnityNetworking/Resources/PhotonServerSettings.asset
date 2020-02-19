@@ -126,5 +126,8 @@ MonoBehaviour:
   - RPCFriendsSendMsg
   - RPCAddPlayerFriend
   - RPCHideModelCharacter
+  - RPCServerConstructPiece
+  - RPCSetTeamID
+  - RPCSetCollider
   DisableAutoOpenWizard: 1
   ShowSettings: 1

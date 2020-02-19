@@ -129,7 +129,7 @@ public class Server : MonoBehaviourPun
     [PunRPC] private void RPCMovePlayer(Player photonPlayer, float horAxis, float verAxis)
     {
         if (!allPlayers.ContainsKey(photonPlayer)) return;
-
+        Debug.LogError(photonPlayer.NickName + " INTENTO MOVERSE");
         allPlayers[photonPlayer].MovePlayer(horAxis, verAxis);
     }
 

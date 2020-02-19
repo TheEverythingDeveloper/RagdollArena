@@ -15,9 +15,7 @@ public class Controller : MonoBehaviourPun, IUpdatable
     private void Start()
     {
         if (FindObjectOfType<NetSpawner>()) Destroy(gameObject);
-        Debug.LogError("START");
         if (!photonView.IsMine) return;
-        Debug.LogError("STARTpart2");
         FindObjectOfType<Chat>().SuscribeChat(ChatActive);
 
         StartCoroutine(DelayWaitForServer()); //esta corrutina se llama porque el controller se crea antes que el server. Esto es ya que el server esperaba a los demas jugadores.
@@ -60,10 +58,6 @@ public class Controller : MonoBehaviourPun, IUpdatable
             Debug.Log("<color=yellow>Intentando Respawnear</color>");
             FindObjectOfType<SpawnPoint>().UseSpawnPoint(photonView.Controller);
         }
-    }
-
-    public void ArtificialUpdate()
-    {
         Move();
     }
 
@@ -74,16 +68,14 @@ public class Controller : MonoBehaviourPun, IUpdatable
 
         if (horAxis != 0 || verAxis != 0)
         {
-            if(_server != null)
-            {
-                _server.MovePlayer(photonView.Controller, horAxis, verAxis);
-                Debug.LogError(2);
-            }
+            FindObjectOfType<Server>().MovePlayer(photonView.Controller, horAxis, verAxis);
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
-            _server.JumpPlayer(photonView.Controller);
+            FindObjectOfType<Server>().JumpPlayer(photonView.Controller);
     }
+
+    public void ArtificialUpdate() { }
 
     public void ArtificialFixedUpdate() { }
 

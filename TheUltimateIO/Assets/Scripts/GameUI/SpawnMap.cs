@@ -33,7 +33,6 @@ namespace GameUI
 
         [PunRPC] public void RPCUpdatePlayerIDs(int newPlayerID, int newTeamID)
         {
-            Debug.LogError(PhotonNetwork.LocalPlayer.NickName);
             UpdatePlayerIDs(newPlayerID, newTeamID);
         }
 

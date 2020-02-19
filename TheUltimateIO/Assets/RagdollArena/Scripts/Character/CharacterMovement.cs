@@ -28,7 +28,7 @@ namespace Character
 
         public void ArtificialAwake()
         {
-            _myModel.OnJump += Jump;
+            //_myModel.OnJump += Jump;
         }
 
         public void ArtificialStart() { }

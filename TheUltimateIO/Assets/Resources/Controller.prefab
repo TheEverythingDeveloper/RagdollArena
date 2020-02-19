@@ -45,7 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controlsActive: 1
-  characterModel: {fileID: 0}
 --- !u!114 &2387
 MonoBehaviour:
   m_ObjectHideFlags: 0

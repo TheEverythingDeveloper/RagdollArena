@@ -22,7 +22,8 @@ namespace Character
 
         public void ClosePanel()
         {
-            _chat.ActivePanelEmojis(false);
+            if(_chat != null)
+                _chat.ActivePanelEmojis(false);
         }
     }
 }
