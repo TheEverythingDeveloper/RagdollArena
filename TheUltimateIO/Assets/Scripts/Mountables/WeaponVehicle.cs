@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
-
-public class WeaponVehicle : MonoBehaviour
+using Photon.Pun;
+public class WeaponVehicle : MonoBehaviourPun
 {
-    public float maxPosZ;
+    public float limit;
     public float speedAttack, speedReturn;
     public float damage;
 
@@ -15,7 +15,12 @@ public class WeaponVehicle : MonoBehaviour
         _initialPosition = transform.localPosition;
     }
 
-    public virtual void ActiveWeapon()
+    public virtual void Attack()
+    {
+
+    }
+
+    public virtual void WeaponActive()
     {
 
     }

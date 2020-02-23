@@ -56,6 +56,11 @@ public class Chat : MonoBehaviourPun
         _methodsSuscribes.Add(method);
     }
 
+    public void DesuscribeChat(Action<bool> method)
+    {
+        _methodsSuscribes.Remove(method);
+    }
+
     public void InitializedChat(CharacterModel model)
     {
         _characterModel = model;

@@ -1,7 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using Character;
+using GameUI;
 
 public class Ram : Mountable
 {
@@ -10,9 +11,9 @@ public class Ram : Mountable
     public LookCharacter lookCharacter;
     public Transform spawnOut;
     public RamWeapon weapon;
-    public bool mounted;
     bool _activeEquip;
     Server server;
+    GameCanvas gameCanvas;
 
     public override void Start()
     {
@@ -20,6 +21,7 @@ public class Ram : Mountable
 
         if (!photonView.IsMine) return;
 
+        gameCanvas = FindObjectOfType<GameCanvas>();
         server = FindObjectOfType<Server>();
     }
 
@@ -72,9 +74,10 @@ public class Ram : Mountable
 
     public override void EnterMountable()
     {
+        photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, true);
+        gameCanvas.ChangeUI(ManagerPanelVehicles.Vehicles.Ram);
         animButtonActive.SetTrigger("Off");
         lookCharacter.LookOff();
-        mounted = true;
         HideModelCharacter(true);
         _characterModel.model.SetActive(false);
         ActiveMountable();
@@ -83,6 +86,7 @@ public class Ram : Mountable
     public override void ExitMountable()
     {
         StartCoroutine(WaitMountedAgain());
+        gameCanvas.NormalUI();
         HideModelCharacter(false);
         _characterModel.transform.position = spawnOut.position;
         _characterModel.model.transform.localPosition = Vector3.zero;
@@ -93,7 +97,7 @@ public class Ram : Mountable
     IEnumerator WaitMountedAgain()
     {
         yield return new WaitForSeconds(1);
-        mounted = false;
+        photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, false);
     }
 
     public override void ArtificialUpdate()
@@ -132,7 +136,7 @@ public class Ram : Mountable
     void Attack()
     {
         if (Input.GetMouseButtonDown(0))
-            weapon.ActiveWeapon();
+            weapon.Attack();
     }
 
 }

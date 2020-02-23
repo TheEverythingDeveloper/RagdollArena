@@ -56,6 +56,9 @@ public class Server : MonoBehaviourPun
 
         if (Input.GetKeyDown(KeyCode.Return))
             StartCoroutine(StartGameCoroutine(5));
+
+        if (Input.GetKeyDown(KeyCode.L))
+            FindObjectOfType<CharacterModel>().AddPoint(10000);
     }
     void ChatActive(bool active)
     {

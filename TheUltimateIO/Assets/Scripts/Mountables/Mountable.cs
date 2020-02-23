@@ -9,6 +9,7 @@ public class Mountable : MonoBehaviourPun, IUpdatable
     public float sqrMagnitudeInTimeSpeed;
     public float rotationSpeed;
     public LayerMask floorLayers;
+    public bool mounted;
     protected Rigidbody _rb;
 
     protected Quaternion _initialRot;
@@ -32,7 +33,13 @@ public class Mountable : MonoBehaviourPun, IUpdatable
         {
             x.material.SetColor("_SkinColor", newTeamID == 0 ? Color.blue : newTeamID == 1 ? Color.red : newTeamID == 2 ? Color.yellow : Color.green);
         }
-    } 
+    }
+
+    [PunRPC]
+    public void RPCMountVehicle(bool mount)
+    {
+        mounted = mount;
+    }
 
     public virtual void ActiveMountable()
     {
@@ -70,6 +77,11 @@ public class Mountable : MonoBehaviourPun, IUpdatable
     }
 
     public virtual void ExitMountable()
+    {
+
+    }
+
+    public virtual void DestroyVehicle()
     {
 
     }

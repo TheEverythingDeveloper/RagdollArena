@@ -15,7 +15,7 @@ public class LookCharacter : MonoBehaviour
 
     public void LookOff()
     {
-        StopCoroutine(_coroutineLook);
+        StopAllCoroutines();
         _coroutineLook = null;
     }
     IEnumerator Look()

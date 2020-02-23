@@ -91,6 +91,7 @@ namespace Character
 
         Action _Update, _FixedUpdate, _LateUpdate;
         Action<float, float> _Move;
+        public GameObject panelUI;
 
         public int team = 0; // { 0 } = sin equipo. { 1, 2, 3, 4 } = posibles equipos que pueden haber.
         [Tooltip("Este owned es parecido al photonView.isMine, solo que es para FullAutho, ya que el server es el photonView.isMine")] public bool owned;
@@ -410,7 +411,7 @@ namespace Character
         {
             photonView.RPC("RPCHideModelCharacter", RpcTarget.AllBuffered, hide);
         }
-        [PunRPC] void RPCHideModelCharacter(bool hide) { model.SetActive(!hide); }
+        [PunRPC] void RPCHideModelCharacter(bool hide) { model.SetActive(!hide); panelUI.SetActive(!hide); }
         #region Controls
         public void ChangeControls(Action u, Action fu, Action lu, Action<float, float> move)
         {
@@ -437,5 +438,6 @@ namespace Character
             characterCamera.ChangeTarget(rb);
         }
         #endregion
+
     }
 }

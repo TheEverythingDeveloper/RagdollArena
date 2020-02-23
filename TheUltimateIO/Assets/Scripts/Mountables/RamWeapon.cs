@@ -6,23 +6,25 @@ using Photon.Pun;
 public class RamWeapon : WeaponVehicle
 {
     public Vector3 forward;
-    public override void ActiveWeapon()
+
+
+    public override void Attack()
     {
         if (_coroutineAttack == null)
         {
             _attack = true;
-            _coroutineAttack = StartCoroutine(Attack());
+            _coroutineAttack = StartCoroutine(AttackRam());
         }
     }
 
-    IEnumerator Attack()
+    IEnumerator AttackRam()
     {
         var WaitForEndOfFrame = new WaitForEndOfFrame();
         while (_attack)
         {
             transform.localPosition += forward * speedAttack * Time.deltaTime;
 
-            if (transform.localPosition.z >= maxPosZ) _attack = false;
+            if (transform.localPosition.z >= limit) _attack = false;
 
             yield return WaitForEndOfFrame;
         }

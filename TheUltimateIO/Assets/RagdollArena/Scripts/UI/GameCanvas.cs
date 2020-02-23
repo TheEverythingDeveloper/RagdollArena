@@ -16,6 +16,9 @@ namespace GameUI
         [Tooltip("Texto del conteo. 5..4..3..2..1..GO!")] [SerializeField] private TextMeshProUGUI _counterText;
         [Tooltip("Texto que solo le va a aparecer al server para iniciar la partida")] [SerializeField] private TextMeshProUGUI _pressEnterToStartText;
 
+        public ManagerPanelVehicles panelsVehicles;
+        public GameObject canvasPlayer;
+
         private void Awake()
         {
             SwitchCounterPanel(false);
@@ -33,6 +36,16 @@ namespace GameUI
             _mapPanel.SetActive(active);
             if(active)
                 FindObjectOfType<SpawnMap>().StartPanelTimer();
+        }
+        public void ChangeUI(ManagerPanelVehicles.Vehicles vehicle)
+        {
+            canvasPlayer.SetActive(false);
+            panelsVehicles.PanelOn(vehicle);
+        }
+        public void NormalUI()
+        {
+            canvasPlayer.SetActive(true);
+            panelsVehicles.PanelOff();
         }
         public void SwitchCounterPanel(bool active) => _counterPanel.SetActive(active);
         public void SwitchRespawnHUD(bool active) => _respawnHUD.SetActive(active);
