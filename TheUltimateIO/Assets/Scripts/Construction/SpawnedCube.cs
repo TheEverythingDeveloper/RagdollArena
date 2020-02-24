@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Linq;
 using Photon;
 using Photon.Realtime;
@@ -10,10 +11,14 @@ public class SpawnedCube : MonoBehaviourPun, IDamageable, IAttractable
     private float _maxLife;
     private float _size = 1;
 
+    public ParticleSystem particlesBreak;
+    public GameObject model;
+    public Collider colliderCube;
+
     public float Life
     {
         get { return _life; }
-        set { _life = Mathf.Max(0, value); if (_life == 0) UpdateHealthState(_life, _maxLife); BreakCube(); }
+        set { _life = Mathf.Max(0, value); UpdateHealthState(_life, _maxLife); if (_life <= 0) BreakCube(); }
     }
     public float Size
     {
@@ -89,8 +94,22 @@ public class SpawnedCube : MonoBehaviourPun, IDamageable, IAttractable
 
     private void BreakCube()
     {
-        //cambiar la layer
-        //activar animacion de romperse
+        photonView.RPC("RPCBreakCube", RpcTarget.AllBuffered);
+        StartCoroutine(DestroyCube());
+    }
+
+    IEnumerator DestroyCube()
+    {
+        yield return new WaitForSeconds(3);
+        PhotonNetwork.Destroy(gameObject);
+    }
+
+    [PunRPC] void RPCBreakCube()
+    {
+        model.gameObject.SetActive(false);
+        colliderCube.enabled = false;
+        _rb.isKinematic = true;
+        particlesBreak.Play();
     }
 
     public void Damage(Vector3 origin, float damage)
