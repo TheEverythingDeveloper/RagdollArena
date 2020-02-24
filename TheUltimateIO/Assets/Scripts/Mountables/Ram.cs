@@ -49,7 +49,7 @@ public class Ram : Mountable
         var WaitForEndOfFrame = new WaitForEndOfFrame();
         while (true)
         {
-            if (Input.GetKey(KeyCode.M) && !mounted)
+            if (Input.GetKeyDown(KeyCode.M) && !mounted)
             {
                 EnterMountable();
                 StopCoroutine(ActiveEquip());
@@ -85,7 +85,7 @@ public class Ram : Mountable
 
     public override void ExitMountable()
     {
-        StartCoroutine(WaitMountedAgain());
+        photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, false);
         gameCanvas.NormalUI();
         HideModelCharacter(false);
         _characterModel.transform.position = spawnOut.position;
@@ -93,11 +93,6 @@ public class Ram : Mountable
         _characterModel.NormalControls();
 
         EnterTrigger();
-    }
-    IEnumerator WaitMountedAgain()
-    {
-        yield return new WaitForSeconds(1);
-        photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, false);
     }
 
     public override void ArtificialUpdate()

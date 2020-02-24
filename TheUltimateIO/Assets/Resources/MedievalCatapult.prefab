@@ -416,7 +416,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   limit: 50.76
-  speedAttack: 50
+  speedAttack: 40
   speedReturn: 50
   damage: 80
   catapult: {fileID: 8824366872169076133}
@@ -424,7 +424,10 @@ MonoBehaviour:
   directionShoot: {x: 0, y: 1, z: 1}
   content: {fileID: 6036121190220035777}
   contentRb: {fileID: 0}
+  minForce: 5
   maxForce: 40
+  minMultiplySpeedAttack: 1
+  maxMultiplySpeedAttack: 3
   speedAmountForce: 20
   contentPlayerOpen: 0
   preparingShoot: 0

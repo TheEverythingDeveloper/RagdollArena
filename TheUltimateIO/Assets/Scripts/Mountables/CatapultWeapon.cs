@@ -11,14 +11,23 @@ public class CatapultWeapon : WeaponVehicle
     public GameObject content;
     public Rigidbody contentRb;
 
+    public float minForce;
     public float maxForce;
+    public float minMultiplySpeedAttack;
+    public float maxMultiplySpeedAttack;
     public float speedAmountForce;
     public bool contentPlayerOpen = true;
     [HideInInspector] public bool preparingShoot;
     float _force;
 
     public GameObject rockBullet;
-    Transform _actualMounted;
+    CharacterModel _actualMounted;
+
+    private void Awake()
+    {
+        _force = minForce;
+        contentPlayerOpen = true;
+    }
 
     public void WeaponActiveAddForce()
     {
@@ -51,7 +60,7 @@ public class CatapultWeapon : WeaponVehicle
 
         while (_attack)
         {
-            transform.localEulerAngles += directionAngle * speedAttack * Time.deltaTime;
+            transform.localEulerAngles += directionAngle * (speedAttack * Remap(_force, minForce, maxForce, minMultiplySpeedAttack, maxMultiplySpeedAttack)) * Time.deltaTime;
 
             localEulerAngleX = transform.localEulerAngles.x > 180 ? transform.localEulerAngles.x - 360 : transform.localEulerAngles.x;
 
@@ -70,7 +79,7 @@ public class CatapultWeapon : WeaponVehicle
 
             yield return WaitForEndOfFrame;
         }
-
+        if (contentPlayerOpen) ActiveRock(true);
         _coroutineAttack = null;
     }
 
@@ -112,17 +121,17 @@ public class CatapultWeapon : WeaponVehicle
 
     public void ExitMountedPlayer()
     {
-        _actualMounted.parent = null;
-        _actualMounted.GetComponentInChildren<CharacterModel>().NormalControls();
-        _actualMounted.position = catapult.spawnOut.position;
+        _actualMounted.transform.parent = null;
+        _actualMounted.NormalControls();
+        _actualMounted.transform.position = catapult.spawnOut.position;
         _actualMounted = null;
     }
     void AddForce()
     {
         _force += speedAmountForce * Time.deltaTime;
-        _force = Mathf.Clamp(_force, 0, maxForce);
+        _force = Mathf.Clamp(_force, minForce, maxForce);
 
-        catapult.UpdateForce(_force / maxForce);
+        catapult.UpdateForce(Remap(_force, minForce, maxForce, 0, 1));
 
         if (!preparingShoot) preparingShoot = true;
     }
@@ -130,13 +139,13 @@ public class CatapultWeapon : WeaponVehicle
     void ResetForce()
     {
         preparingShoot = false;
-        _force = 0;
+        _force = minForce;
         catapult.UpdateForce(0);
     }
 
     void ShootContent()
     {
-        if (contentRb == default)
+        if (contentRb == null)
         {
             var rock = PhotonNetwork.Instantiate("CatapultRock", content.transform.position, content.transform.rotation).GetComponent<RockCatapult>();
             rock.transform.position = content.transform.position;
@@ -144,8 +153,10 @@ public class CatapultWeapon : WeaponVehicle
         }
         else
         {
-            _actualMounted.parent = null;
+            _actualMounted.transform.parent = null;
+            _actualMounted.NormalControls();
             _actualMounted = null;
+            contentRb.isKinematic = false;
         }
 
         contentRb.AddForce((catapult.transform.forward * _force) + (catapult.transform.up * _force), ForceMode.Impulse);
@@ -154,29 +165,23 @@ public class CatapultWeapon : WeaponVehicle
         ResetForce();
     }
 
-    public bool AddContent(Transform contentAdd, Rigidbody rb)
-    {
-        if (contentRb != null) return false;
-
-        _actualMounted = contentAdd;
-        _actualMounted.parent = content.transform;
-        _actualMounted.localPosition = Vector3.zero;
-        contentRb = rb;
-
-        return true;
-    }
-
-    public bool AddContentPlayer(Transform player, Transform model, Rigidbody rb)
+    public bool AddContentPlayer(CharacterModel player, Transform model, Rigidbody rb)
     {
         if (contentRb != null) return false;
 
         _actualMounted = player;
-        _actualMounted.parent = content.transform;
-        _actualMounted.localPosition = Vector3.zero;
+        _actualMounted.transform.parent = content.transform;
+        _actualMounted.transform.localPosition = Vector3.zero;
         model.localPosition = Vector3.zero;
         contentRb = rb;
+        contentRb.isKinematic = true;
 
         return true;
+    }
+
+    float Remap(float value, float from1, float to1, float from2, float to2)
+    {
+        return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
     }
 
 }

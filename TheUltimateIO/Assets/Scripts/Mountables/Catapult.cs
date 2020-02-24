@@ -61,13 +61,20 @@ public class Catapult : Mountable
 
     IEnumerator ActiveEquip()
     {
-        var WaitForEndOfFrame = new WaitForEndOfFrame();
+        var WaitForEndOfFrame = new WaitForFixedUpdate();
         while (true)
         {
-            if (Input.GetKey(KeyCode.M))
+            Debug.LogError("Mounted: " + mounted + " ---- contentPlayerOpen: " + weapon.contentPlayerOpen);
+            if (Input.GetKeyDown(KeyCode.M) && !mounted)
             {
-                if (mounted) EnterWeapon();
-                else EnterMountable();
+                EnterMountable();
+
+                StopCoroutine(ActiveEquip());
+            }
+
+            if (Input.GetKeyDown(KeyCode.P) && weapon.contentPlayerOpen)
+            {
+                EnterWeapon();
 
                 StopCoroutine(ActiveEquip());
             }
@@ -102,6 +109,7 @@ public class Catapult : Mountable
 
     void EnterWeapon()
     {
+        Debug.LogError("EnterWeapon");
         lookCharacter.LookOff();
         AddPlayerContent(_characterModel);
     }
@@ -113,18 +121,14 @@ public class Catapult : Mountable
 
     public override void ExitMountable()
     {
-        StartCoroutine(WaitMountedAgain());
+        EnterTrigger();
+
         gameCanvas.NormalUI();
         HideModelCharacter(false);
         _characterModel.transform.position = spawnOut.position;
         _characterModel.model.transform.localPosition = Vector3.zero;
         _characterModel.NormalControls();
         _characterModel.characterCamera.ChangeRespawnMode(CharacterCamera.CameraMode.ThirdPersonMode);
-        EnterTrigger();
-    }
-    IEnumerator WaitMountedAgain()
-    {
-        yield return new WaitForSeconds(1);
         photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, false);
     }
 
@@ -137,7 +141,7 @@ public class Catapult : Mountable
         if (weapon.preparingShoot) return;
 
         if (Input.GetKeyDown(KeyCode.Tab)) ChangeAmmunition();
-        if (Input.GetKeyDown(KeyCode.M)) ExitMountable();
+        if (Input.GetKeyDown(KeyCode.L)) ExitMountable();
     }
 
     public override void ArtificialFixedUpdate()
@@ -200,18 +204,24 @@ public class Catapult : Mountable
 
     public void AddPlayerContent(CharacterModel character)
     {
+        Debug.LogError("AddPlayerContent");
         if (!weapon.contentPlayerOpen) return;
-
-        if(weapon.AddContentPlayer(character.transform, character.model.transform, character.rb))
+        Debug.LogError("AddPlayerContent-contentPlayerOpen");
+        if (weapon.AddContentPlayer(character, character.model.transform, character.rb))
         {
-            photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, false);
             photonView.RPC("RPCEnterWeapon", RpcTarget.AllBuffered, true);
             _catapultPanel.ChangeAmmunition(_ammunitionType, !weapon.contentPlayerOpen);
-            character.ChangeControls(AssistantUpdate, delegate { }, AssistantLateUpdate, AssistantMovement);
+            character.ChangeControls(AssistantUpdate, AssistantFixedUpdate, AssistantLateUpdate, AssistantMovement);
+            Debug.LogError("AddPlayerContent-AddContentPlayer");
         }
     }
 
     void AssistantMovement(float hor, float ver)
+    {
+
+    }
+
+    void AssistantFixedUpdate()
     {
 
     }
