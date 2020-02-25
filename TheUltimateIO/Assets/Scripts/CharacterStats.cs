@@ -12,6 +12,7 @@ namespace Character
         public float jumpSpeed = 200;
         public float rotationSpeed = 2;
 
+        public float backImpulseDamage;
         public float initialDistAttack;
         public float verticalDistAttack;
         public float horizontalDistAttack;

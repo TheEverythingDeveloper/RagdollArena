@@ -12,7 +12,7 @@ namespace Character
         public WeaponsManager weaponsMng;
 
         Func<int> weaponActive;
-        Action weaponOff = delegate { };
+        Action weaponOff;
         CharacterModel _characterModel;
 
         WeaponsAndStatsUIManager _weaponUIMng;
@@ -27,6 +27,7 @@ namespace Character
             _weaponUIMng = weaponUIMng;
             weaponsMng = weaponsManager;
             weaponActive = Sword;
+            weaponOff = delegate { };
 
             chat.SuscribeChat(ChatActive);
         }
@@ -60,15 +61,13 @@ namespace Character
             _allAttacksCd[0] = true;
             Debug.Log("<color=blue> Se posiciono en modo defensivo con el escudo. </color>");
 
-            _characterModel.ChangeSpeedPlayer(0.2f);
-            weaponsMng.ActiveShield(true);
+            _characterModel.photonView.RPC("RPCActiveShield", RpcTarget.AllBuffered, true);
             return 0;
         }
 
         void ShieldUp()
         {
-            _characterModel.ChangeSpeedPlayer(1);
-            weaponsMng.ActiveShield(false);
+            _characterModel.photonView.RPC("RPCActiveShield", RpcTarget.AllBuffered, false);
         }
 
         int Sword()
@@ -80,8 +79,8 @@ namespace Character
             _characterModel.photonView.RPC("RPCAnimSword", RpcTarget.All);
 
             RaycastHit hit;
-            if (Physics.Raycast(_characterModel.rb.transform.position, _characterModel.rb.transform.up, out hit, _characterModel.characterStats.verticalDistAttack, _characterModel.layerMaskWeaponDamage))
-                hit.collider.gameObject.GetComponent<Damageable>().Damage(_characterModel.transform.position, _characterModel.characterStats.damageAttack);
+            if (Physics.Raycast(weaponsMng.transform.position, -weaponsMng.transform.forward, out hit, _characterModel.characterStats.verticalDistAttack, _characterModel.layerMaskWeaponDamage))
+                hit.collider.gameObject.GetComponent<Damageable>().Damage(weaponsMng.transform.position, _characterModel.characterStats.damageAttack);
 
             return 1;
         }
@@ -188,12 +187,6 @@ namespace Character
         {
             weaponsMng.UpdateWeaponColors(r, g, b);
             _teamColor = new Color(r, g, b, 1f);
-        }
-
-        private void OnDrawGizmos()
-        {
-            if (_characterModel == null) return;
-            Gizmos.DrawLine(_characterModel.rb.transform.position, _characterModel.rb.transform.up * _characterModel.characterStats.verticalDistAttack); 
         }
 
     } 

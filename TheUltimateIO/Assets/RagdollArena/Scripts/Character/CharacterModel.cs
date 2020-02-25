@@ -22,7 +22,6 @@ namespace Character
         public Player myPhotonPlayer;
 
         public GameObject model;
-        public float forceImpulseDamage;
         public ParticlesPlayer particlesPlayer;
 
         private LevelManager _lvlMng;
@@ -289,10 +288,17 @@ namespace Character
         {
             if (!FindObjectOfType<Server>().DamageActive()) return;
 
-            rb.AddForce((rb.transform.position - origin) * forceImpulseDamage, ForceMode.Impulse);
             _hp -= damage;
 
-            photonView.RPC("RPCDamage", RpcTarget.All, _hp / characterStats.life);
+            photonView.RPC("RPCFeedbackDamage", RpcTarget.All, origin.x, origin.y, origin.z);
+            photonView.RPC("RPCDamage", RpcTarget.AllBuffered, _hp / characterStats.life);
+        }
+        [PunRPC]
+        public void RPCFeedbackDamage(float x, float y, float z)
+        {
+            var origin = new Vector3(x, y, z);
+            rb.AddForce((rb.transform.position - origin).normalized * characterStats.backImpulseDamage, ForceMode.Impulse);
+            particlesPlayer.particlesDamage.Play();
         }
         [PunRPC]
         public void RPCDamage(float hp)
@@ -362,6 +368,13 @@ namespace Character
         public void RPCChangeWeapon(int selectedWeaponID)
         {
             _characterWeapon.weaponsMng.ChangeWeapon(selectedWeaponID);
+        }
+
+        [PunRPC]
+        void RPCActiveShield(bool active)
+        {
+            ChangeSpeedPlayer(active ? 0.2f : 1);
+            _characterWeapon.weaponsMng.ActiveShield(active);
         }
         #endregion
         #region Drunk
