@@ -17,10 +17,15 @@ public class RockCatapult : MonoBehaviourPun
 
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("0");
+        if (!PhotonNetwork.IsMasterClient) return;
         if (_exploit) return;
 
-        if (collision.gameObject.layer == layersExploit)
+        Debug.Log("1");
+        Debug.Log("1: " + collision.gameObject.layer);
+        if (collision.gameObject.layer == 16 || collision.gameObject.layer == 9)
         {
+            Debug.Log("2");
             _exploit = true;
             rb.isKinematic = true;
             ExploitRock();
@@ -29,9 +34,10 @@ public class RockCatapult : MonoBehaviourPun
 
     void ExploitRock()
     {
-        photonView.RPC("RPCExploitRock", RpcTarget.AllBuffered);
+        Debug.Log("3");
+        photonView.RPC("RPCExploitRock", RpcTarget.All);
 
-        Collider[] hits = Physics.OverlapSphere(transform.position, distanceDamage);
+        Collider[] hits = Physics.OverlapSphere(transform.position, distanceDamage, 1 << 16);
 
         for (int i = 0; i < hits.Length; i++)
         {
@@ -43,6 +49,7 @@ public class RockCatapult : MonoBehaviourPun
 
     [PunRPC] void RPCExploitRock()
     {
+        Debug.Log("4");
         model.SetActive(false);
         particles.Play();
         sound.Play();
@@ -50,6 +57,7 @@ public class RockCatapult : MonoBehaviourPun
 
     IEnumerator WaitTimeDestroy()
     {
+        Debug.Log("6");
         yield return new WaitForSeconds(secondsWaitTime);
         PhotonNetwork.Destroy(gameObject);
     }

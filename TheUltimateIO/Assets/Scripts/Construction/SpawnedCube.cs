@@ -100,7 +100,7 @@ public class SpawnedCube : MonoBehaviourPun, IDamageable, IAttractable
 
     IEnumerator DestroyCube()
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(3f);
         PhotonNetwork.Destroy(gameObject);
     }
 
@@ -115,8 +115,6 @@ public class SpawnedCube : MonoBehaviourPun, IDamageable, IAttractable
     public void Damage(Vector3 origin, float damage)
     {
         Life -= damage;
-        /*if (Life <= 0) 
-            GetComponent<GridEntity>().DestroyGameObject();*/
     }
 
     public void Explosion(Vector3 origin, float force)
