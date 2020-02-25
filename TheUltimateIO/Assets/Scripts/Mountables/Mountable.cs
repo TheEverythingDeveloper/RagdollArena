@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using Character;
 using Photon.Pun;
+using Photon.Realtime;
+using Photon;
 using System.Collections.Generic;
 
 public class Mountable : MonoBehaviourPun, IUpdatable
@@ -9,7 +11,8 @@ public class Mountable : MonoBehaviourPun, IUpdatable
     public float sqrMagnitudeInTimeSpeed;
     public float rotationSpeed;
     public LayerMask floorLayers;
-    public bool mounted;
+    public bool someoneMounted;
+    public bool isPlayerMounted;
     protected Rigidbody _rb;
 
     protected Quaternion _initialRot;
@@ -35,19 +38,24 @@ public class Mountable : MonoBehaviourPun, IUpdatable
         }
     }
 
-    [PunRPC]
-    public void RPCMountVehicle(bool mount)
+    [PunRPC] public void RPCMountVehicle(bool mount)
     {
-        mounted = mount;
+        someoneMounted = mount;
     }
 
-    public virtual void ActiveMountable()
+    [PunRPC] public void RPCActiveMountable(Player photonPlayer)
     {
-        _characterModel.ChangeControls(ArtificialUpdate, ArtificialFixedUpdate, ArtificialLateUpdate, Move, _rb);
+        ActiveMountable(photonPlayer);
+    }
+
+    public virtual void ActiveMountable(Player photonPlayer)
+    {
+        FindObjectOfType<Server>().ChangeControls(photonPlayer, ArtificialUpdate, ArtificialFixedUpdate, ArtificialLateUpdate, Move, _rb);
     }
 
     public virtual void HideModelCharacter(bool hide)
     {
+        Debug.Log("hide character = " + hide);
         _characterModel.HideModel(hide);
     }
 

@@ -26,7 +26,7 @@ public class Ram : Mountable
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("trigger 0");
-        if (_activeEquip || mounted) return;
+        if (_activeEquip || someoneMounted) return;
 
         Debug.Log("trigger 1");
         if (other.gameObject.layer == Layers.PLAYER)
@@ -54,11 +54,27 @@ public class Ram : Mountable
     {
         if (!_controlsActive) return;
 
-        if (Input.GetKeyDown(KeyCode.M) && !mounted)
+        if (Input.GetKeyDown(KeyCode.M) && !someoneMounted)
         {
             Debug.Log("trigger 5");
             EnterMountable();
         }
+
+        if (!isPlayerMounted) return;
+
+        if (Input.GetMouseButtonDown(0))
+            weapon.Attack();
+        if (Input.GetKeyDown(KeyCode.L)) ExitMountable();
+
+        RotateLookMouse();
+    }
+
+    private void LateUpdate()
+    {
+        if (!_controlsActive) return;
+        if (!isPlayerMounted) return;
+        
+        _characterModel.characterCamera.ArtificialLateUpdate();
     }
 
     private void OnTriggerExit(Collider other)
@@ -76,52 +92,35 @@ public class Ram : Mountable
 
     public override void EnterMountable()
     {
+        isPlayerMounted = true;
         photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, true);
         gameCanvas.ChangeUI(ManagerPanelVehicles.Vehicles.Ram);
         animButtonActive.SetTrigger("Off");
         lookCharacter.LookOff();
         HideModelCharacter(true);
         _characterModel.model.SetActive(false);
-        ActiveMountable();
-            Debug.Log("trigger 6");
+        photonView.RPC("RPCActiveMountable", RpcTarget.MasterClient, _characterModel.myPhotonPlayer);
+        Debug.Log("trigger 6");
     }
 
     public override void ExitMountable()
     {
+        isPlayerMounted = false;
+        Debug.Log("update 2");
         photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, false);
         _controlsActive = false;
         gameCanvas.NormalUI();
         HideModelCharacter(false);
-        _characterModel.transform.position = spawnOut.position;
-        _characterModel.model.transform.localPosition = Vector3.zero;
-        _characterModel.NormalControls();
+        _characterModel.photonView.RPC("RPCResetNormalControls", RpcTarget.MasterClient, spawnOut.position);
 
         EnterTrigger();
     }
 
-    public override void ArtificialUpdate()
-    {
-        Attack();
-        if (Input.GetKeyDown(KeyCode.L)) ExitMountable();
-    }
+    public override void ArtificialUpdate() { }
 
-    public override void ArtificialFixedUpdate()
-    {
-        _characterModel.characterCamera.ArtificialFixedUpdate();
+    public override void ArtificialFixedUpdate() { }
 
-        RotateLookMouse();
-
-        var horAxis = Input.GetAxis("Horizontal");
-        var verAxis = Input.GetAxis("Vertical");
-
-        if (horAxis != 0 || verAxis != 0)
-            server.MovePlayer(photonView.Controller, horAxis, verAxis);
-    }
-
-    public override void ArtificialLateUpdate()
-    {
-        _characterModel.characterCamera.ArtificialLateUpdate();
-    }
+    public override void ArtificialLateUpdate() { }
 
     public override void Move(float horizontal, float vertical)
     {
@@ -133,11 +132,4 @@ public class Ram : Mountable
         var dir = new Vector3(horAxis, 0, verAxis);
         transform.position += dir;
     }
-
-    void Attack()
-    {
-        if (Input.GetMouseButtonDown(0))
-            weapon.Attack();
-    }
-
 }

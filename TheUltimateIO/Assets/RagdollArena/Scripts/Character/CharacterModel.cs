@@ -8,6 +8,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using Weapons;
 using Construction;
+using Photon;
+using Photon.Realtime;
 
 namespace Character
 {
@@ -17,6 +19,7 @@ namespace Character
         private List<IConstructable> _allConstructables = new List<IConstructable>();
         private CharacterMovement _movementController;
         public Image barLife;
+        public Player myPhotonPlayer;
 
         public GameObject model;
         public float forceImpulseDamage;
@@ -96,9 +99,15 @@ namespace Character
         public int team = 0; // { 0 } = sin equipo. { 1, 2, 3, 4 } = posibles equipos que pueden haber.
         [Tooltip("Este owned es parecido al photonView.isMine, solo que es para FullAutho, ya que el server es el photonView.isMine")] public bool owned;
 
-        [PunRPC] public void RPCSetModelOwner(bool own) => owned = own;
+        [PunRPC]
+        public void RPCSetModelOwner(bool own, Player photonPlayer)
+        {
+            owned = own;
+            myPhotonPlayer = photonPlayer;
+        }
 
-        [PunRPC] public void RPCArtificialAwake()
+        [PunRPC]
+        public void RPCArtificialAwake()
         {
 
             _lvlMng = FindObjectOfType<LevelManager>();
@@ -165,7 +174,7 @@ namespace Character
         private void ChangeTeam(int ID) //cambiar el team equivale tambien a cambiar el color del jugador y color de efectos
         {
             Debug.Log("<color=green> Fuiste cambiado al equipo " + ID.ToString() + "</color>");
-            team = ID-1;
+            team = ID - 1;
 
             Color teamIDColor = ID == 0 ? Color.grey : ID == 1 ? Color.blue : ID == 2 ? Color.red : ID == 3 ? Color.yellow : Color.blue;
 
@@ -175,7 +184,8 @@ namespace Character
                 PlayerPrefs.GetInt("HeadTypeID"), team);
         }
 
-        [PunRPC] public void RPCStartGame()
+        [PunRPC]
+        public void RPCStartGame()
         {
             _lvlMng.gameCanvas.SwitchMapPanel(true);
             _lvlMng.gameCanvas.SwitchCounterPanel(false);
@@ -201,7 +211,8 @@ namespace Character
         private void Update() { _movementController.ArtificialUpdate(); if ((!owned && rb != null) || !_controlsActive) return; ArtificialUpdate(); _Update(); }
         private void FixedUpdate() { if (!owned || !_controlsActive) return; ArtificialFixedUpdate(); _FixedUpdate(); }
         private void LateUpdate() { if (!owned || !_controlsActive) return; ArtificialLateUpdate(); _LateUpdate(); }
-        [PunRPC] public void RPCUpdateColorTeamAndHead(float[] skinColor, float[] teamColor, int headTypeID, int teamTypeID)
+        [PunRPC]
+        public void RPCUpdateColorTeamAndHead(float[] skinColor, float[] teamColor, int headTypeID, int teamTypeID)
         {
             _allMyHeads.Select(x =>
             {
@@ -222,12 +233,14 @@ namespace Character
         public void ArtificialLateUpdate() { _allUpdatables.Select(x => { x.ArtificialLateUpdate(); return x; }).ToList(); }
 
         public event Action<CharacterCamera.CameraMode> OnChangeRespawnMode = delegate { };
-        [PunRPC] public void RPCRespawn(Vector3 positionToRespawn)
+        [PunRPC]
+        public void RPCRespawn(Vector3 positionToRespawn)
         {
             RPCChangeRespawnMode(false); //no hace falta llamarlo desde RPC aca porque ya estamos en la misma
             RespawnAtPosition(positionToRespawn);
         }
-        [PunRPC] public void RPCChangeRespawnMode(bool dead)
+        [PunRPC]
+        public void RPCChangeRespawnMode(bool dead)
         {
             model.SetActive(!dead);
             OnChangeRespawnMode(dead ? CharacterCamera.CameraMode.GodMode : CharacterCamera.CameraMode.ThirdPersonMode);
@@ -238,8 +251,8 @@ namespace Character
             _lvlMng.gameCanvas.SwitchMapPanel(dead);
             if (dead)
                 FindObjectOfType<SpawnMap>().SetSpawnPointer();
-           // else
-                //Damage(transform.position, -1f);
+            // else
+            //Damage(transform.position, -1f);
             Debug.Log(dead ? "<color=red>Muerto</color>" : "<color=green>Respawneado</color>");
         }
         public void RespawnAtPosition(Vector3 positionToRespawn)
@@ -256,14 +269,14 @@ namespace Character
         public void AddPoint(int points)
         {
             var cubeSpawner = FindObjectOfType<CubeSpawner>();
-            if(cubeSpawner != null)
+            if (cubeSpawner != null)
                 cubeSpawner.ConstructionPoints += points;
         }
 
         public bool OnClickPlayer()
         {
             foreach (var item in hands)
-                if (item.activeTaken) 
+                if (item.activeTaken)
                     return true;
             return false;
         }
@@ -281,7 +294,8 @@ namespace Character
 
             photonView.RPC("RPCDamage", RpcTarget.All, _hp / characterStats.life);
         }
-        [PunRPC] public void RPCDamage(float hp)
+        [PunRPC]
+        public void RPCDamage(float hp)
         {
             particlesPlayer.particlesDamage.Play();
 
@@ -293,7 +307,8 @@ namespace Character
                 FindObjectOfType<Server>().photonView.RPC("RPCPlayerDeath", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer);
         }
 
-        [PunRPC] public void RPCActivateEmoji(int emojiID)
+        [PunRPC]
+        public void RPCActivateEmoji(int emojiID)
         {
             particlesPlayer.particlesEmoji[emojiID].Play();
         }
@@ -301,7 +316,7 @@ namespace Character
         [PunRPC]
         public void RPCActivateChat(bool activateChat)
         {
-            if(activateChat)
+            if (activateChat)
                 particlesPlayer.particleChat.Play();
             else
                 particlesPlayer.particleChat.Stop();
@@ -321,8 +336,8 @@ namespace Character
             _grenadeThrowSpeed = 0;
             while (true)
             {
-                _grenadeThrowSpeed = 
-                    Mathf.Clamp(_grenadeThrowSpeed + Time.deltaTime * grenadeThrowSpeedThreshold ,0.1f,grenadeThrowSpeed);
+                _grenadeThrowSpeed =
+                    Mathf.Clamp(_grenadeThrowSpeed + Time.deltaTime * grenadeThrowSpeedThreshold, 0.1f, grenadeThrowSpeed);
                 yield return new WaitForEndOfFrame();
             }
         }
@@ -391,7 +406,7 @@ namespace Character
         [PunRPC]
         void ParticlesDrunk(bool active)
         {
-            if(active) particlesDrunk.Play();
+            if (active) particlesDrunk.Play();
             else particlesDrunk.Stop();
         }
 
@@ -415,19 +430,34 @@ namespace Character
         #region Controls
         public void ChangeControls(Action u, Action fu, Action lu, Action<float, float> move)
         {
+            Debug.Log("se cambiaron los controles de este model");
             _Update = u;
             _FixedUpdate = fu;
             _LateUpdate = lu;
             _Move = move;
         }
 
+        public void ChangeSpeedPlayer(float multiply)
+        {
+            _movementController.multiplySpeed = multiply;
+        }
+
         public void ChangeControls(Action u, Action fu, Action lu, Action<float, float> move, Rigidbody newRb)
         {
+            Debug.Log("se cambiaron los controles de este model");
             _Update = u;
             _FixedUpdate = fu;
             _LateUpdate = lu;
             _Move = move;
             characterCamera.ChangeTarget(newRb);
+        }
+
+        [PunRPC]
+        public void RPCResetNormalControls(Vector3 spawnOut)
+        {
+            transform.position = spawnOut;
+            model.transform.localPosition = Vector3.zero;
+            NormalControls();
         }
 
         public void NormalControls()
@@ -440,9 +470,5 @@ namespace Character
         }
         #endregion
 
-        public void ChangeSpeedPlayer(float multiply)
-        {
-            _movementController.multiplySpeed = multiply;
-        }
     }
 }

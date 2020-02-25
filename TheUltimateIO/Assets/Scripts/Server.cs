@@ -138,10 +138,14 @@ public class Server : MonoBehaviourPun
             CharacterModel model = LevelManager.Instance.SpawnUser();
             Debug.Log("<color=green>Se unio a la partida un usuario! Se llama </color>" + photonPlayer.NickName);
             allPlayers.Add(photonPlayer, model);
-            allPlayers[photonPlayer].photonView.RPC("RPCSetModelOwner", photonPlayer, true);
+            allPlayers[photonPlayer].photonView.RPC("RPCSetModelOwner", photonPlayer, true, photonPlayer);
             allPlayers[photonPlayer].photonView.RPC("RPCArtificialAwake", RpcTarget.AllBuffered);
             FindObjectOfType<TeamManager>().AddPlayer(photonPlayer);
         }
+    }
+    public void ChangeControls(Player photonPlayer, Action u, Action fu, Action lu, Action<float, float> move, Rigidbody newRb)
+    {
+        allPlayers[photonPlayer].ChangeControls(u, fu, lu, move, newRb);
     }
     [PunRPC] public void RPCPlayerDeath(Player photonPlayer) //Decirle al modelo que se apague y que ponga los paneles de respawn en el HUD
     {

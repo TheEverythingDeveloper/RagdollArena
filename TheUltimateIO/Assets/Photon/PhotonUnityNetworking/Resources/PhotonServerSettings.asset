@@ -136,5 +136,8 @@ MonoBehaviour:
   - RPCMountVehicle
   - RPCBreakCube
   - RPCExploitRock
+  - RPCActiveMountable
+  - RPCNormalControls
+  - RPCResetNormalControls
   DisableAutoOpenWizard: 1
   ShowSettings: 1

@@ -41,7 +41,7 @@ public class Catapult : Mountable
 
     private void OnTriggerEnter(Collider other)
     {
-        if (_activeEquip || (mounted && !weapon.contentPlayerOpen )) return;
+        if (_activeEquip || (someoneMounted && !weapon.contentPlayerOpen )) return;
 
         if (other.gameObject.layer == Layers.PLAYER)
         {
@@ -67,7 +67,7 @@ public class Catapult : Mountable
     {
         if (!_controlsActive) return;
 
-        if (Input.GetKeyDown(KeyCode.M) && !mounted)
+        if (Input.GetKeyDown(KeyCode.M) && !someoneMounted)
             EnterMountable();
         if (Input.GetKeyDown(KeyCode.P) && weapon.contentPlayerOpen)
             EnterWeapon();
@@ -93,7 +93,7 @@ public class Catapult : Mountable
         animButtonActive.SetTrigger("Off");
         lookCharacter.LookOff();
         HideModelCharacter(true);
-        ActiveMountable();
+        photonView.RPC("RPCActiveMountable", RpcTarget.MasterClient, _characterModel.myPhotonPlayer);
     }
 
     void EnterWeapon()
