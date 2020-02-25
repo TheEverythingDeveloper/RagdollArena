@@ -459,7 +459,11 @@ namespace Character
         {
             Debug.Log("se cambiaron los controles de este model");
             _Move = move;
-            characterCamera.ChangeTarget(newRb);
+        }
+
+        public void ChangeCameraTarget(Rigidbody rb)
+        {
+            characterCamera.ChangeTarget(rb);
         }
 
         [PunRPC]
@@ -476,7 +480,6 @@ namespace Character
             _FixedUpdate = ArtificialFixedUpdate;
             _LateUpdate = ArtificialLateUpdate;
             _Move = _movementController.Move;
-            characterCamera.ChangeTarget(rb);
         }
         #endregion
 

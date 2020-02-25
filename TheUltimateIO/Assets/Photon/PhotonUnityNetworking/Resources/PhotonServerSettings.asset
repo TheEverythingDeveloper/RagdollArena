@@ -143,5 +143,7 @@ MonoBehaviour:
   - RPCRotateLookMouse
   - Attack
   - RPCAttack
+  - RPCActiveShield
+  - RPCFeedbackDamage
   DisableAutoOpenWizard: 1
   ShowSettings: 1

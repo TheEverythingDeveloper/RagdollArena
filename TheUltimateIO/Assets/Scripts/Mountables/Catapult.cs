@@ -113,6 +113,7 @@ public class Catapult : Mountable
     public override void EnterMountable()
     {
         isPlayerMounted = true;
+        _characterModel.ChangeCameraTarget(_rb);
         photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, true);
         gameCanvas.ChangeUI(ManagerPanelVehicles.Vehicles.Catapult);
         animButtonActive.SetTrigger("Off");
@@ -136,6 +137,7 @@ public class Catapult : Mountable
     public override void ExitMountable()
     {
         isPlayerMounted = false;
+        _characterModel.ChangeCameraTarget(_characterModel.rb);
         EnterTrigger();
         _controlsActive = false;
         gameCanvas.NormalUI();

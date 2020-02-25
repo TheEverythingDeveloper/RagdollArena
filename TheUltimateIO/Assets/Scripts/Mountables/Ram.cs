@@ -91,6 +91,7 @@ public class Ram : Mountable
     public override void EnterMountable()
     {
         isPlayerMounted = true;
+        _characterModel.ChangeCameraTarget(_rb);
         photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, true);
         gameCanvas.ChangeUI(ManagerPanelVehicles.Vehicles.Ram);
         animButtonActive.SetTrigger("Off");
@@ -103,6 +104,7 @@ public class Ram : Mountable
     public override void ExitMountable()
     {
         isPlayerMounted = false;
+        _characterModel.ChangeCameraTarget(_characterModel.rb);
         photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, false);
         _controlsActive = false;
         gameCanvas.NormalUI();
