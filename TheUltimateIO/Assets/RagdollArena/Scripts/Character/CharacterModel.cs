@@ -440,5 +440,9 @@ namespace Character
         }
         #endregion
 
+        public void ChangeSpeedPlayer(float multiply)
+        {
+            _movementController.multiplySpeed = multiply;
+        }
     }
 }

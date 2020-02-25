@@ -12,6 +12,7 @@ namespace Character
         public WeaponsManager weaponsMng;
 
         Func<int> weaponActive;
+        Action weaponOff = delegate { };
         CharacterModel _characterModel;
 
         WeaponsAndStatsUIManager _weaponUIMng;
@@ -41,6 +42,8 @@ namespace Character
 
             if (Input.GetMouseButtonDown(0))
                 _characterModel.StartCoroutine(AttackCoroutine());
+            if (Input.GetMouseButtonUp(0))
+                weaponOff();
         }
 
         public void ArtificialFixedUpdate() { }
@@ -57,9 +60,15 @@ namespace Character
             _allAttacksCd[0] = true;
             Debug.Log("<color=blue> Se posiciono en modo defensivo con el escudo. </color>");
 
-            //TODO: Funcionamiento del Escudo
-
+            _characterModel.ChangeSpeedPlayer(0.2f);
+            weaponsMng.ActiveShield(true);
             return 0;
+        }
+
+        void ShieldUp()
+        {
+            _characterModel.ChangeSpeedPlayer(1);
+            weaponsMng.ActiveShield(false);
         }
 
         int Sword()
@@ -126,20 +135,40 @@ namespace Character
             if (right)
             {
                 if (weaponActive == Shield)
+                {
+                    weaponOff();
                     weaponActive = Sword;
+                    weaponOff = delegate { };
+                }
                 else if (weaponActive == Bow)
+                {
                     weaponActive = Shield;
+                    weaponOff = ShieldUp;
+                }
                 else
+                {
                     weaponActive = Bow;
+                    weaponOff = delegate { };
+                }
             }
             else
             {
                 if (weaponActive == Shield)
+                {
+                    weaponOff();
                     weaponActive = Bow;
+                    weaponOff = delegate { };
+                }
                 else if (weaponActive == Sword)
+                {
                     weaponActive = Shield;
+                    weaponOff = ShieldUp;
+                }
                 else
+                {
                     weaponActive = Sword;
+                    weaponOff = delegate { };
+                }
             }
             int selectedWeaponID = 0;
             if (weaponActive == Shield)

@@ -12,10 +12,15 @@ namespace Weapons
         private Weapon _actualBackWeapon;
         public Transform arrowSpawnTransform;
         public bool constructionMode;
-
+        public GameObject shieldProtect;
         private void Awake()
         {
             ChangeWeapon(1);
+        }
+
+        public void ActiveShield(bool active)
+        {
+            shieldProtect.SetActive(active);
         }
 
         public void ConstructionMode(bool show)

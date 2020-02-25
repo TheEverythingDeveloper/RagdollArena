@@ -16,6 +16,7 @@ namespace Character
         private LayerMask _floorLayers;
         Action updateControls;
         Action<float, float> fixedUpdateControls;
+        public float multiplySpeed = 1;
 
         public CharacterMovement(CharacterModel model, Rigidbody rigidbody, Quaternion initialRot, LayerMask floorLayers)
         {
@@ -94,8 +95,8 @@ namespace Character
 
         void NormalFixedUpdateControls(float horizontal, float vertical)
         {
-            var horAxis = horizontal * _myModel.characterStats.speed * Time.deltaTime;
-            var verAxis = vertical * _myModel.characterStats.speed * Time.deltaTime;
+            var horAxis = horizontal * _myModel.characterStats.speed * multiplySpeed * Time.deltaTime;
+            var verAxis = vertical * _myModel.characterStats.speed * multiplySpeed * Time.deltaTime;
 
             _myModel.anim.SetTrigger("Walk");
 
