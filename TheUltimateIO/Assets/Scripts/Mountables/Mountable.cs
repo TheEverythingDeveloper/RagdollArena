@@ -110,5 +110,12 @@ public class Mountable : MonoBehaviourPun, IUpdatable
 
             _rb.transform.localRotation = Quaternion.Euler(_initialRot.eulerAngles.x, _lookRotation.eulerAngles.y, _initialRot.eulerAngles.z);
         }
+
+        photonView.RPC("RPCRotateLookMouse", RpcTarget.MasterClient, _rb.transform.localRotation);
+    }
+
+    [PunRPC] public void RPCRotateLookMouse(Quaternion quatRot)
+    {
+        _rb.transform.localRotation = quatRot;
     }
 }

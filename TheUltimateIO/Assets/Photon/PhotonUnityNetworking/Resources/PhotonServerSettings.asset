@@ -139,5 +139,9 @@ MonoBehaviour:
   - RPCActiveMountable
   - RPCNormalControls
   - RPCResetNormalControls
+  - RPCDamageShield
+  - RPCRotateLookMouse
+  - Attack
+  - RPCAttack
   DisableAutoOpenWizard: 1
   ShowSettings: 1

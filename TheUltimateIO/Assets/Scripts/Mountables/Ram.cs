@@ -25,17 +25,13 @@ public class Ram : Mountable
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("trigger 0");
         if (_activeEquip || someoneMounted) return;
 
-        Debug.Log("trigger 1");
         if (other.gameObject.layer == Layers.PLAYER)
         {
-            Debug.Log("trigger 2");
             _characterModel = other.GetComponentInParent<CharacterModel>();
 
             if (_characterModel.team != teamID) return;
-            Debug.Log("trigger 3");
 
             EnterTrigger();
         }
@@ -55,18 +51,20 @@ public class Ram : Mountable
         if (!_controlsActive) return;
 
         if (Input.GetKeyDown(KeyCode.M) && !someoneMounted)
-        {
-            Debug.Log("trigger 5");
             EnterMountable();
-        }
 
         if (!isPlayerMounted) return;
 
         if (Input.GetMouseButtonDown(0))
-            weapon.Attack();
+            photonView.RPC("RPCAttack", RpcTarget.All);
         if (Input.GetKeyDown(KeyCode.L)) ExitMountable();
 
         RotateLookMouse();
+    }
+
+    [PunRPC] public void RPCAttack()
+    {
+        weapon.Attack();
     }
 
     private void LateUpdate()
@@ -100,13 +98,11 @@ public class Ram : Mountable
         HideModelCharacter(true);
         _characterModel.model.SetActive(false);
         photonView.RPC("RPCActiveMountable", RpcTarget.MasterClient, _characterModel.myPhotonPlayer);
-        Debug.Log("trigger 6");
     }
 
     public override void ExitMountable()
     {
         isPlayerMounted = false;
-        Debug.Log("update 2");
         photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, false);
         _controlsActive = false;
         gameCanvas.NormalUI();
@@ -124,8 +120,6 @@ public class Ram : Mountable
 
     public override void Move(float horizontal, float vertical)
     {
-        Debug.Log("Move call " + horizontal + "  " + vertical);
-
         var horAxis = horizontal * speed * Time.deltaTime;
         var verAxis = vertical * speed * Time.deltaTime;
 

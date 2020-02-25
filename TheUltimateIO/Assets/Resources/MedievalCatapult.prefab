@@ -547,7 +547,8 @@ MonoBehaviour:
   floorLayers:
     serializedVersion: 2
     m_Bits: 66049
-  mounted: 0
+  someoneMounted: 0
+  isPlayerMounted: 0
   allRenderers:
   - {fileID: 2095452060322974521}
   - {fileID: 7099717360609337783}
