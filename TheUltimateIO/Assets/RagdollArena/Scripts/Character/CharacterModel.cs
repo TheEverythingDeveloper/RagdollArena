@@ -97,7 +97,7 @@ namespace Character
 
         public int team = 0; // { 0 } = sin equipo. { 1, 2, 3, 4 } = posibles equipos que pueden haber.
         [Tooltip("Este owned es parecido al photonView.isMine, solo que es para FullAutho, ya que el server es el photonView.isMine")] public bool owned;
-
+        Mountable _actualMountable;
         [PunRPC]
         public void RPCSetModelOwner(bool own, Player photonPlayer)
         {
@@ -436,11 +436,23 @@ namespace Character
                 * 20, ForceMode.Impulse);
         }
         #endregion
+        #region Mountable
         public void HideModel(bool hide)
         {
             photonView.RPC("RPCHideModelCharacter", RpcTarget.AllBuffered, hide);
         }
         [PunRPC] void RPCHideModelCharacter(bool hide) { model.SetActive(!hide); panelUI.SetActive(!hide); }
+
+        public void ViewMountable(Mountable mountable)
+        {
+            if (_actualMountable != null) mountable.ViewOff();
+
+            _actualMountable = mountable;
+        }
+
+        public void EnterActualMountable() { if (_actualMountable != null) _actualMountable.EnterMountable(); }
+        public void ExitActualMountable() { if (_actualMountable != null) _actualMountable.ExitMountable(); }
+        #endregion
         #region Controls
         public void ChangeControls(Action u, Action fu, Action lu, Action<float, float> move)
         {

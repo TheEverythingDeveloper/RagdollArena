@@ -64,6 +64,16 @@ public class Mountable : MonoBehaviourPun
 
     }
 
+    public virtual void ViewOn()
+    {
+
+    }
+
+    public virtual void ViewOff()
+    {
+
+    }
+
     public virtual void EnterMountable()
     {
 

@@ -29,15 +29,17 @@ public class Ram : Mountable
 
         if (other.gameObject.layer == Layers.PLAYER)
         {
-            _characterModel = other.GetComponentInParent<CharacterModel>();
+            var model = other.GetComponentInParent<CharacterModel>();
 
-            if (_characterModel.team != teamID) return;
+            if (model.team != teamID) return;
 
-            EnterTrigger();
+            _characterModel = model;
+            _characterModel.ViewMountable(this);
+            ViewOn();
         }
     }
 
-    void EnterTrigger()
+    public override void ViewOn()
     {
         animButtonActive.SetTrigger("On");
         lookCharacter.LookActive(_characterModel.transform);
@@ -45,19 +47,34 @@ public class Ram : Mountable
         _controlsActive = true;
     }
 
+    public override void ViewOff()
+    {
+        if (!_activeEquip) return;
+
+        animButtonActive.SetTrigger("Off");
+        lookCharacter.LookOff();
+        _activeEquip = false;
+        _controlsActive = false;
+        StopAllCoroutines();
+    }
+
     private bool _controlsActive;
     private void Update()
     {
-        if (!_controlsActive) return;
+        if (!_controlsActive || (someoneMounted && !isPlayerMounted)) return;
 
-        if (Input.GetKeyDown(KeyCode.M) && !someoneMounted)
-            EnterMountable();
+        if (Input.GetKeyDown(KeyCode.M) && !isPlayerMounted)
+            _characterModel.EnterActualMountable();
+        else if (Input.GetKeyDown(KeyCode.M) && isPlayerMounted)
+        {
+            Debug.LogError("Ram: " + gameObject.name);
+            _characterModel.ExitActualMountable();
+        }
 
         if (!isPlayerMounted) return;
 
         if (Input.GetMouseButtonDown(0))
             photonView.RPC("RPCAttack", RpcTarget.All);
-        if (Input.GetKeyDown(KeyCode.L)) ExitMountable();
 
         RotateLookMouse();
     }
@@ -77,14 +94,9 @@ public class Ram : Mountable
 
     private void OnTriggerExit(Collider other)
     {
-        if (!_activeEquip) return;
-
         if (other.gameObject.layer == Layers.PLAYER)
         {
-            animButtonActive.SetTrigger("Off");
-            lookCharacter.LookOff();
-            _activeEquip = false;
-            StopAllCoroutines();
+            ViewOff();
         }
     }
 
@@ -111,7 +123,7 @@ public class Ram : Mountable
         HideModelCharacter(false);
         _characterModel.photonView.RPC("RPCResetNormalControls", RpcTarget.MasterClient, spawnOut.position);
 
-        EnterTrigger();
+        ViewOn();
     }
 
     public override void Move(float horizontal, float vertical)
