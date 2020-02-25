@@ -145,5 +145,7 @@ MonoBehaviour:
   - RPCAttack
   - RPCActiveShield
   - RPCFeedbackDamage
+  - RPCPosterConstruction
+  - RPCPosterWar
   DisableAutoOpenWizard: 1
   ShowSettings: 1

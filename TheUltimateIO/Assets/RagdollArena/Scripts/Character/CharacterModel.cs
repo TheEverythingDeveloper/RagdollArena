@@ -129,10 +129,11 @@ namespace Character
             _allUpdatables.Add(characterCamera);
 
             var weaponsUIManager = FindObjectOfType<WeaponsAndStatsUIManager>();
-            var WeaponsManager = GetComponentInChildren<WeaponsManager>();
+            var canvas = FindObjectOfType<GameCanvas>();
             var chat = FindObjectOfType<Chat>();
+            var WeaponsManager = GetComponentInChildren<WeaponsManager>();
 
-            _characterWeapon = new CharacterWeapon(this, weaponsUIManager, WeaponsManager, chat);
+            _characterWeapon = new CharacterWeapon(this, weaponsUIManager, WeaponsManager, chat, canvas);
             _allUpdatables.Add(_characterWeapon);
 
             _hp = characterStats.life;
@@ -476,9 +477,9 @@ namespace Character
 
         public void NormalControls()
         {
-            _Update = ArtificialUpdate;
-            _FixedUpdate = ArtificialFixedUpdate;
-            _LateUpdate = ArtificialLateUpdate;
+//             _Update = ArtificialUpdate;
+//             _FixedUpdate = ArtificialFixedUpdate;
+//             _LateUpdate = ArtificialLateUpdate;
             _Move = _movementController.Move;
         }
         #endregion

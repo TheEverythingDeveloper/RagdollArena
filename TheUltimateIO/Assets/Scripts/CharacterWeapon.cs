@@ -11,24 +11,24 @@ namespace Character
     {
         public WeaponsManager weaponsMng;
 
-        Func<int> weaponActive;
+        Action weaponActive;
         Action weaponOff;
         CharacterModel _characterModel;
-
+        GameCanvas _gameCanvas;
         WeaponsAndStatsUIManager _weaponUIMng;
 
         private bool[] _allAttacksCd = new bool[3];
 
         bool controlsActive = true;
 
-        public CharacterWeapon(CharacterModel cm, WeaponsAndStatsUIManager weaponUIMng, WeaponsManager weaponsManager, Chat chat)
+        public CharacterWeapon(CharacterModel cm, WeaponsAndStatsUIManager weaponUIMng, WeaponsManager weaponsManager, Chat chat, GameCanvas canvas)
         {
             _characterModel = cm;
             _weaponUIMng = weaponUIMng;
             weaponsMng = weaponsManager;
             weaponActive = Sword;
             weaponOff = delegate { };
-
+            _gameCanvas = canvas;
             chat.SuscribeChat(ChatActive);
         }
 
@@ -42,7 +42,7 @@ namespace Character
                 SelectWeapon(true);
 
             if (Input.GetMouseButtonDown(0))
-                _characterModel.StartCoroutine(AttackCoroutine());
+                weaponActive();
             if (Input.GetMouseButtonUp(0))
                 weaponOff();
         }
@@ -55,14 +55,12 @@ namespace Character
         {
             controlsActive = active;
         }
-        int Shield()
+        void Shield()
         {
-            if (_allAttacksCd[0]) return 0;
-            _allAttacksCd[0] = true;
             Debug.Log("<color=blue> Se posiciono en modo defensivo con el escudo. </color>");
 
             _characterModel.photonView.RPC("RPCActiveShield", RpcTarget.AllBuffered, true);
-            return 0;
+
         }
 
         void ShieldUp()
@@ -70,9 +68,9 @@ namespace Character
             _characterModel.photonView.RPC("RPCActiveShield", RpcTarget.AllBuffered, false);
         }
 
-        int Sword()
+        void Sword()
         {
-            if (_allAttacksCd[1]) return 1;
+            if (_allAttacksCd[1]) return;
             _allAttacksCd[1] = true;
             Debug.Log("<color=blue> Se ataco con la espada. </color>");
 
@@ -82,20 +80,18 @@ namespace Character
             if (Physics.Raycast(weaponsMng.transform.position, -weaponsMng.transform.forward, out hit, _characterModel.characterStats.verticalDistAttack, _characterModel.layerMaskWeaponDamage))
                 hit.collider.gameObject.GetComponent<Damageable>().Damage(weaponsMng.transform.position, _characterModel.characterStats.damageAttack);
 
-            return 1;
-        }
+            _characterModel.StartCoroutine(CooldownAttack(1));
+        }  
 
-        
-
-        int Bow()
+        void Bow()
         {
-            if (_allAttacksCd[2]) return 2;
+            if (_allAttacksCd[2]) return;
             _allAttacksCd[2] = true;
             Debug.Log("<color=blue> Se ataco con el arco. </color>");
 
             _characterModel.StartCoroutine(BowCoroutine());
 
-            return 2;
+            _characterModel.StartCoroutine(CooldownAttack(2));
         }
 
         
@@ -108,8 +104,6 @@ namespace Character
             _characterModel.photonView.RPC("RPCAnimBow", RpcTarget.All);
             yield return new WaitForSeconds(_characterModel.characterStats.delayAnimBowInSeconds);
             _lastArrow.ThrowArrow();
-            yield return new WaitForSeconds(_characterModel.characterStats.delayBowAttackInSeconds);
-            SpawnArrow();
         }
 
         private void SpawnArrow()
@@ -120,10 +114,19 @@ namespace Character
             _lastArrow.transform.parent = weaponsMng.arrowSpawnTransform;
         }
 
-        IEnumerator AttackCoroutine()
+        IEnumerator CooldownAttack(int attackID)
         {
-            int attackID = weaponActive();
-            yield return new WaitForSeconds(_characterModel.characterStats.delayMeleeAttackInSeconds);
+            var WaitForEndOfFrame = new WaitForEndOfFrame();
+            var counter = _characterModel.characterStats.delayAttackInSeconds[attackID];
+            _gameCanvas.ActiveCooldown(true);
+
+            while (counter > 0)
+            {
+                counter -= Time.deltaTime;
+                _gameCanvas.ChangeCooldown(counter / _characterModel.characterStats.delayAttackInSeconds[attackID]);
+                yield return WaitForEndOfFrame;
+            }
+            _gameCanvas.ActiveCooldown(false);
             _allAttacksCd[attackID] = false;
         }
 

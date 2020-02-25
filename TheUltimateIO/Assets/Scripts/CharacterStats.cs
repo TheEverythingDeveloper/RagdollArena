@@ -16,8 +16,7 @@ namespace Character
         public float initialDistAttack;
         public float verticalDistAttack;
         public float horizontalDistAttack;
-        public float delayMeleeAttackInSeconds;
-        public float delayBowAttackInSeconds;
+        public float[] delayAttackInSeconds;
         public float delayAnimBowInSeconds;
     }
 }

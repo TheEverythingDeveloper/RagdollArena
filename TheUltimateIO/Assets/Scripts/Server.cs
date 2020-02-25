@@ -57,8 +57,6 @@ public class Server : MonoBehaviourPun
         if (Input.GetKeyDown(KeyCode.Return))
             StartCoroutine(StartGameCoroutine(5));
 
-        if (Input.GetKeyDown(KeyCode.L))
-            FindObjectOfType<CharacterModel>().AddPoint(10000);
     }
     void ChatActive(bool active)
     {
@@ -102,12 +100,16 @@ public class Server : MonoBehaviourPun
     }
     IEnumerator TimerConstructMode()
     {
-        _chat.SendMsgServer("In " + timeConstructInSeconds + " seconds the war will begin, build to protect the nexus.");
+        photonView.RPC("RPCPosterConstruction", RpcTarget.All);
         yield return new WaitForSeconds(timeConstructInSeconds);
-        _chat.SendMsgServer("Construction time is over, go to the war!!");
+        photonView.RPC("RPCPosterWar", RpcTarget.All);
 
         //TODO: Feedback de que comienza la guerra.
     }
+    [PunRPC] void RPCPosterConstruction() { MsgServerUI.Instance.NewMsg("In " + timeConstructInSeconds + " seconds the war will begin, build to protect the nexus.", 5); }
+
+    [PunRPC] void RPCPosterWar() { MsgServerUI.Instance.NewMsg("Construction time is over, go to the war!!", 5); }
+
     [PunRPC] private void RPCUpdateCounter(int i)
     {
         _lvlMng.gameCanvas.SwitchCounterPanel(true);

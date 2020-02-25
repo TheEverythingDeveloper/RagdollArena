@@ -1126,8 +1126,10 @@ MonoBehaviour:
   initialDistAttack: 2
   verticalDistAttack: 10
   horizontalDistAttack: 5
-  delayMeleeAttackInSeconds: 1.5
-  delayBowAttackInSeconds: 1
+  delayAttackInSeconds:
+  - 0
+  - 1
+  - 2
   delayAnimBowInSeconds: 0.6
 --- !u!1001 &98437747436014007
 PrefabInstance:

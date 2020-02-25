@@ -18,6 +18,7 @@ namespace GameUI
 
         public ManagerPanelVehicles panelsVehicles;
         public GameObject canvasPlayer;
+        public Image cooldownAttack;
 
         private void Awake()
         {
@@ -47,6 +48,9 @@ namespace GameUI
             canvasPlayer.SetActive(true);
             panelsVehicles.PanelOff();
         }
+        public void ActiveCooldown(bool active) { cooldownAttack.gameObject.SetActive(active); }
+        public void ChangeCooldown(float fill) { cooldownAttack.fillAmount = fill; }
+
         public void SwitchCounterPanel(bool active) => _counterPanel.SetActive(active);
         public void SwitchRespawnHUD(bool active) => _respawnHUD.SetActive(active);
         public void SwitchEnterToStartText(bool active) => _pressEnterToStartText.gameObject.SetActive(active);

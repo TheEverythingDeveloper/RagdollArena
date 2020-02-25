@@ -31,9 +31,6 @@ namespace GameUI
                 panelControls.SetActive(false);
         }
 
-        public void ChangeLife(float fill)
-        {
-            barLife.fillAmount = fill;
-        }
+        public void ChangeLife(float fill) { barLife.fillAmount = fill; }
     }
 }
