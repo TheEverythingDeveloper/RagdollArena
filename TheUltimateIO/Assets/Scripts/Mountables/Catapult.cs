@@ -66,7 +66,7 @@ public class Catapult : Mountable
     private void Update()
     {
         if (_chatActive) return;
-        if (!_controlsActive || someoneMounted) return;
+        if (!_controlsActive) return;
 
         if (Input.GetKeyDown(KeyCode.M) && !someoneMounted)
             EnterMountable();
@@ -112,6 +112,7 @@ public class Catapult : Mountable
 
     public override void EnterMountable()
     {
+        isPlayerMounted = true;
         photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, true);
         gameCanvas.ChangeUI(ManagerPanelVehicles.Vehicles.Catapult);
         animButtonActive.SetTrigger("Off");
@@ -134,6 +135,7 @@ public class Catapult : Mountable
 
     public override void ExitMountable()
     {
+        isPlayerMounted = false;
         EnterTrigger();
         _controlsActive = false;
         gameCanvas.NormalUI();
