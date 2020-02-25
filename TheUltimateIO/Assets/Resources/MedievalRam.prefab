@@ -73,6 +73,7 @@ MonoBehaviour:
   floorLayers:
     serializedVersion: 2
     m_Bits: 66049
+  mounted: 0
   allRenderers:
   - {fileID: 1712717087486746034}
   - {fileID: 8726250726809235440}
@@ -82,7 +83,6 @@ MonoBehaviour:
   lookCharacter: {fileID: 6156361944897803361}
   spawnOut: {fileID: 7168649886785938042}
   weapon: {fileID: 5810207178745815066}
-  mounted: 0
 --- !u!114 &9057799214614386480
 MonoBehaviour:
   m_ObjectHideFlags: 0

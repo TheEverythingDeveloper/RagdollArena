@@ -198,9 +198,9 @@ namespace Character
         public void Crowned(bool on) => OnCrowned(on);
         public void TryJump() { if (_movementController.inAir) return; OnJump(); }
         private void Start() { if (!owned) return; ArtificialStart(); }
-        private void Update() { _movementController.ArtificialUpdate(); if ((!owned && rb != null) || !_controlsActive) return; _Update(); }
-        private void FixedUpdate() { if (!owned || !_controlsActive) return; _FixedUpdate(); }
-        private void LateUpdate() { if (!owned || !_controlsActive) return; _LateUpdate(); }
+        private void Update() { _movementController.ArtificialUpdate(); if ((!owned && rb != null) || !_controlsActive) return; ArtificialUpdate(); _Update(); }
+        private void FixedUpdate() { if (!owned || !_controlsActive) return; ArtificialFixedUpdate(); _FixedUpdate(); }
+        private void LateUpdate() { if (!owned || !_controlsActive) return; ArtificialLateUpdate(); _LateUpdate(); }
         [PunRPC] public void RPCUpdateColorTeamAndHead(float[] skinColor, float[] teamColor, int headTypeID, int teamTypeID)
         {
             _allMyHeads.Select(x =>
@@ -420,6 +420,7 @@ namespace Character
             _LateUpdate = lu;
             _Move = move;
         }
+
         public void ChangeControls(Action u, Action fu, Action lu, Action<float, float> move, Rigidbody newRb)
         {
             _Update = u;

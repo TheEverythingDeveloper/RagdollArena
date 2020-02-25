@@ -46,8 +46,12 @@ public class Catapult : Mountable
         if (other.gameObject.layer == Layers.PLAYER)
         {
             _characterModel = other.GetComponentInParent<CharacterModel>();
+
+            if (_characterModel.team != teamID) return;
+
             _characterModel.characterCamera.catapultLook = positionCam;
             EnterTrigger();
+            _controlsActive = true;
         }
     }
 
@@ -56,30 +60,17 @@ public class Catapult : Mountable
         animButtonActive.SetTrigger("On");
         lookCharacter.LookActive(_characterModel.transform);
         _activeEquip = true;
-        StartCoroutine(ActiveEquip());
     }
 
-    IEnumerator ActiveEquip()
+    private bool _controlsActive;
+    private void Update()
     {
-        var WaitForEndOfFrame = new WaitForFixedUpdate();
-        while (true)
-        {
-            if (Input.GetKeyDown(KeyCode.M) && !mounted)
-            {
-                EnterMountable();
+        if (!_controlsActive) return;
 
-                StopCoroutine(ActiveEquip());
-            }
-
-            if (Input.GetKeyDown(KeyCode.P) && weapon.contentPlayerOpen)
-            {
-                EnterWeapon();
-
-                StopCoroutine(ActiveEquip());
-            }
-
-            yield return WaitForEndOfFrame;
-        }
+        if (Input.GetKeyDown(KeyCode.M) && !mounted)
+            EnterMountable();
+        if (Input.GetKeyDown(KeyCode.P) && weapon.contentPlayerOpen)
+            EnterWeapon();
     }
 
     private void OnTriggerExit(Collider other)
@@ -93,7 +84,6 @@ public class Catapult : Mountable
             _activeEquip = false;
             StopAllCoroutines();
         }
-
     }
 
     public override void EnterMountable()
@@ -121,7 +111,7 @@ public class Catapult : Mountable
     public override void ExitMountable()
     {
         EnterTrigger();
-
+        _controlsActive = false;
         gameCanvas.NormalUI();
         HideModelCharacter(false);
         _characterModel.transform.position = spawnOut.position;
@@ -134,10 +124,12 @@ public class Catapult : Mountable
     public override void ArtificialUpdate()
     {
         if (_chatActive) return;
+        Debug.Log("0");
         LookAttack();
         Attack();
 
         if (weapon.preparingShoot) return;
+        Debug.Log("3");
 
         if (Input.GetKeyDown(KeyCode.Tab)) ChangeAmmunition();
         if (Input.GetKeyDown(KeyCode.L)) ExitMountable();
@@ -185,6 +177,7 @@ public class Catapult : Mountable
 
     void LookAttack()
     {
+        Debug.Log("1");
         if (Input.GetMouseButtonDown(1))
             _characterModel.characterCamera.ChangeRespawnMode(CharacterCamera.CameraMode.CatapultMode);
         else if (Input.GetMouseButtonUp(1))
@@ -193,6 +186,7 @@ public class Catapult : Mountable
 
     void Attack()
     {
+        Debug.Log("2");
         weapon.WeaponActive();
     }
 
@@ -245,5 +239,4 @@ public class Catapult : Mountable
     {
         FindObjectOfType<Chat>().DesuscribeChat(ChatActive);
     }
-
 }

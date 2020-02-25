@@ -133,7 +133,7 @@ public class CatapultWeapon : WeaponVehicle
 
         catapult.UpdateForce(Remap(_force, minForce, maxForce, 0, 1));
 
-        if (!preparingShoot) preparingShoot = true;
+        preparingShoot = true;
     }
 
     void ResetForce()

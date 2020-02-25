@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using Photon.Pun;
-using UnityEngine;
-using Character;
+﻿using Character;
 using GameUI;
+using Photon.Pun;
+using System.Collections;
+using UnityEngine;
 
 public class Ram : Mountable
 {
@@ -19,42 +19,45 @@ public class Ram : Mountable
     {
         base.Start();
 
-        if (!photonView.IsMine) return;
-
         gameCanvas = FindObjectOfType<GameCanvas>();
         server = FindObjectOfType<Server>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("trigger 0");
         if (_activeEquip || mounted) return;
 
-        if(other.gameObject.layer == Layers.PLAYER)
+        Debug.Log("trigger 1");
+        if (other.gameObject.layer == Layers.PLAYER)
         {
+            Debug.Log("trigger 2");
             _characterModel = other.GetComponentInParent<CharacterModel>();
+
+            if (_characterModel.team != teamID) return;
+            Debug.Log("trigger 3");
+
             EnterTrigger();
         }
-    }  
+    }
 
     void EnterTrigger()
     {
         animButtonActive.SetTrigger("On");
         lookCharacter.LookActive(_characterModel.transform);
         _activeEquip = true;
-        StartCoroutine(ActiveEquip());
+        _controlsActive = true;
     }
 
-    IEnumerator ActiveEquip()
+    private bool _controlsActive;
+    private void Update()
     {
-        var WaitForEndOfFrame = new WaitForEndOfFrame();
-        while (true)
+        if (!_controlsActive) return;
+
+        if (Input.GetKeyDown(KeyCode.M) && !mounted)
         {
-            if (Input.GetKeyDown(KeyCode.M) && !mounted)
-            {
-                EnterMountable();
-                StopCoroutine(ActiveEquip());
-            }
-            yield return WaitForEndOfFrame;
+            Debug.Log("trigger 5");
+            EnterMountable();
         }
     }
 
@@ -69,7 +72,6 @@ public class Ram : Mountable
             _activeEquip = false;
             StopAllCoroutines();
         }
-
     }
 
     public override void EnterMountable()
@@ -81,11 +83,13 @@ public class Ram : Mountable
         HideModelCharacter(true);
         _characterModel.model.SetActive(false);
         ActiveMountable();
+            Debug.Log("trigger 6");
     }
 
     public override void ExitMountable()
     {
         photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, false);
+        _controlsActive = false;
         gameCanvas.NormalUI();
         HideModelCharacter(false);
         _characterModel.transform.position = spawnOut.position;
@@ -98,7 +102,7 @@ public class Ram : Mountable
     public override void ArtificialUpdate()
     {
         Attack();
-        if (Input.GetKeyDown(KeyCode.M)) ExitMountable();
+        if (Input.GetKeyDown(KeyCode.L)) ExitMountable();
     }
 
     public override void ArtificialFixedUpdate()
@@ -121,6 +125,8 @@ public class Ram : Mountable
 
     public override void Move(float horizontal, float vertical)
     {
+        Debug.Log("Move call " + horizontal + "  " + vertical);
+
         var horAxis = horizontal * speed * Time.deltaTime;
         var verAxis = vertical * speed * Time.deltaTime;
 
