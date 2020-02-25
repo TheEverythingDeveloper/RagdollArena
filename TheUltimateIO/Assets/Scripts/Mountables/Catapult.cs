@@ -26,12 +26,12 @@ public class Catapult : Mountable
     {
         base.Start();
 
-        if (!photonView.IsMine) return;
-
         gameCanvas = FindObjectOfType<GameCanvas>();
         _catapultPanel = (CatapultPanelUI)gameCanvas.panelsVehicles.panels[1];
         FindObjectOfType<Chat>().SuscribeChat(ChatActive);
         server = FindObjectOfType<Server>();
+
+        if (!photonView.IsMine) return;
     }
 
     public void ChatActive(bool active)
@@ -64,7 +64,6 @@ public class Catapult : Mountable
         var WaitForEndOfFrame = new WaitForFixedUpdate();
         while (true)
         {
-            Debug.LogError("Mounted: " + mounted + " ---- contentPlayerOpen: " + weapon.contentPlayerOpen);
             if (Input.GetKeyDown(KeyCode.M) && !mounted)
             {
                 EnterMountable();

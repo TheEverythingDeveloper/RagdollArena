@@ -134,5 +134,7 @@ MonoBehaviour:
   - RPCActiveRock
   - RPCEnterWeapon
   - RPCMountVehicle
+  - RPCBreakCube
+  - RPCExploitRock
   DisableAutoOpenWizard: 1
   ShowSettings: 1

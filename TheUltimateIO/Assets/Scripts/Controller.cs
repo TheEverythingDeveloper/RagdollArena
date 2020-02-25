@@ -42,10 +42,7 @@ public class Controller : MonoBehaviourPun, IUpdatable
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Debug.Log("<color=red>Desconectado de la partida actual</color>");
-            _server.RemovePlayer(photonView.Controller);
-            PhotonNetwork.Disconnect();
-            PhotonNetwork.LeaveRoom();
-            SceneManager.LoadScene(0);
+            FindObjectOfType<ExitPanel>().SwitchPanel(true);
         }
 
         if (Input.GetKeyDown(KeyCode.Backspace))
