@@ -65,12 +65,36 @@ public class Catapult : Mountable
     private bool _controlsActive;
     private void Update()
     {
-        if (!_controlsActive) return;
+        if (_chatActive) return;
+        if (!_controlsActive || someoneMounted) return;
 
         if (Input.GetKeyDown(KeyCode.M) && !someoneMounted)
             EnterMountable();
         if (Input.GetKeyDown(KeyCode.P) && weapon.contentPlayerOpen)
             EnterWeapon();
+
+        if (!isPlayerMounted) return;
+
+        LookAttack();
+        Attack();
+
+        _characterModel.characterCamera.ArtificialFixedUpdate();
+
+        weapon.WeaponActiveAddForce();
+        RotateLookMouse();
+
+        if (weapon.preparingShoot) return;
+
+        if (Input.GetKeyDown(KeyCode.Tab)) ChangeAmmunition();
+        if (Input.GetKeyDown(KeyCode.L)) ExitMountable();
+    }
+
+    private void LateUpdate()
+    {
+        if (_chatActive) return;
+        if (!isPlayerMounted) return;
+
+        _characterModel.characterCamera.ArtificialLateUpdate();
     }
 
     private void OnTriggerExit(Collider other)
@@ -121,41 +145,6 @@ public class Catapult : Mountable
         photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, false);
     }
 
-    public override void ArtificialUpdate()
-    {
-        if (_chatActive) return;
-        Debug.Log("0");
-        LookAttack();
-        Attack();
-
-        if (weapon.preparingShoot) return;
-        Debug.Log("3");
-
-        if (Input.GetKeyDown(KeyCode.Tab)) ChangeAmmunition();
-        if (Input.GetKeyDown(KeyCode.L)) ExitMountable();
-    }
-
-    public override void ArtificialFixedUpdate()
-    {
-        if (_chatActive) return;
-        _characterModel.characterCamera.ArtificialFixedUpdate();
-
-        weapon.WeaponActiveAddForce();
-        RotateLookMouse();
-
-        var horAxis = Input.GetAxis("Horizontal");
-        var verAxis = Input.GetAxis("Vertical");
-
-        if (horAxis != 0 || verAxis != 0)
-            server.MovePlayer(photonView.Controller, horAxis, verAxis);
-    }
-
-    public override void ArtificialLateUpdate()
-    {
-        if (_chatActive) return;
-        _characterModel.characterCamera.ArtificialLateUpdate();
-    }
-
     public override void Move(float horizontal, float vertical)
     {
         if (_chatActive) return;
@@ -186,7 +175,6 @@ public class Catapult : Mountable
 
     void Attack()
     {
-        Debug.Log("2");
         weapon.WeaponActive();
     }
 

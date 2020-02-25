@@ -112,12 +112,6 @@ public class Ram : Mountable
         EnterTrigger();
     }
 
-    public override void ArtificialUpdate() { }
-
-    public override void ArtificialFixedUpdate() { }
-
-    public override void ArtificialLateUpdate() { }
-
     public override void Move(float horizontal, float vertical)
     {
         var horAxis = horizontal * speed * Time.deltaTime;

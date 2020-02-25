@@ -5,7 +5,7 @@ using Photon.Realtime;
 using Photon;
 using System.Collections.Generic;
 
-public class Mountable : MonoBehaviourPun, IUpdatable
+public class Mountable : MonoBehaviourPun
 {
     public CharacterModel _characterModel;
     public float sqrMagnitudeInTimeSpeed;
@@ -50,28 +50,13 @@ public class Mountable : MonoBehaviourPun, IUpdatable
 
     public virtual void ActiveMountable(Player photonPlayer)
     {
-        FindObjectOfType<Server>().ChangeControls(photonPlayer, ArtificialUpdate, ArtificialFixedUpdate, ArtificialLateUpdate, Move, _rb);
+        FindObjectOfType<Server>().ChangeControls(photonPlayer, Move, _rb);
     }
 
     public virtual void HideModelCharacter(bool hide)
     {
         Debug.Log("hide character = " + hide);
         _characterModel.HideModel(hide);
-    }
-
-    public virtual void ArtificialUpdate()
-    {
-
-    }
-
-    public virtual void ArtificialFixedUpdate()
-    {
-        
-    }
-
-    public virtual void ArtificialLateUpdate()
-    {
-        
     }
 
     public virtual void Move(float horizontal, float vertical)

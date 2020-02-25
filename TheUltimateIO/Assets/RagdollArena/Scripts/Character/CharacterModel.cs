@@ -442,12 +442,9 @@ namespace Character
             _movementController.multiplySpeed = multiply;
         }
 
-        public void ChangeControls(Action u, Action fu, Action lu, Action<float, float> move, Rigidbody newRb)
+        public void ChangeControls(Action<float, float> move, Rigidbody newRb)
         {
             Debug.Log("se cambiaron los controles de este model");
-            _Update = u;
-            _FixedUpdate = fu;
-            _LateUpdate = lu;
             _Move = move;
             characterCamera.ChangeTarget(newRb);
         }

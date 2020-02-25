@@ -143,9 +143,9 @@ public class Server : MonoBehaviourPun
             FindObjectOfType<TeamManager>().AddPlayer(photonPlayer);
         }
     }
-    public void ChangeControls(Player photonPlayer, Action u, Action fu, Action lu, Action<float, float> move, Rigidbody newRb)
+    public void ChangeControls(Player photonPlayer, Action<float, float> move, Rigidbody newRb)
     {
-        allPlayers[photonPlayer].ChangeControls(u, fu, lu, move, newRb);
+        allPlayers[photonPlayer].ChangeControls(move, newRb);
     }
     [PunRPC] public void RPCPlayerDeath(Player photonPlayer) //Decirle al modelo que se apague y que ponga los paneles de respawn en el HUD
     {
