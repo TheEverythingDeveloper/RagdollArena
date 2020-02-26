@@ -95,6 +95,7 @@ namespace Character
         Action<float, float> _Move;
         public GameObject panelUI;
 
+        public ShieldProtect shield;
         public int team = 0; // { 0 } = sin equipo. { 1, 2, 3, 4 } = posibles equipos que pueden haber.
         [Tooltip("Este owned es parecido al photonView.isMine, solo que es para FullAutho, ya que el server es el photonView.isMine")] public bool owned;
         Mountable _actualMountable;
@@ -376,6 +377,13 @@ namespace Character
         {
             ChangeSpeedPlayer(active ? 0.2f : 1);
             _characterWeapon.weaponsMng.ActiveShield(active);
+        }
+
+        [PunRPC]
+        void RPCDamageShield(float x, float y, float z)
+        {
+            rb.AddForce(new Vector3(x,y,z), ForceMode.Impulse);
+            shield.particlesShield.Play();
         }
         #endregion
         #region Drunk
