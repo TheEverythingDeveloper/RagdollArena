@@ -42,7 +42,7 @@ public class Arrow : MonoBehaviourPun
         if (!ownerWeapon.owned) return;
         if (other.gameObject.layer != 17) return;
 
-        other.GetComponent<IDamageable>().Damage(transform.position, damage);
+        other.GetComponent<Damageable>().Damage(transform.position, damage);
         DestroyArrow();
     }
 

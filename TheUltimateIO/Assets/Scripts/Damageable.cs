@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Damageable : MonoBehaviour, IDamageable
+public class Damageable : MonoBehaviour
 {
     IDamageable _iDamageable;
 
@@ -12,10 +12,5 @@ public class Damageable : MonoBehaviour, IDamageable
     public void Damage(Vector3 origin, float d)
     {
         _iDamageable.Damage(origin, d);
-    }
-
-    public void Explosion(Vector3 origin, float force)
-    {
-        throw new System.NotImplementedException();
     }
 }
