@@ -84,6 +84,7 @@ MonoBehaviour:
   lookCharacter: {fileID: 6156361944897803361}
   spawnOut: {fileID: 7168649886785938042}
   weapon: {fileID: 5810207178745815066}
+  _activeEquip: 0
 --- !u!114 &9057799214614386480
 MonoBehaviour:
   m_ObjectHideFlags: 0

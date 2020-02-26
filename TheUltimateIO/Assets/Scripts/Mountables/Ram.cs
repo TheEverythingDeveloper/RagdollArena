@@ -33,6 +33,9 @@ public class Ram : Mountable
 
             if (model.team != teamID) return;
 
+
+            if (model.owned == false) return;
+
             _characterModel = model;
             _characterModel.ViewMountable(this);
             ViewOn();
@@ -91,6 +94,7 @@ public class Ram : Mountable
     {
         if (other.gameObject.layer == Layers.PLAYER)
         {
+            if (other.gameObject.GetComponentInParent<CharacterModel>().owned == false) return;
             ViewOff();
         }
     }
