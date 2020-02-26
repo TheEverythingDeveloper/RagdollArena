@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 719747758475387708}
   - component: {fileID: 6623450077227021208}
   - component: {fileID: 5894306395544410025}
-  m_Layer: 5
+  m_Layer: 17
   m_Name: LifeBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,7 +84,7 @@ GameObject:
   - component: {fileID: 4911693365087546801}
   - component: {fileID: 795570573236856994}
   - component: {fileID: 2995600376523284493}
-  m_Layer: 5
+  m_Layer: 17
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,7 +158,7 @@ GameObject:
   - component: {fileID: 3668741466471657}
   - component: {fileID: 6471176954203668950}
   - component: {fileID: 1883023293624428268}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -237,7 +237,7 @@ GameObject:
   - component: {fileID: 7161699658128644180}
   - component: {fileID: 1096850983546790558}
   - component: {fileID: 395382866585935772}
-  m_Layer: 5
+  m_Layer: 17
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -324,64 +324,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!1 &5927087042298495633
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2925295779169855567}
-  - component: {fileID: 9202817360015437196}
-  - component: {fileID: 3537986226702412230}
-  m_Layer: 17
-  m_Name: ColliderDamageable
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2925295779169855567
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5927087042298495633}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.84, z: 0.22}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 7535337251854632180}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &9202817360015437196
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5927087042298495633}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 1.14
-  m_Height: 4.49
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3537986226702412230
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5927087042298495633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c13d19be0b421840be23908dd7aed86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7535337251854632179
 GameObject:
   m_ObjectHideFlags: 0
@@ -394,7 +336,8 @@ GameObject:
   - component: {fileID: 6411882057663207398}
   - component: {fileID: 3383136051320595329}
   - component: {fileID: 4743319972480324735}
-  m_Layer: 0
+  - component: {fileID: 4354823489074701125}
+  m_Layer: 17
   m_Name: Core
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -414,7 +357,6 @@ Transform:
   m_Children:
   - {fileID: 3668741466471657}
   - {fileID: 7083167991914503468}
-  - {fileID: 2925295779169855567}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -497,3 +439,17 @@ MonoBehaviour:
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
+--- !u!136 &4354823489074701125
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7535337251854632179}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 1.14
+  m_Height: 4.49
+  m_Direction: 1
+  m_Center: {x: 0, y: -0.82, z: 0.21}
