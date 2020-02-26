@@ -37,9 +37,9 @@ namespace Character
             if (!_characterModel.owned || !controlsActive) return;
 
             if (Input.GetKeyDown(KeyCode.Q))
-                SelectWeapon(false);
-            else if (Input.GetKeyDown(KeyCode.E))
                 SelectWeapon(true);
+            else if (Input.GetKeyDown(KeyCode.E))
+                SelectWeapon(false);
 
             if (Input.GetMouseButtonDown(0))
                 weaponActive();
@@ -117,16 +117,14 @@ namespace Character
         IEnumerator CooldownAttack(int attackID)
         {
             var WaitForEndOfFrame = new WaitForEndOfFrame();
-            var counter = _characterModel.characterStats.delayAttackInSeconds[attackID];
-            _gameCanvas.ActiveCooldown(true);
+            var counter = 0f;
 
-            while (counter > 0)
+            while (counter < _characterModel.characterStats.delayAttackInSeconds[attackID])
             {
-                counter -= Time.deltaTime;
+                counter += Time.deltaTime;
                 _gameCanvas.ChangeCooldown(counter / _characterModel.characterStats.delayAttackInSeconds[attackID]);
                 yield return WaitForEndOfFrame;
             }
-            _gameCanvas.ActiveCooldown(false);
 
             _allAttacksCd[attackID] = false;
         }

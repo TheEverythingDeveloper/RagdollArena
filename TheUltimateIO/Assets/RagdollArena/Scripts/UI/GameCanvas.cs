@@ -48,7 +48,6 @@ namespace GameUI
             canvasPlayer.SetActive(true);
             panelsVehicles.PanelOff();
         }
-        public void ActiveCooldown(bool active) { cooldownAttack.gameObject.SetActive(active); }
         public void ChangeCooldown(float fill) { cooldownAttack.fillAmount = fill; }
 
         public void SwitchCounterPanel(bool active) => _counterPanel.SetActive(active);
