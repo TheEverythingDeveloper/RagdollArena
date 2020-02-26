@@ -147,5 +147,6 @@ MonoBehaviour:
   - RPCFeedbackDamage
   - RPCPosterConstruction
   - RPCPosterWar
+  - RPCPlaySound
   DisableAutoOpenWizard: 1
   ShowSettings: 1
