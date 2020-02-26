@@ -31,6 +31,8 @@ public class Server : MonoBehaviourPun
         _lvlMng = FindObjectOfType<LevelManager>();
 
         if (!photonView.IsMine) return;
+
+        _chat = FindObjectOfType<Chat>();
         CheckReadyToPlay();
         PackagesPerSecond = 30;
     }
@@ -150,8 +152,10 @@ public class Server : MonoBehaviourPun
         {
             if (!allPlayers.ContainsKey(photonPlayer)) return; //en caso de que NO este en la lista, return
             Debug.Log("<color=red>Se fue de la partida un usuario!</color>");
+            _chat.SendMsgServer(photonPlayer.NickName + " disconnected");
             PhotonNetwork.Destroy(allPlayers[photonPlayer].gameObject);
             allPlayers.Remove(photonPlayer);
+            FindObjectOfType<TeamManager>().RemovePlayer(photonPlayer);
             CheckReadyToPlay();
         }
         else

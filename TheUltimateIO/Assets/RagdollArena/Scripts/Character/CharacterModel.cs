@@ -455,7 +455,7 @@ namespace Character
 
         public void ViewMountable(Mountable mountable)
         {
-            if (_actualMountable != null) mountable.ViewOff();
+            if (_actualMountable != null) _actualMountable.ViewOff();
 
             _actualMountable = mountable;
         }

@@ -122,6 +122,16 @@ namespace GameUI
             photonView.RPC("CreatePanelsWithStructure", RpcTarget.All, allPlayers.ToArray(), _teamCombinations[playersPerTeam][0], _teamCombinations[playersPerTeam][1]);
         }
 
+        public void RemovePlayer(Player removePlayer)
+        {
+            allPlayers.Remove(removePlayer);
+            playersAmount--;
+
+            playersPerTeam = AnalyzeTeamOrganization(playersAmount);
+            FindObjectOfType<SpawnMap>().SetTeamAmountOfPlayers(_teamCombinations[playersPerTeam][0], _teamCombinations[playersPerTeam][1]);
+            photonView.RPC("CreatePanelsWithStructure", RpcTarget.All, allPlayers.ToArray(), _teamCombinations[playersPerTeam][0], _teamCombinations[playersPerTeam][1]);
+        }
+
         public void RematchReorganization(List<Player> allPlayers)
         {
             this.allPlayers = allPlayers;

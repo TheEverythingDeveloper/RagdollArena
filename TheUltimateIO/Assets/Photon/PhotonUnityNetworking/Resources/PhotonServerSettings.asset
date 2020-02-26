@@ -149,5 +149,7 @@ MonoBehaviour:
   - RPCPosterWar
   - RPCPlaySound
   - RPCDestroyCube
+  - RPCExitPlayer
+  - RPCSaveExitPanel
   DisableAutoOpenWizard: 1
   ShowSettings: 1

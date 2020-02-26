@@ -61,15 +61,10 @@ public class Ram : Mountable
     private bool _controlsActive;
     private void Update()
     {
-        if (!_controlsActive || (someoneMounted && !isPlayerMounted)) return;
-
-        if (Input.GetKeyDown(KeyCode.M) && !isPlayerMounted)
+        if (Input.GetKeyDown(KeyCode.M) && _controlsActive && !isPlayerMounted)
             _characterModel.EnterActualMountable();
         else if (Input.GetKeyDown(KeyCode.M) && isPlayerMounted)
-        {
-            Debug.LogError("Ram: " + gameObject.name);
             _characterModel.ExitActualMountable();
-        }
 
         if (!isPlayerMounted) return;
 
@@ -86,7 +81,6 @@ public class Ram : Mountable
 
     private void LateUpdate()
     {
-        if (!_controlsActive) return;
         if (!isPlayerMounted) return;
         
         _characterModel.characterCamera.ArtificialLateUpdate();
@@ -115,13 +109,13 @@ public class Ram : Mountable
 
     public override void ExitMountable()
     {
+        _characterModel.photonView.RPC("RPCResetNormalControls", RpcTarget.MasterClient, spawnOut.position);
         isPlayerMounted = false;
-        _characterModel.ChangeCameraTarget(_characterModel.rb);
         photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, false);
         _controlsActive = false;
         gameCanvas.NormalUI();
         HideModelCharacter(false);
-        _characterModel.photonView.RPC("RPCResetNormalControls", RpcTarget.MasterClient, spawnOut.position);
+        _characterModel.ChangeCameraTarget(_characterModel.rb);
 
         ViewOn();
     }

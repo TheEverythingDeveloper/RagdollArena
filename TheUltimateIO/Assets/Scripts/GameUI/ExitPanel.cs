@@ -6,7 +6,7 @@ using Photon.Realtime;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
 
-public class ExitPanel : MonoBehaviour
+public class ExitPanel : MonoBehaviourPun
 {
     [SerializeField] private GameObject _panel;
 
@@ -17,10 +17,15 @@ public class ExitPanel : MonoBehaviour
 
     public void OnExitButton()
     {
-        FindObjectOfType<Server>().RemovePlayer(PhotonNetwork.LocalPlayer);
+        photonView.RPC("RPCExitPlayer", RpcTarget.MasterClient);
         PhotonNetwork.Disconnect();
         PhotonNetwork.LeaveRoom();
         SceneManager.LoadScene(0);
+    }
+
+    [PunRPC] void RPCExitPlayer()
+    {
+        FindObjectOfType<Server>().RemovePlayer(PhotonNetwork.LocalPlayer);
     }
 
     public void OnStayButton()
