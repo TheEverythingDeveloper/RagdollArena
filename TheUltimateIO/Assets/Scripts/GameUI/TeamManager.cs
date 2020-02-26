@@ -42,8 +42,8 @@ namespace GameUI
         {
             if (!PhotonNetwork.IsMasterClient) return;
 
-            if (Input.GetKeyDown(KeyCode.U))
-                AddPlayer(photonView.Controller);
+            //if (Input.GetKeyDown(KeyCode.U))
+            //    AddPlayer(photonView.Controller);
 
             if (Input.GetKeyDown(KeyCode.KeypadPlus) || Input.GetKeyDown(KeyCode.Plus))
             {

@@ -61,7 +61,7 @@ public class CubeSpawner : MonoBehaviour
         while (amount != _preSpawnedCubes.Count)
         {
             int last = _preSpawnedCubes.Count;
-            Debug.Log("amount is " + amount + " and my last is " + last);
+            //Debug.Log("amount is " + amount + " and my last is " + last);
             if(_preSpawnedCubes.Count < amount)
             {
                 _preSpawnedCubes.Add(Instantiate((GameObject)Resources.Load(SpawningItem.ToString()), Vector3.zero, Quaternion.identity).GetComponent<SpawnedCube>());
@@ -142,11 +142,11 @@ public class CubeSpawner : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
             SpawningItem = SpawnItem.Block;
         else if (Input.GetKeyDown(KeyCode.Alpha2))
-            SpawningItem = SpawnItem.Respawn;
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-            SpawningItem = SpawnItem.Ram;
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
             SpawningItem = SpawnItem.Catapult;
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+            SpawningItem = SpawnItem.Respawn;
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+            SpawningItem = SpawnItem.Ram;
     }
 
     private Vector3 GetMouseSpawnPos()
@@ -187,7 +187,7 @@ public class CubeSpawner : MonoBehaviour
         float scaleOffset = (1 - (_preSpawnedCubes[0].Size % 2)) * 0.5f;
         Vector3 gridHitPoint = new Vector3(Mathf.Ceil(hitPoint.x) - scaleOffset, Mathf.Ceil(hitPoint.y), Mathf.Ceil(hitPoint.z) - scaleOffset);
         //_preSpawnedCubes[0].CorrectPosition(gridHitPoint);
-
+        
         if (Input.GetMouseButtonDown(0))
         {
             _mouseDownHitPoint = gridHitPoint;
@@ -206,7 +206,7 @@ public class CubeSpawner : MonoBehaviour
         if (Input.GetMouseButton(0)) //Ir creando la maxima cantidad de PreSpawnedCubes que se pueda
         {
             int cubesAmoount = Mathf.FloorToInt(Mathf.Max(dx, dy, dz) / _lastCubeSize);
-            Debug.Log("Se pueden spawnear: " + cubesAmoount + "cubos de este tamaño");
+            //Debug.Log("Se pueden spawnear: " + cubesAmoount + "cubos de este tamaño");
             Debug.DrawLine(_mouseDownHitPoint, gridHitPoint, Color.red);
             CreatePreCube(cubesAmoount, _lastCubeSize, _lastCubeSize);
         }

@@ -45,17 +45,17 @@ public class Controller : MonoBehaviourPun, IUpdatable
             FindObjectOfType<ExitPanel>().SwitchPanel(true);
         }
 
-        if (Input.GetKeyDown(KeyCode.Backspace))
+        /*if (Input.GetKeyDown(KeyCode.Backspace))
         {
             Debug.Log("<color=red>Fuiste asesinado</color>");
             _server.photonView.RPC("RPCPlayerDeath", RpcTarget.MasterClient, photonView.Controller);
-        }
+        }*/
 
-        if (Input.GetKeyDown(KeyCode.R))
+        /*if (Input.GetKeyDown(KeyCode.R))
         {
             Debug.Log("<color=yellow>Intentando Respawnear</color>");
             FindObjectOfType<SpawnPoint>().UseSpawnPoint(photonView.Controller);
-        }
+        }*/
         Move();
     }
 

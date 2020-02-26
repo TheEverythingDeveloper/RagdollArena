@@ -24,10 +24,10 @@ namespace Character
 
         public void ArtificialUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.P))
+            /*if (Input.GetKeyDown(KeyCode.P))
             {
                 _owner.UpdatePoints(Random.Range(0,100));
-            }
+            }*/
         }
         public void ArtificialFixedUpdate() { }
         public void ArtificialLateUpdate() { }

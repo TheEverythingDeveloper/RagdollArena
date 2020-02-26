@@ -23,10 +23,10 @@ public class TowerSceneManager : MonoBehaviour
 
     public void Update()
     {
-        if(Input.GetKeyDown(KeyCode.R))
+        /*if(Input.GetKeyDown(KeyCode.R))
         {
             CallEveryNearMonster(FindObjectOfType<CharacterModel>().transform.position);
-        }
+        }*/
     }
 
     /*IEnumerator SpawnEnemies()
