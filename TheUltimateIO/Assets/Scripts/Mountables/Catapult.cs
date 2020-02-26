@@ -178,6 +178,10 @@ public class Catapult : Mountable, IDamageable
         FindObjectOfType<Chat>().DesuscribeChat(ChatActive);
         if(isPlayerMounted) _characterModel.ExitActualMountable();
 
+        photonView.RPC("RPCResetNormalControls", RpcTarget.MasterClient);
+    }
+    [PunRPC] void RPCDestroyVehicle()
+    {
         PhotonNetwork.Destroy(gameObject);
     }
 

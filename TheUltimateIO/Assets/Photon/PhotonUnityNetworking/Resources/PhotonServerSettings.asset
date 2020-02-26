@@ -151,5 +151,6 @@ MonoBehaviour:
   - RPCDestroyCube
   - RPCExitPlayer
   - RPCSaveExitPanel
+  - RPCDestroyVehicle
   DisableAutoOpenWizard: 1
   ShowSettings: 1
