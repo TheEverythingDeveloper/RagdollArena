@@ -21,7 +21,7 @@ public class Ram : Mountable, IDamageable
     public override void Start()
     {
         base.Start();
-
+        _life = maxLife;
         FindObjectOfType<Chat>().SuscribeChat(ChatActive);
         gameCanvas = FindObjectOfType<GameCanvas>();
         server = FindObjectOfType<Server>();
@@ -164,6 +164,12 @@ public class Ram : Mountable, IDamageable
         FindObjectOfType<Chat>().DesuscribeChat(ChatActive);
         if (isPlayerMounted) _characterModel.ExitActualMountable();
 
+        photonView.RPC("RPCDestroyVehicle", RpcTarget.MasterClient);
+    }
+
+    [PunRPC]
+    void RPCDestroyVehicle()
+    {
         PhotonNetwork.Destroy(gameObject);
     }
 }

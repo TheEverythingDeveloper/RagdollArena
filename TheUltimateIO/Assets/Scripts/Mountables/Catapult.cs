@@ -25,7 +25,7 @@ public class Catapult : Mountable, IDamageable
     public override void Start()
     {
         base.Start();
-
+        _life = maxLife;
         gameCanvas = FindObjectOfType<GameCanvas>();
         _catapultPanel = (CatapultPanelUI)gameCanvas.panelsVehicles.panels[1];
         FindObjectOfType<Chat>().SuscribeChat(ChatActive);
@@ -33,7 +33,7 @@ public class Catapult : Mountable, IDamageable
 
         if (!photonView.IsMine) return;
 
-        _life = maxLife;
+ 
     }
 
     public void ChatActive(bool active)
@@ -178,7 +178,7 @@ public class Catapult : Mountable, IDamageable
         FindObjectOfType<Chat>().DesuscribeChat(ChatActive);
         if(isPlayerMounted) _characterModel.ExitActualMountable();
 
-        photonView.RPC("RPCResetNormalControls", RpcTarget.MasterClient);
+        photonView.RPC("RPCDestroyVehicle", RpcTarget.MasterClient);
     }
     [PunRPC] void RPCDestroyVehicle()
     {

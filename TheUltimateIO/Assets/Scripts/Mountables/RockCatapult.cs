@@ -36,7 +36,7 @@ public class RockCatapult : MonoBehaviourPun
 
         for (int i = 0; i < hits.Length; i++)
         {
-            hits[i].GetComponent<IDamageable>().Damage(transform.position, damage);
+            if(hits[i].GetComponent<IDamageable>() != null) hits[i].GetComponent<IDamageable>().Damage(transform.position, damage);
         }
 
         StartCoroutine(WaitTimeDestroy());
