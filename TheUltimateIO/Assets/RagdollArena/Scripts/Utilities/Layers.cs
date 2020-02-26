@@ -14,4 +14,5 @@ public class Layers : MonoBehaviour
     public static int CONSTRUCTIONBLOCK = 16;
     public static int DAMAGEABLE = 17;
     public static int MAQUINARY = 18;
+    public static int SHIELD = 19;
 }

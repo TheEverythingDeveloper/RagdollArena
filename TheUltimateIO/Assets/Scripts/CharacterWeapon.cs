@@ -74,13 +74,17 @@ namespace Character
             _allAttacksCd[1] = true;
             Debug.Log("<color=blue> Se ataco con la espada. </color>");
 
+            _characterModel.StartCoroutine(CooldownAttack(1));
+
             _characterModel.photonView.RPC("RPCAnimSword", RpcTarget.All);
 
             RaycastHit hit;
             if (Physics.Raycast(weaponsMng.transform.position, -weaponsMng.transform.forward, out hit, _characterModel.characterStats.verticalDistAttack, _characterModel.layerMaskWeaponDamage))
-                hit.collider.gameObject.GetComponent<Damageable>().Damage(weaponsMng.transform.position, _characterModel.characterStats.damageAttack);
+            {
+                if(hit.collider.gameObject.GetComponent<IDamageable>() != null)
+                    hit.collider.gameObject.GetComponent<IDamageable>().Damage(weaponsMng.transform.position, _characterModel.characterStats.damageAttack);             
+            }
 
-            _characterModel.StartCoroutine(CooldownAttack(1));
         }  
 
         void Bow()
@@ -89,9 +93,9 @@ namespace Character
             _allAttacksCd[2] = true;
             Debug.Log("<color=blue> Se ataco con el arco. </color>");
 
-            _characterModel.StartCoroutine(BowCoroutine());
-
             _characterModel.StartCoroutine(CooldownAttack(2));
+
+            _characterModel.StartCoroutine(BowCoroutine());
         }
 
         
@@ -99,8 +103,7 @@ namespace Character
         private Arrow _lastArrow;
         IEnumerator BowCoroutine()
         {
-            if (_lastArrow == null)
-                SpawnArrow();
+            SpawnArrow();
             _characterModel.photonView.RPC("RPCAnimBow", RpcTarget.All);
             yield return new WaitForSeconds(_characterModel.characterStats.delayAnimBowInSeconds);
             _lastArrow.ThrowArrow();
@@ -127,6 +130,7 @@ namespace Character
                 yield return WaitForEndOfFrame;
             }
             _gameCanvas.ActiveCooldown(false);
+
             _allAttacksCd[attackID] = false;
         }
 

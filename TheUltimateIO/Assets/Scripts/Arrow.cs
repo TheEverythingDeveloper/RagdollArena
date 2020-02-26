@@ -6,6 +6,7 @@ using Photon.Pun;
 using Photon;
 using System.Linq;
 using Character;
+using Weapons;
 
 public class Arrow : MonoBehaviourPun
 {
@@ -40,10 +41,26 @@ public class Arrow : MonoBehaviourPun
         if (!thrownArrow) return;
         if (ownerWeapon == null) return;
         if (!ownerWeapon.owned) return;
-        if (other.gameObject.layer != 17) return;
 
-        other.GetComponent<Damageable>().Damage(transform.position, damage);
-        DestroyArrow();
+        if (other.gameObject.GetComponent<IDamageable>() != null)
+        {
+            other.gameObject.GetComponent<IDamageable>().Damage(transform.position, damage);
+            DestroyArrow();
+        }
+
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!thrownArrow) return;
+        if (ownerWeapon == null) return;
+        if (!ownerWeapon.owned) return;
+
+        if (collision.gameObject.GetComponent<IDamageable>() != null)
+        {
+            collision.gameObject.GetComponent<IDamageable>().Damage(transform.position, damage);
+            DestroyArrow();
+        }
     }
 
     [PunRPC] public void RPCUpdateWeaponColors(float r, float g, float b)
