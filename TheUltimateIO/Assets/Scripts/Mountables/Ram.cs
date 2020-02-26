@@ -49,7 +49,7 @@ public class Ram : Mountable
 
     public override void ViewOff()
     {
-        if (!_activeEquip) return;
+        //if (!_activeEquip) return;
 
         animButtonActive.SetTrigger("Off");
         lookCharacter.LookOff();
