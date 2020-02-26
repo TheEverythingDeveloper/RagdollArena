@@ -11,7 +11,7 @@ public class Ram : Mountable
     public LookCharacter lookCharacter;
     public Transform spawnOut;
     public RamWeapon weapon;
-    bool _activeEquip;
+    public bool _activeEquip;
     Server server;
     GameCanvas gameCanvas;
 
@@ -55,6 +55,7 @@ public class Ram : Mountable
         lookCharacter.LookOff();
         _activeEquip = false;
         _controlsActive = false;
+        isPlayerMounted = false;
         StopAllCoroutines();
     }
 
@@ -96,6 +97,7 @@ public class Ram : Mountable
 
     public override void EnterMountable()
     {
+        if (!_characterModel) return;
         isPlayerMounted = true;
         _characterModel.ChangeCameraTarget(_rb);
         photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, true);
@@ -109,6 +111,7 @@ public class Ram : Mountable
 
     public override void ExitMountable()
     {
+        if (!_characterModel) return;
         _characterModel.photonView.RPC("RPCResetNormalControls", RpcTarget.MasterClient, spawnOut.position);
         isPlayerMounted = false;
         photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, false);

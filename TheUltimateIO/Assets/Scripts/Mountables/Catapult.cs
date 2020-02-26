@@ -66,12 +66,11 @@ public class Catapult : Mountable
     private void Update()
     {
         if (_chatActive) return;
-        if (!_controlsActive) return;
 
-        if (Input.GetKeyDown(KeyCode.M) && !someoneMounted)
-            EnterMountable();
-        if (Input.GetKeyDown(KeyCode.P) && weapon.contentPlayerOpen)
-            EnterWeapon();
+        if (Input.GetKeyDown(KeyCode.M) && _controlsActive && !isPlayerMounted)
+            _characterModel.EnterActualMountable();
+        else if (Input.GetKeyDown(KeyCode.M) && isPlayerMounted)
+            _characterModel.ExitActualMountable();
 
         if (!isPlayerMounted) return;
 
@@ -91,7 +90,6 @@ public class Catapult : Mountable
 
     private void LateUpdate()
     {
-        if (_chatActive) return;
         if (!isPlayerMounted) return;
 
         _characterModel.characterCamera.ArtificialLateUpdate();
