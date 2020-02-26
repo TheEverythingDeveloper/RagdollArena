@@ -4,14 +4,17 @@ using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 
-public class Ram : Mountable
+public class Ram : Mountable, IDamageable
 {
+    public float maxLife;
+    float _life;
     public float speed;
     public Animator animButtonActive;
     public LookCharacter lookCharacter;
     public Transform spawnOut;
     public RamWeapon weapon;
     public bool _activeEquip;
+    bool _chatActive;
     Server server;
     GameCanvas gameCanvas;
 
@@ -19,8 +22,14 @@ public class Ram : Mountable
     {
         base.Start();
 
+        FindObjectOfType<Chat>().SuscribeChat(ChatActive);
         gameCanvas = FindObjectOfType<GameCanvas>();
         server = FindObjectOfType<Server>();
+    }
+
+    public void ChatActive(bool active)
+    {
+        _chatActive = active;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -65,6 +74,8 @@ public class Ram : Mountable
     private bool _controlsActive;
     private void Update()
     {
+        if (_chatActive) return;
+
         if (Input.GetKeyDown(KeyCode.M) && _controlsActive && !isPlayerMounted)
             _characterModel.EnterActualMountable();
         else if (Input.GetKeyDown(KeyCode.M) && isPlayerMounted)
@@ -134,5 +145,25 @@ public class Ram : Mountable
 
         var dir = new Vector3(horAxis, 0, verAxis);
         transform.position += dir;
+    }
+
+    public void Damage(Vector3 origin, float damage)
+    {
+        _life -= damage;
+        gameCanvas.panelsVehicles.panels[0].ChangeLife(_life / maxLife);
+
+        if (_life <= 0) DestroyVehicle();
+    }
+
+    public void Explosion(Vector3 origin, float force)
+    {
+        throw new System.NotImplementedException();
+    }
+    public override void DestroyVehicle()
+    {
+        FindObjectOfType<Chat>().DesuscribeChat(ChatActive);
+        if (isPlayerMounted) _characterModel.ExitActualMountable();
+
+        PhotonNetwork.Destroy(gameObject);
     }
 }

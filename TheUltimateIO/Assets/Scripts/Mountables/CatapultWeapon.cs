@@ -16,7 +16,6 @@ public class CatapultWeapon : WeaponVehicle
     public float minMultiplySpeedAttack;
     public float maxMultiplySpeedAttack;
     public float speedAmountForce;
-    public bool contentPlayerOpen = true;
     [HideInInspector] public bool preparingShoot;
     float _force;
 
@@ -26,7 +25,6 @@ public class CatapultWeapon : WeaponVehicle
     private void Awake()
     {
         _force = minForce;
-        contentPlayerOpen = true;
     }
 
     public void WeaponActiveAddForce()
@@ -68,7 +66,7 @@ public class CatapultWeapon : WeaponVehicle
 
             yield return WaitForEndOfFrame;
         }
-        if (contentPlayerOpen) ActiveRock(false);
+        ActiveRock(false);
         ShootContent();
 
         while (localEulerAngleX > 0)
@@ -79,53 +77,16 @@ public class CatapultWeapon : WeaponVehicle
 
             yield return WaitForEndOfFrame;
         }
-        if (contentPlayerOpen) ActiveRock(true);
+        ActiveRock(true);
         _coroutineAttack = null;
-    }
-
-    public void ChangeAmmunition(int ammunition)
-    {
-        switch (ammunition)
-        {
-            case 0:
-                catapult.photonView.RPC("RPCEnterWeapon", RpcTarget.AllBuffered, false);
-                ActiveRock(true);
-                CheckMountPlayer();
-                break;
-            case 1:
-                catapult.photonView.RPC("RPCEnterWeapon", RpcTarget.AllBuffered, true);
-                ActiveRock(false);
-                break;
-            default:
-                catapult.photonView.RPC("RPCEnterWeapon", RpcTarget.AllBuffered, false);
-                ActiveRock(true);
-                CheckMountPlayer();
-                break;
-        }
     }
 
     void ActiveRock(bool active)
     {
         photonView.RPC("RPCActiveRock", RpcTarget.AllBuffered, active);
-
-        if (active) CheckMountPlayer();
     }
     [PunRPC] void RPCActiveRock(bool active) { rockBullet.SetActive(active); }
 
-    void CheckMountPlayer()
-    {
-        if (contentRb == null) return;
-
-        ExitMountedPlayer();
-    }
-
-    public void ExitMountedPlayer()
-    {
-        _actualMounted.transform.parent = null;
-        _actualMounted.NormalControls();
-        _actualMounted.transform.position = catapult.spawnOut.position;
-        _actualMounted = null;
-    }
     void AddForce()
     {
         _force += speedAmountForce * Time.deltaTime;
@@ -145,38 +106,14 @@ public class CatapultWeapon : WeaponVehicle
 
     void ShootContent()
     {
-        if (contentRb == null)
-        {
-            var rock = PhotonNetwork.Instantiate("CatapultRock", content.transform.position, content.transform.rotation).GetComponent<RockCatapult>();
-            rock.transform.position = content.transform.position;
-            contentRb = rock.rb;
-        }
-        else
-        {
-            _actualMounted.transform.parent = null;
-            _actualMounted.NormalControls();
-            _actualMounted = null;
-            contentRb.isKinematic = false;
-        }
+        var rock = PhotonNetwork.Instantiate("CatapultRock", content.transform.position, content.transform.rotation).GetComponent<RockCatapult>();
+        rock.transform.position = content.transform.position;
+        contentRb = rock.rb;
 
         contentRb.AddForce((catapult.transform.forward * _force) + (catapult.transform.up * _force), ForceMode.Impulse);
 
         contentRb = null;
         ResetForce();
-    }
-
-    public bool AddContentPlayer(CharacterModel player, Transform model, Rigidbody rb)
-    {
-        if (contentRb != null) return false;
-
-        _actualMounted = player;
-        _actualMounted.transform.parent = content.transform;
-        _actualMounted.transform.localPosition = Vector3.zero;
-        model.localPosition = Vector3.zero;
-        contentRb = rb;
-        contentRb.isKinematic = true;
-
-        return true;
     }
 
     float Remap(float value, float from1, float to1, float from2, float to2)

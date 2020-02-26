@@ -5,8 +5,10 @@ using Character;
 using GameUI;
 using System;
 
-public class Catapult : Mountable
+public class Catapult : Mountable, IDamageable
 {
+    public float maxLife;
+    float _life;
     public float speed;
     public Transform positionCam;
     public Animator animButtonActive;
@@ -19,8 +21,6 @@ public class Catapult : Mountable
     Server server;
     [HideInInspector]public GameCanvas gameCanvas;
     CatapultPanelUI _catapultPanel;
-    public int maxAmmunitionType;
-    int _ammunitionType;
 
     public override void Start()
     {
@@ -32,6 +32,8 @@ public class Catapult : Mountable
         server = FindObjectOfType<Server>();
 
         if (!photonView.IsMine) return;
+
+        _life = maxLife;
     }
 
     public void ChatActive(bool active)
@@ -41,25 +43,40 @@ public class Catapult : Mountable
 
     private void OnTriggerEnter(Collider other)
     {
-        if (_activeEquip || (someoneMounted && !weapon.contentPlayerOpen )) return;
+        if (_activeEquip || someoneMounted) return;
 
         if (other.gameObject.layer == Layers.PLAYER)
         {
-            _characterModel = other.GetComponentInParent<CharacterModel>();
+            var model = other.GetComponentInParent<CharacterModel>();
 
-            if (_characterModel.team != teamID) return;
+            if (model.team != teamID) return;
 
-            _characterModel.characterCamera.catapultLook = positionCam;
-            EnterTrigger();
-            _controlsActive = true;
+            if (model.owned == false) return;
+
+            _characterModel = model;
+            _characterModel.ViewMountable(this);
+            ViewOn();
         }
     }
 
-    void EnterTrigger()
+    public override void ViewOn()
     {
         animButtonActive.SetTrigger("On");
         lookCharacter.LookActive(_characterModel.transform);
         _activeEquip = true;
+        _controlsActive = true;
+    }
+
+    public override void ViewOff()
+    {
+        //if (!_activeEquip) return;
+
+        animButtonActive.SetTrigger("Off");
+        lookCharacter.LookOff();
+        _activeEquip = false;
+        _controlsActive = false;
+        isPlayerMounted = false;
+        StopAllCoroutines();
     }
 
     private bool _controlsActive;
@@ -69,7 +86,7 @@ public class Catapult : Mountable
 
         if (Input.GetKeyDown(KeyCode.M) && _controlsActive && !isPlayerMounted)
             _characterModel.EnterActualMountable();
-        else if (Input.GetKeyDown(KeyCode.M) && isPlayerMounted)
+        else if (Input.GetKeyDown(KeyCode.M) && isPlayerMounted && !weapon.preparingShoot)
             _characterModel.ExitActualMountable();
 
         if (!isPlayerMounted) return;
@@ -81,11 +98,6 @@ public class Catapult : Mountable
 
         weapon.WeaponActiveAddForce();
         RotateLookMouse();
-
-        if (weapon.preparingShoot) return;
-
-        if (Input.GetKeyDown(KeyCode.Tab)) ChangeAmmunition();
-        if (Input.GetKeyDown(KeyCode.L)) ExitMountable();
     }
 
     private void LateUpdate()
@@ -97,19 +109,16 @@ public class Catapult : Mountable
 
     private void OnTriggerExit(Collider other)
     {
-        if (!_activeEquip) return;
-
         if (other.gameObject.layer == Layers.PLAYER)
         {
-            animButtonActive.SetTrigger("Off");
-            lookCharacter.LookOff();
-            _activeEquip = false;
-            StopAllCoroutines();
+            if (other.gameObject.GetComponentInParent<CharacterModel>().owned == false) return;
+            ViewOff();
         }
     }
 
     public override void EnterMountable()
     {
+        if (!_characterModel) return;
         isPlayerMounted = true;
         _characterModel.ChangeCameraTarget(_rb);
         photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, true);
@@ -117,34 +126,22 @@ public class Catapult : Mountable
         animButtonActive.SetTrigger("Off");
         lookCharacter.LookOff();
         HideModelCharacter(true);
+        _characterModel.model.SetActive(false);
         photonView.RPC("RPCActiveMountable", RpcTarget.MasterClient, _characterModel.myPhotonPlayer);
-    }
-
-    void EnterWeapon()
-    {
-        Debug.LogError("EnterWeapon");
-        lookCharacter.LookOff();
-        AddPlayerContent(_characterModel);
-    }
-
-    [PunRPC] void RPCEnterWeapon(bool enter)
-    {
-        weapon.contentPlayerOpen = enter;
     }
 
     public override void ExitMountable()
     {
+        if (!_characterModel) return;
+        _characterModel.photonView.RPC("RPCResetNormalControls", RpcTarget.MasterClient, spawnOut.position);
         isPlayerMounted = false;
-        _characterModel.ChangeCameraTarget(_characterModel.rb);
-        EnterTrigger();
+        photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, false);
         _controlsActive = false;
         gameCanvas.NormalUI();
         HideModelCharacter(false);
-        _characterModel.transform.position = spawnOut.position;
-        _characterModel.model.transform.localPosition = Vector3.zero;
-        _characterModel.NormalControls();
-        _characterModel.characterCamera.ChangeRespawnMode(CharacterCamera.CameraMode.ThirdPersonMode);
-        photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, false);
+        _characterModel.ChangeCameraTarget(_characterModel.rb);
+
+        ViewOn();
     }
 
     public override void Move(float horizontal, float vertical)
@@ -158,17 +155,8 @@ public class Catapult : Mountable
         transform.position += dir;
     }
 
-    void ChangeAmmunition()
-    {
-        _ammunitionType = _ammunitionType >= maxAmmunitionType ? _ammunitionType = 0 : _ammunitionType + 1;
-
-        weapon.ChangeAmmunition(_ammunitionType);
-        _catapultPanel.ChangeAmmunition(_ammunitionType, !weapon.contentPlayerOpen);
-    }
-
     void LookAttack()
     {
-        Debug.Log("1");
         if (Input.GetMouseButtonDown(1))
             _characterModel.characterCamera.ChangeRespawnMode(CharacterCamera.CameraMode.CatapultMode);
         else if (Input.GetMouseButtonUp(1))
@@ -185,48 +173,24 @@ public class Catapult : Mountable
         _catapultPanel.BarForce(fill);
     }
 
-    public void AddPlayerContent(CharacterModel character)
-    {
-        Debug.LogError("AddPlayerContent");
-        if (!weapon.contentPlayerOpen) return;
-        Debug.LogError("AddPlayerContent-contentPlayerOpen");
-        if (weapon.AddContentPlayer(character, character.model.transform, character.rb))
-        {
-            photonView.RPC("RPCEnterWeapon", RpcTarget.AllBuffered, true);
-            _catapultPanel.ChangeAmmunition(_ammunitionType, !weapon.contentPlayerOpen);
-            character.ChangeControls(AssistantUpdate, AssistantFixedUpdate, AssistantLateUpdate, AssistantMovement);
-            Debug.LogError("AddPlayerContent-AddContentPlayer");
-        }
-    }
-
-    void AssistantMovement(float hor, float ver)
-    {
-
-    }
-
-    void AssistantFixedUpdate()
-    {
-
-    }
-
-    void AssistantLateUpdate()
-    {
-        _characterModel.characterCamera.ArtificialFixedUpdate();
-    }
-
-    public void AssistantUpdate()
-    {
-        if (_chatActive) return;
-
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            photonView.RPC("RPCMountVehicle", RpcTarget.AllBuffered, true);
-            weapon.ExitMountedPlayer();
-        }
-    }
-
     public override void DestroyVehicle()
     {
         FindObjectOfType<Chat>().DesuscribeChat(ChatActive);
+        if(isPlayerMounted) _characterModel.ExitActualMountable();
+
+        PhotonNetwork.Destroy(gameObject);
+    }
+
+    public void Damage(Vector3 origin, float damage)
+    {
+        _life -= damage;
+        _catapultPanel.ChangeLife(_life / maxLife);
+
+        if (_life <= 0) DestroyVehicle();
+    }
+
+    public void Explosion(Vector3 origin, float force)
+    {
+        throw new NotImplementedException();
     }
 }

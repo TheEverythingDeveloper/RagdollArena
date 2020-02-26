@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 1023453814511614750}
   - component: {fileID: 2023670796771116521}
   - component: {fileID: 8685746275218998224}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: MedievalRam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -79,6 +79,7 @@ MonoBehaviour:
   - {fileID: 1712717087486746034}
   - {fileID: 8726250726809235440}
   teamID: 0
+  maxLife: 350
   speed: 4
   animButtonActive: {fileID: 8685746275218998224}
   lookCharacter: {fileID: 6156361944897803361}
@@ -212,7 +213,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7168649886785938042}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: OutSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -244,7 +245,7 @@ GameObject:
   - component: {fileID: 1611360285320453203}
   - component: {fileID: 4314757744637150644}
   - component: {fileID: 1712717087486746034}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -420,7 +421,7 @@ GameObject:
   - component: {fileID: 5885005968621528741}
   - component: {fileID: 6018916133830783957}
   - component: {fileID: 365883472824510301}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -576,7 +577,7 @@ GameObject:
   - component: {fileID: 8671789302851453160}
   - component: {fileID: 6370557878297580876}
   - component: {fileID: 508365473743010493}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -652,7 +653,7 @@ GameObject:
   - component: {fileID: 5472371716494851920}
   - component: {fileID: 5258150419860455678}
   - component: {fileID: 6156361944897803361}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -826,12 +827,12 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: f8fa2d9e876742342889243ec1e0906e,
         type: 3}
       propertyPath: m_Layer
-      value: 18
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 2534866581884222612, guid: f8fa2d9e876742342889243ec1e0906e,
         type: 3}
       propertyPath: m_Layer
-      value: 18
+      value: 17
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8fa2d9e876742342889243ec1e0906e, type: 3}

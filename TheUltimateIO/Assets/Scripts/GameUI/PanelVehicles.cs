@@ -25,6 +25,8 @@ namespace GameUI
 
         private void Update()
         {
+            if (_chatActive) return;
+
             if (Input.GetKeyDown(keyViewControls))
                 panelControls.SetActive(true);
             else if (Input.GetKeyUp(keyViewControls))

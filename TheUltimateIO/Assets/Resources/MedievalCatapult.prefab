@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4062413319852307583}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: PositionCam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8024645638511948321}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: SpawnOut
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,7 +71,7 @@ GameObject:
   - component: {fileID: 8486916764172217135}
   - component: {fileID: 8596424592588550056}
   - component: {fileID: 5371795160497552081}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -227,7 +227,7 @@ GameObject:
   - component: {fileID: 1289473222576871828}
   - component: {fileID: 1992246468241935687}
   - component: {fileID: 7099717360609337783}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -305,7 +305,7 @@ GameObject:
   - component: {fileID: 9045495155070533292}
   - component: {fileID: 7980447077306177194}
   - component: {fileID: 1907609657713243805}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -380,7 +380,7 @@ GameObject:
   - component: {fileID: 6220911693534961293}
   - component: {fileID: 41087510613821896}
   - component: {fileID: 8259036657204361383}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: CatapultWeapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -429,7 +429,6 @@ MonoBehaviour:
   minMultiplySpeedAttack: 1
   maxMultiplySpeedAttack: 3
   speedAmountForce: 20
-  contentPlayerOpen: 0
   preparingShoot: 0
   rockBullet: {fileID: 586942101518771008}
 --- !u!114 &41087510613821896
@@ -503,7 +502,8 @@ GameObject:
   - component: {fileID: 1257877241821511402}
   - component: {fileID: 6779259746824098900}
   - component: {fileID: 8913766870185531263}
-  m_Layer: 18
+  - component: {fileID: 5568115278172102423}
+  m_Layer: 17
   m_Name: MedievalCatapult
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -553,6 +553,7 @@ MonoBehaviour:
   - {fileID: 2095452060322974521}
   - {fileID: 7099717360609337783}
   teamID: 0
+  maxLife: 200
   speed: 2
   positionCam: {fileID: 4062413319852307583}
   animButtonActive: {fileID: 116704995854726395}
@@ -560,7 +561,6 @@ MonoBehaviour:
   spawnOut: {fileID: 8024645638511948321}
   weapon: {fileID: 6220911693534961293}
   gameCanvas: {fileID: 0}
-  maxAmmunitionType: 1
 --- !u!95 &116704995854726395
 Animator:
   serializedVersion: 3
@@ -679,6 +679,19 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
+--- !u!65 &5568115278172102423
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3239363577142571801}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.6, y: 2.6, z: 4}
+  m_Center: {x: 0, y: 1.12, z: 0}
 --- !u!1 &3477745242283987505
 GameObject:
   m_ObjectHideFlags: 0
@@ -688,7 +701,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 439161470466564130}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Catapult
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -723,7 +736,7 @@ GameObject:
   - component: {fileID: 4664040023778741632}
   - component: {fileID: 6251962344968493669}
   - component: {fileID: 8015349283980089502}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -831,7 +844,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8758374133841054380}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: CatapultWeapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -862,7 +875,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1960728024687921879}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: ContentCatapult
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -895,8 +908,7 @@ GameObject:
   - component: {fileID: 7959805342562448154}
   - component: {fileID: 7221003319206225865}
   - component: {fileID: 2095452060322974521}
-  - component: {fileID: 2343001441724869149}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -963,19 +975,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &2343001441724869149
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6939805616430692268}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3.6, y: 2.6, z: 4}
-  m_Center: {x: -2.000001, y: 3.3000002, z: -2.000001}
 --- !u!1001 &8864440508180609609
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1112,6 +1111,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CatapultRock
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 067e74b245202334f972356a78a6561f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 2534866581884222612, guid: 067e74b245202334f972356a78a6561f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 17
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 067e74b245202334f972356a78a6561f, type: 3}
