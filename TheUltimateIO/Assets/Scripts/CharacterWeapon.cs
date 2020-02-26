@@ -77,7 +77,7 @@ namespace Character
             _characterModel.StartCoroutine(CooldownAttack(1));
 
             _characterModel.photonView.RPC("RPCAnimSword", RpcTarget.All);
-
+            weaponsMng.allSoundsWeapons[1].PlayRandomSound();
             RaycastHit hit;
             if (Physics.Raycast(weaponsMng.transform.position, -weaponsMng.transform.forward, out hit, _characterModel.characterStats.verticalDistAttack, _characterModel.layerMaskWeaponDamage))
                 hit.collider.gameObject.GetComponent<IDamageable>().Damage(weaponsMng.transform.position, _characterModel.characterStats.damageAttack);
@@ -91,7 +91,6 @@ namespace Character
             Debug.Log("<color=blue> Se ataco con el arco. </color>");
 
             _characterModel.StartCoroutine(CooldownAttack(2));
-
             _characterModel.StartCoroutine(BowCoroutine());
         }
 
@@ -103,6 +102,7 @@ namespace Character
             SpawnArrow();
             _characterModel.photonView.RPC("RPCAnimBow", RpcTarget.All);
             yield return new WaitForSeconds(_characterModel.characterStats.delayAnimBowInSeconds);
+            weaponsMng.allSoundsWeapons[2].PlayRandomSound();
             _lastArrow.ThrowArrow();
         }
 

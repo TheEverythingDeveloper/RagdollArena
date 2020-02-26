@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Audio;
 
 namespace Weapons
 {
@@ -8,6 +9,7 @@ namespace Weapons
     {
         [SerializeField] private Weapon[] _allFrontWeapons = new Weapon[3];
         [SerializeField] private Weapon[] _allBackWeapons = new Weapon[3];
+        public AudioManager[] allSoundsWeapons = new AudioManager[3];
         private Weapon _actualFrontWeapon;
         private Weapon _actualBackWeapon;
         public Transform arrowSpawnTransform;

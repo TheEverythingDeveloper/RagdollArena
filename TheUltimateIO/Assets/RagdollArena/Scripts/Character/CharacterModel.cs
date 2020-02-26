@@ -10,6 +10,7 @@ using Weapons;
 using Construction;
 using Photon;
 using Photon.Realtime;
+using Audio;
 
 namespace Character
 {
@@ -96,6 +97,7 @@ namespace Character
         public GameObject panelUI;
 
         public ShieldProtect shield;
+        public AudioManager soundDamage;
         public int team = 0; // { 0 } = sin equipo. { 1, 2, 3, 4 } = posibles equipos que pueden haber.
         [Tooltip("Este owned es parecido al photonView.isMine, solo que es para FullAutho, ya que el server es el photonView.isMine")] public bool owned;
         Mountable _actualMountable;
@@ -291,7 +293,7 @@ namespace Character
             if (!FindObjectOfType<Server>().DamageActive()) return;
 
             _hp -= damage;
-
+            soundDamage.PlayRandomSound();
             photonView.RPC("RPCFeedbackDamage", RpcTarget.All, origin.x, origin.y, origin.z);
             photonView.RPC("RPCDamage", RpcTarget.AllBuffered, _hp / characterStats.life);
         }

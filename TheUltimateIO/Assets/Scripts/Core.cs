@@ -5,16 +5,15 @@ using Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using GameUI;
-using TMPro;
 using UnityEngine.UI;
-
+using Audio;
 public class Core : MonoBehaviourPun, IDamageable
 {
     public int teamID;
     [SerializeField] private Image _lifeBar;
     [SerializeField] private List<Color> _lifeColors;
     [SerializeField] private List<Color> _backgroundLifeColors;
-
+    public AudioManager sounds;
     private void Start()
     {
         UpdateMaterial(teamID);
@@ -71,6 +70,7 @@ public class Core : MonoBehaviourPun, IDamageable
     public void Damage(Vector3 origin, float damage)
     {
         FindObjectOfType<TeamManager>().photonView.RPC("RPCCoreLifeUpdateCall", RpcTarget.MasterClient , teamID-1, -damage);
+        sounds.PlayRandomSound();
     }
 
     public void Explosion(Vector3 origin, float force)
