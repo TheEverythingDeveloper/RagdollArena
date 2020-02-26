@@ -101,6 +101,11 @@ public class SpawnedCube : MonoBehaviourPun, IDamageable, IAttractable
     IEnumerator DestroyCube()
     {
         yield return new WaitForSeconds(3f);
+        photonView.RPC("RPCDestroyCube", RpcTarget.MasterClient);
+    }
+
+    [PunRPC] private void RPCDestroyCube()
+    {
         PhotonNetwork.Destroy(gameObject);
     }
 
