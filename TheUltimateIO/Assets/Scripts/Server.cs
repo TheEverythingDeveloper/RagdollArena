@@ -8,6 +8,7 @@ using System.Linq;
 using System;
 using GameUI;
 using Friends;
+using Audio;
 using Random = UnityEngine.Random;
 
 public class Server : MonoBehaviourPun
@@ -20,6 +21,7 @@ public class Server : MonoBehaviourPun
     Chat _chat;
     public bool startGame;
     public int timeConstructInSeconds;
+
     private void Awake()
     {
         if (FindObjectOfType<NetSpawner>()) Destroy(gameObject);
@@ -104,11 +106,10 @@ public class Server : MonoBehaviourPun
         yield return new WaitForSeconds(timeConstructInSeconds);
         photonView.RPC("RPCPosterWar", RpcTarget.All);
 
-        //TODO: Feedback de que comienza la guerra.
     }
     [PunRPC] void RPCPosterConstruction() { MsgServerUI.Instance.NewMsg("In " + timeConstructInSeconds + " seconds the war will begin, build to protect the nexus.", 5); }
 
-    [PunRPC] void RPCPosterWar() { MsgServerUI.Instance.NewMsg("Construction time is over, go to the war!!", 5); }
+    [PunRPC] void RPCPosterWar() { MsgServerUI.Instance.NewMsg("Construction time is over, go to the war!!", 5); FindObjectOfType<ServerAudioManager>().PlaySound(0); }
 
     [PunRPC] private void RPCUpdateCounter(int i)
     {
