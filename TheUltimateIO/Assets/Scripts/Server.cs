@@ -19,6 +19,8 @@ public class Server : MonoBehaviourPun
 
     public bool controlsActive = true;
     Chat _chat;
+    public int minPlayersToPlay = 2;
+    public bool readyToPlay = true;
     public bool startGame;
     public int timeConstructInSeconds;
 
@@ -29,7 +31,7 @@ public class Server : MonoBehaviourPun
         _lvlMng = FindObjectOfType<LevelManager>();
 
         if (!photonView.IsMine) return;
-
+        CheckReadyToPlay();
         PackagesPerSecond = 30;
     }
 
@@ -56,9 +58,25 @@ public class Server : MonoBehaviourPun
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return) && readyToPlay)
             StartCoroutine(StartGameCoroutine(5));
 
+    }
+
+    void CheckReadyToPlay()
+    {
+        if (startGame) return;
+
+        if(allPlayers.Count >= minPlayersToPlay && !readyToPlay)
+        {
+            FindObjectOfType<GameCanvas>().SwitchChangeStartText("Press Enter to start game");
+            readyToPlay = true;
+        }
+        else if(allPlayers.Count < minPlayersToPlay && readyToPlay)
+        {
+            FindObjectOfType<GameCanvas>().SwitchChangeStartText("Minimum 2 players to play");
+            readyToPlay = false;
+        }
     }
     void ChatActive(bool active)
     {
@@ -134,6 +152,7 @@ public class Server : MonoBehaviourPun
             Debug.Log("<color=red>Se fue de la partida un usuario!</color>");
             PhotonNetwork.Destroy(allPlayers[photonPlayer].gameObject);
             allPlayers.Remove(photonPlayer);
+            CheckReadyToPlay();
         }
         else
         {
@@ -144,6 +163,7 @@ public class Server : MonoBehaviourPun
             allPlayers[photonPlayer].photonView.RPC("RPCSetModelOwner", photonPlayer, true, photonPlayer);
             allPlayers[photonPlayer].photonView.RPC("RPCArtificialAwake", RpcTarget.AllBuffered);
             FindObjectOfType<TeamManager>().AddPlayer(photonPlayer);
+            CheckReadyToPlay();
         }
     }
     public void ChangeControls(Player photonPlayer, Action<float, float> move, Rigidbody newRb)

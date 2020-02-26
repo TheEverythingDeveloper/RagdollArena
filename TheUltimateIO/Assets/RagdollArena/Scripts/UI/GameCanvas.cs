@@ -53,5 +53,6 @@ namespace GameUI
         public void SwitchCounterPanel(bool active) => _counterPanel.SetActive(active);
         public void SwitchRespawnHUD(bool active) => _respawnHUD.SetActive(active);
         public void SwitchEnterToStartText(bool active) => _pressEnterToStartText.gameObject.SetActive(active);
+        public void SwitchChangeStartText(string txt) => _pressEnterToStartText.text = txt;
     }
 }

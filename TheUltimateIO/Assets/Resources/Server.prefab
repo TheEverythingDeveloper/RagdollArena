@@ -45,6 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controlsActive: 1
+  minPlayersToPlay: 2
+  readyToPlay: 1
   startGame: 0
   timeConstructInSeconds: 20
 --- !u!114 &2385
